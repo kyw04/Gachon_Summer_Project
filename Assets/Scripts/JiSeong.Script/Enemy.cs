@@ -4,7 +4,6 @@ public class Enemy : MonoBehaviour
 {
     public float moveSpeed = 5f; // 적의 이동 속도
     public float attackRange = 0.5f; // 공격 범위
-    public int damage = 10; // 공격력
 
     private Transform player; // 플레이어의 위치
     private Animator animator; // 애니메이터 컴포넌트
