@@ -18,9 +18,14 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
     //현재 체력
     [SerializeField]
     protected int healthPoint;
+    protected int staminaPoint;
+    protected float attackDelay;
 
-    protected Animator Animator;
+    public Animator animator;
     protected Rigidbody Rigidbody;
+    //현재 카메라가 바라보고 있는 방향을 바라보고 있는 변수
+    public Vector3 lookFoward;
+    public Vector3 lookRight;
     
     // BattleableComponentBase.BattleableVOBase.AttackPoint 등으로 공격력, 체력 등의 스테이터스 정보를 가져 올 수 있음
     // ex) : PlayerComponent.Status.AttackPoint 
@@ -34,9 +39,10 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
     private void Awake()
     {
         //컴포넌트를 가져옴
-        Animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
         Rigidbody = GetComponent<Rigidbody>();
     }
+
     public virtual void Attack()
     {
         if (isAttacking) return;

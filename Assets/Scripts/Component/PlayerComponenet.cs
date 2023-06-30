@@ -14,6 +14,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         public bool isWiring = false;
         public bool isJumping = false;
 
+
     #endregion
     
     delegate void Act();
@@ -24,6 +25,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         //현재 체력을 최대 체력에 맞춤
         Status = new PlayerVO();
         healthPoint = Status.maxHealthPoint;
+        staminaPoint = Status.maxStaminaPoint;
     }
 
     private void FixedUpdate()
@@ -32,7 +34,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     }
 
     #region 기능적인 메소드
-
+    
     public override void ModifyHealthPoint(int amount)
     {
         if (amount < 0)
@@ -103,16 +105,53 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     }
     public override void Move()
     {
-        var direction =
-            (Input.GetAxisRaw("Horizontal") * Vector3.right + Input.GetAxisRaw("Vertical") * Vector3.forward) *
-            Time.deltaTime;
-        Rigidbody.velocity = new Vector3(
-            direction.x * Status.spd,
-            Rigidbody.velocity.y,
-            direction.z * Status.spd);
-        transform.LookAt(
-            transform.position + direction);
+        var dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        
+        //에니메이터에 있는 bool 타입의 파라미터들을 한 번에 false로
+        foreach (var param in animator.parameters)
+        {
+            if (param.type is AnimatorControllerParameterType.Bool)
+            {
+                animator.SetBool(param.name, false);
+            }
+        }
+        //플레이어가 이동 중 일 경우
+        if (dir.magnitude != 0)
+        {
+            var moveDir = lookFoward * dir.y + lookRight * dir.x;
+            this.transform.forward = lookFoward;
+
+            Debug.Log(dir.x + " " + dir.y);
+            if (dir.x == 0)
+            {
+                animator.SetBool(dir.y > 0 ? "isWalkingForward" : "isWalkingBackward", true);
+            }
+            else
+            {
+                if (dir.y == 0)
+                {
+                    
+                    animator.SetBool(dir.x < 0 ? "isWalkingLeft" : "isWalkingRight", true);
+                }
+                else
+                {
+                    //오른쪽 앞 & 뒤
+                    animator.SetBool(dir.y > 0 ? "isWalkingForward" : "isWalkingBackward", true);
+                    animator.SetBool(dir.x < 0 ? "isWalkingLeft" : "isWalkingRight", true);
+                    moveDir /= Mathf.Sqrt(2);
+                }
+            }
+
+            transform.position += moveDir * Time.deltaTime * Status.spd;
+        }
+        else
+        {
+            animator.SetBool("isIdle", true);
+        }
     }
+
+
+
     #endregion
     
     #region Collision Func
