@@ -6,7 +6,8 @@ public class BattleableVOBase
 {
     public string name = "John";
     public int maxHealthPoint = 0;
+    public int maxStaminaPoint = 0;
     public int attackPoint = 0;
     public int defencePoint = 0;
-    public float spd = 100;
+    public float spd = 4;
 }

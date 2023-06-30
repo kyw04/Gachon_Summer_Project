@@ -5,15 +5,17 @@ public class PlayerVO : BattleableVOBase
     {
         name = "John";
         maxHealthPoint = 100;
+        maxStaminaPoint = 20;
         attackPoint = 10;
         defencePoint = 5;
-        spd = 10;
+        spd = 4;
     }
 
-    public PlayerVO(string name, int maxHealthPoint, int attackPoint, int defencePoint, float spd)
+    public PlayerVO(string name, int maxHealthPoint, int maxStaminaPoint, int attackPoint, int defencePoint, float spd)
     {
         base.name = name;
         base.maxHealthPoint = maxHealthPoint;
+        base.maxStaminaPoint = maxStaminaPoint;
         base.attackPoint = attackPoint;
         base.defencePoint = defencePoint;
         base.spd = spd;
