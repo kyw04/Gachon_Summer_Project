@@ -106,7 +106,10 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         var direction =
             (Input.GetAxisRaw("Horizontal") * Vector3.right + Input.GetAxisRaw("Vertical") * Vector3.forward) *
             Time.deltaTime;
-        Rigidbody.velocity = direction * Status.spd;
+        Rigidbody.velocity = new Vector3(
+            direction.x * Status.spd,
+            Rigidbody.velocity.y,
+            direction.z * Status.spd);
         transform.LookAt(
             transform.position + direction);
     }
