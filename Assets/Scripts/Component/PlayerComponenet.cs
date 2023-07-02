@@ -3,6 +3,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -69,6 +70,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         if (Input.GetButton("Attack"))
         {
             action = Attack;
+            Rigidbody.velocity = Vector3.zero;
         }
         else if (Input.GetButton("Dodge"))
         {
@@ -76,7 +78,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
             {
                 if (isDodging) return;
                 else isDodging = !isDodging;
-                //회피 기능 구현
+                animator.SetTrigger("Rolling");
 
             };
         }
@@ -105,23 +107,23 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     }
     public override void Move()
     {
+        if (isJumping || isDodging || isJumping || isAttacking) return;
         var dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         
         //에니메이터에 있는 bool 타입의 파라미터들을 한 번에 false로
-        foreach (var param in animator.parameters)
-        {
-            if (param.type is AnimatorControllerParameterType.Bool)
-            {
-                animator.SetBool(param.name, false);
-            }
-        }
+        var boolParamName =
+            from param in animator.parameters
+            where param.type == AnimatorControllerParameterType.Bool
+            select param.name;
+        foreach (var paramName in  boolParamName)
+            animator.SetBool(paramName, false);
+        
+        
         //플레이어가 이동 중 일 경우
         if (dir.magnitude != 0)
         {
             var moveDir = lookFoward * dir.y + lookRight * dir.x;
             this.transform.forward = lookFoward;
-
-            Debug.Log(dir.x + " " + dir.y);
             if (dir.x == 0)
             {
                 animator.SetBool(dir.y > 0 ? "isWalkingForward" : "isWalkingBackward", true);
@@ -165,6 +167,24 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     {
         
     }
+
     #endregion
+    
+    public override void AnimEvt(string cmd)
+    {
+        switch (cmd)
+        {
+            case "AttackEnd":
+                isAttacking = false;
+                break;
+            case "RollEnd":
+                isDodging = false;
+                Rigidbody.transform.rotation =
+                    new Quaternion(0,
+                        Rigidbody.transform.rotation.y,
+                        0, Rigidbody.transform.rotation.w);
+                break;
+        }
+    }
 
 }
