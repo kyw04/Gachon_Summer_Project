@@ -10,13 +10,13 @@ using UnityEngine.Serialization;
 public sealed class PlayerComponenet : BattleableComponentBase, IControllable
 {
     #region  Variable
-    
+
         public bool isDodging = false;
         public bool isWiring = false;
         public bool isJumping = false;
+        public bool isControllable { get; set; } = true;
 
-
-    #endregion
+        #endregion
     
     delegate void Act();
 
@@ -26,7 +26,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         //현재 체력을 최대 체력에 맞춤
         Status = new PlayerVO();
         healthPoint = Status.maxHealthPoint;
-        staminaPoint = Status.maxStaminaPoint;
+        StaminaPoint = Status.maxStaminaPoint;
     }
 
     private void FixedUpdate()
@@ -69,15 +69,16 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         //조작키들은 임의로 정해진 키로 작동하므로 나중에 정해지면 수정 바람 (2023. 06. 29)
         if (Input.GetButton("Attack"))
         {
-            action = Attack;
-            Rigidbody.velocity = Vector3.zero;
+            action = isControllable ? Attack : Move;
+            isControllable = false;
         }
         else if (Input.GetButton("Dodge"))
         {
             action = () =>
             {
-                if (isDodging) return;
+                if (isDodging || !isControllable) return;
                 else isDodging = !isDodging;
+                isControllable = false;
                 animator.SetTrigger("Rolling");
 
             };
@@ -86,8 +87,9 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         {
             action = () =>
             {
-                if (isWiring) return;
+                if (isWiring || !isControllable) return;
                 else isWiring = !isWiring;
+                isControllable = false;
                 //갈고리 이동 기능 구현
 
             };
@@ -97,8 +99,9 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
             action = () =>
             {
 
-                if (isJumping) return;
+                if (isJumping || !isControllable) return;
                 else isJumping = !isJumping;
+                isControllable = false;
                 //점프 구현
             };
         }
@@ -107,7 +110,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     }
     public override void Move()
     {
-        if (isJumping || isDodging || isJumping || isAttacking) return;
+        if (!isControllable) return;
         var dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         
         //에니메이터에 있는 bool 타입의 파라미터들을 한 번에 false로
@@ -172,6 +175,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     
     public override void AnimEvt(string cmd)
     {
+        isControllable = true;
         switch (cmd)
         {
             case "AttackEnd":
