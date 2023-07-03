@@ -50,7 +50,10 @@ public class Stage2_Boss : MonoBehaviour
                     Vector3 playerPosition = playerTransform.position;
                     // 메테오를 플레이어의 현재 위치에 생성
                     Vector3 meteorPosition = new Vector3(playerPosition.x, playerPosition.y + 3f, playerPosition.z);
-                    GameObject meteor = Instantiate(meteorPrefab, playerPosition, Quaternion.identity);
+                    GameObject meteor = Instantiate(meteorPrefab, meteorPosition, Quaternion.identity);
+                    if (meteor.transform.position.y <= -0.5)
+                        Destroy(meteor);
+
                     // 생성된 메테오에 대한 추가 설정이 필요하다면 여기에 추가 코드 작성
                     break;
             }
