@@ -14,7 +14,9 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         public bool isDodging = false;
         public bool isWiring = false;
         public bool isJumping = false;
-        public bool isControllable { get; set; } = true;
+        public bool isControllable = true;
+
+        private int AttackStatus = 0;
 
         #endregion
     
@@ -61,6 +63,13 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     #endregion
 
     #region 플레이어 조작과 관련한 메소드
+
+    public override void Attack()
+    {
+        base.Attack();
+        animator.SetInteger("AttackType", AttackStatus++ % 2 );
+    }
+
     public void Command()
     {
         //기본적으로 MOVE함수를 실행시키며 특정한 INPUT이 있으면 그에 맞는 메소드를 실행
@@ -80,6 +89,8 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
                 else isDodging = !isDodging;
                 isControllable = false;
                 animator.SetTrigger("Rolling");
+
+                this.transform.forward = lookFoward * (Input.GetAxisRaw("Vertical") == -1 ? -1 : 1);
 
             };
         }
@@ -112,6 +123,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     {
         if (!isControllable) return;
         var dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        this.transform.forward = lookFoward;
         
         //에니메이터에 있는 bool 타입의 파라미터들을 한 번에 false로
         var boolParamName =
@@ -126,7 +138,6 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         if (dir.magnitude != 0)
         {
             var moveDir = lookFoward * dir.y + lookRight * dir.x;
-            this.transform.forward = lookFoward;
             if (dir.x == 0)
             {
                 animator.SetBool(dir.y > 0 ? "isWalkingForward" : "isWalkingBackward", true);
@@ -183,10 +194,6 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
                 break;
             case "RollEnd":
                 isDodging = false;
-                Rigidbody.transform.rotation =
-                    new Quaternion(0,
-                        Rigidbody.transform.rotation.y,
-                        0, Rigidbody.transform.rotation.w);
                 break;
         }
     }

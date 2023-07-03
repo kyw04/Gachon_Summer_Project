@@ -4,6 +4,5 @@ using Unity.VisualScripting;
 
 public interface IControllable
 {
-    public bool isControllable { get; set; }
     public void Command();
 }
