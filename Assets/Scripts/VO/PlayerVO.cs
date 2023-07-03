@@ -14,10 +14,10 @@ public class PlayerVO : BattleableVOBase
     public PlayerVO(string name, int maxHealthPoint, int maxStaminaPoint, int attackPoint, int defencePoint, float spd)
     {
         base.name = name;
-        base.maxHealthPoint = maxHealthPoint;
-        base.maxStaminaPoint = maxStaminaPoint;
-        base.attackPoint = attackPoint;
-        base.defencePoint = defencePoint;
-        base.spd = spd;
+        this.maxHealthPoint = maxHealthPoint;
+        this.maxStaminaPoint = maxStaminaPoint;
+        this.attackPoint = attackPoint;
+        this.defencePoint = defencePoint;
+        this.spd = spd;
     }
 }

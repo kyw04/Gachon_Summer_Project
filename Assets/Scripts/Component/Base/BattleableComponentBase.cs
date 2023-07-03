@@ -14,12 +14,12 @@ using UnityEngine.Serialization;
 public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
 {
     public BattleableVOBase Status;
-    
+
     //현재 체력
     [SerializeField]
     protected int healthPoint;
-    protected int staminaPoint;
-    protected float attackDelay;
+    protected int StaminaPoint;
+    protected float AttackDelay;
 
     public Animator animator;
     protected Rigidbody Rigidbody;
@@ -43,7 +43,7 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
         animator = GetComponent<Animator>();
         Rigidbody = GetComponent<Rigidbody>();
     }
-    
+
     public virtual void Attack()
     {
         if (isAttacking) return;
