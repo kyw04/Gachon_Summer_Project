@@ -25,7 +25,7 @@ public class ObjectPoolComponent : MonoBehaviour
     private void Awake()
     {
         poolObjectLlist = new List<GameObject>();
-        index = 0;
+        index = -1;
         if (prefab == null) Debug.LogError("Cannot found Prefab");
         
         for (int i = 0; i < maxObjectCount; i++)
@@ -95,6 +95,13 @@ public class ObjectPoolComponent : MonoBehaviour
         poolObjectLlist.RemoveAt(freeItemIndex);
 
         freeItem.SetActive(false);
+        freeItem.transform.rotation = Quaternion.identity;
+        
+        if (freeItem.GetComponent<Rigidbody>())
+        {
+            freeItem.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        }
+
         index = (index + 1) % maxObjectCount;
         poolObjectLlist.Insert(index, item);
 
