@@ -8,6 +8,7 @@ TagManager:
   - Plane
   - Enemy
   - Weapon
+  - DestroyLine
   layers:
   - Default
   - TransparentFX
