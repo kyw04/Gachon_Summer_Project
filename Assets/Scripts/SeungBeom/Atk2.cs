@@ -34,7 +34,7 @@ public class Atk2 : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         Grow = false;
 
-        yield return new WaitForSeconds(2.6f);
+        yield return new WaitForSeconds(2.5f);  //3초 후에 메테오 생성.
         Instantiate(Meteor, transform.position, Quaternion.identity);
         yield return new WaitForSeconds(0.4f);
         Shrink = true;

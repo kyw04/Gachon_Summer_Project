@@ -5,34 +5,29 @@ using UnityEngine;
 public class BossAttackManager : MonoBehaviour
 {
 
+
     public GameObject player;
 
-    public GameObject Atk2;
+    public GameObject Atk2; // 마법진 생성 후 메테오
+    public GameObject Atk3; // 마법진 생성 후 폭발 , 즉사기
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-
-        StartCoroutine(Atk());
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-
-
-    //공격
-    IEnumerator Atk()
-    {
-        while(true)
+        if(Input.GetKeyDown(KeyCode.J))
         {
-            yield return new WaitForSeconds(3);
-            Instantiate(Atk2, player.transform.position, Quaternion.identity);
+            Instantiate(Atk2, new Vector3(player.transform.position.x, 0, player.transform.position.z), Quaternion.identity);
         }
-        
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Instantiate(Atk3, new Vector3(player.transform.position.x, 0, player.transform.position.z), Quaternion.identity);
+        }
 
     }
 }
