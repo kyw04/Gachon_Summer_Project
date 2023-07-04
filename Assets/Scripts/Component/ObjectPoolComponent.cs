@@ -58,7 +58,6 @@ public class ObjectPoolComponent : MonoBehaviour
         item.transform.position = pos;
 
         item.SetActive(true);
-        poolObjectLlist.Add(item);
 
         return item;
     }
@@ -81,7 +80,6 @@ public class ObjectPoolComponent : MonoBehaviour
         item.transform.position = Vector3.zero;
 
         item.SetActive(true);
-        poolObjectLlist.Add(item);
 
         return item;
     }
