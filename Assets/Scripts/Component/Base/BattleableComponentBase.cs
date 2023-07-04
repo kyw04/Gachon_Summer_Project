@@ -39,6 +39,7 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
     
     private void Awake()
     {
+        new SQLConnector();
         //컴포넌트를 가져옴
         animator = GetComponent<Animator>();
         Rigidbody = GetComponent<Rigidbody>();
