@@ -37,9 +37,9 @@ public class CameraComponent : MonoBehaviour
         var mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
         var camAngle = _anchor.rotation.eulerAngles;
 
-        float x = camAngle.x + mouseDelta.y;
+        float x = camAngle.x - mouseDelta.y;
 
-        x = x < 180f ? Mathf.Clamp(x, -1, 70) : Mathf.Clamp(x, 335, 361); 
+        x = x < 180f ? Mathf.Clamp(x, -1, 25) : Mathf.Clamp(x, 290, 361); 
         
         _anchor.rotation = Quaternion.Euler(
             x, camAngle.y + mouseDelta.x,
