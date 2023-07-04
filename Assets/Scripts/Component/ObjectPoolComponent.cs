@@ -41,6 +41,28 @@ public class ObjectPoolComponent : MonoBehaviour
         //StartPooling(poolObjectLlist);
     }
 
+    public GameObject GetItem(Vector3 pos)
+    {
+        if (poolObjectLlist.Count == 0)
+            return null;
+
+        index = (index + 1) % maxObjectCount;
+
+        var item = poolObjectLlist[index];
+
+        if (item.activeSelf == false)
+        {
+            item.SetActive(false);
+        }
+
+        item.transform.position = pos;
+
+        item.SetActive(true);
+        poolObjectLlist.Add(item);
+
+        return item;
+    }
+
     public GameObject GetItem(Transform parent)
     {
         if (poolObjectLlist.Count == 0)
