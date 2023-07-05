@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - Weapon
   - DestroyLine
+  - Scythe
   layers:
   - Default
   - TransparentFX
