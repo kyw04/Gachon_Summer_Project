@@ -16,7 +16,7 @@ public class Atk2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //-------------- ¸ÞÅ×¿À ³«ÇÏ Àü ¸¶¹ýÁø »ý¼º -------------------
+        //-------------- ï¿½ï¿½ï¿½×¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ -------------------
         if (Grow)
         {
             transform.localScale += new Vector3(2*70 * Time.deltaTime, 2*70 * Time.deltaTime, 2*70 * Time.deltaTime);
@@ -26,7 +26,7 @@ public class Atk2 : MonoBehaviour
             transform.localScale -= new Vector3(2*70 * Time.deltaTime, 2*70 * Time.deltaTime, 2*70 * Time.deltaTime);
         }
     }
-    //-------------- ¸ÞÅ×¿À ³«ÇÏ Àü ¸¶¹ýÁø »ý¼º -------------------
+    //-------------- ï¿½ï¿½ï¿½×¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ -------------------
     IEnumerator Growing()
     {
 
@@ -34,7 +34,7 @@ public class Atk2 : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         Grow = false;
 
-        yield return new WaitForSeconds(2.5f);  //3ÃÊ ÈÄ¿¡ ¸ÞÅ×¿À »ý¼º.
+        yield return new WaitForSeconds(2.5f);  //3ï¿½ï¿½ ï¿½Ä¿ï¿½ ï¿½ï¿½ï¿½×¿ï¿½ ï¿½ï¿½ï¿½ï¿½.
         Instantiate(Meteor, transform.position, Quaternion.identity);
         yield return new WaitForSeconds(0.4f);
         Shrink = true;
