@@ -8,8 +8,8 @@ public class BossAttackManager : MonoBehaviour
 
     public GameObject player;
 
-    public GameObject Atk2; // ¸¶¹ýÁø »ý¼º ÈÄ ¸ÞÅ×¿À
-    public GameObject Atk3; // ¸¶¹ýÁø »ý¼º ÈÄ Æø¹ß , Áï»ç±â
+    public GameObject Atk2; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½×¿ï¿½
+    public GameObject Atk3; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ , ï¿½ï¿½ï¿½ï¿½
     // Start is called before the first frame update
     void Start()
     {
