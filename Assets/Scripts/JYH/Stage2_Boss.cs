@@ -1,57 +1,222 @@
+using JYH;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Stage2_Boss : MonoBehaviour
 {
+    Animator anim;
+    NavMeshAgent agent;
+
+    Rigidbody rb;
     [SerializeField] int Boss_AttackNum;
 
-    public GameObject meteorPrefab;
-    Transform playerTransform;
+    [SerializeField] int ranNum;
+
+    public ObjectPoolComponent boss_Attack;
+    float attackDelayTime;
+
+    public GameObject die_Effect;
+
+    float away;
+    public Transform Player;
+
+    // Transform playerTransform;
     IEnumerator attack;
+
+    Vector3 dir;
+
+    public float dirX;
+    public float dirZ;
+
+    public enum EnemyState
+    {
+        Idle,
+        Walk,
+        Attack1,
+        Attack2,
+        Damaged,
+        Dead
+    }
+    public EnemyState eState;
+
+
+    void Awake()
+    {
+        anim = GetComponent<Animator>();
+        agent = GetComponent<NavMeshAgent>();
+        rb = GetComponent<Rigidbody>();
+    }
     void Start()
     {
-        GameObject player = GameObject.Find("Player");
-        if (player != null)
-        {
-            playerTransform = player.transform;
-        }
+        Player = FindObjectOfType<PlayerCtrl>().transform;
+
+        eState = EnemyState.Idle;
+
+        //GameObject player = GameObject.Find("Player");
+        //if (player != null)
+        //{
+        //    playerTransform = player.transform;
+        //}
         attack = Attack_C();
         StartCoroutine(attack);
+        //  StartCoroutine(Move_C());
+
+
+
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-            StopCoroutine(attack);
-    }
-    public void Attack()
-    {
+        away = Vector3.Distance(transform.position, Player.position);
+        //  Debug.Log(away);
 
+        if (Input.GetKeyDown(KeyCode.Q))
+            eState = EnemyState.Dead;
+
+        ChangeEnemyState();
     }
+
+    void ChangeEnemyState()
+    {
+        switch (eState)
+        {
+            case EnemyState.Idle:
+                Idle();
+                break;
+
+            case EnemyState.Walk:
+                Walk(dir);
+                break;
+
+            case EnemyState.Attack1:
+                Attack();
+                break;
+
+            case EnemyState.Dead:
+                Dead();
+                break;
+        }
+    }
+    public void Idle()
+    {
+        // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ ï¿½à°£ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        if (away <= 10)
+        {
+            // ï¿½Ìµï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½È¯
+            eState = EnemyState.Walk;
+            // ï¿½Ìµï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
+            anim.SetFloat("Z", 1);
+        }
+    }
+
+    public void Walk(Vector3 dir)
+    {
+        //dir = Vector3.Lerp(dir, new Vector3(dirX, 0, dirZ), Time.deltaTime * 5);
+        //anim.SetFloat("Z", dir.z);
+        //anim.SetFloat("X", dir.x);
+
+        if (away <= 5)
+        {
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            attackDelayTime = 1;
+            eState = EnemyState.Attack1;
+        }
+        // ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½âº» ï¿½ï¿½ï¿½ï¿½
+        else if (away > 10)
+        {
+            eState = EnemyState.Idle;
+
+            // ï¿½âº» ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
+            anim.SetFloat("Z", 0);
+
+            // ï¿½ï¿½Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            agent.isStopped = true;
+        }
+        //ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
+        else
+        {
+            Debug.Log("ï¿½Ã·ï¿½ï¿½Ì¾î¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+            anim.SetFloat("Z", 1);
+            // ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (destination)
+            agent.destination = Player.position;
+            // ï¿½ï¿½Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            agent.isStopped = false;
+        }
+    }
+
+    void Dead()
+    {
+        die_Effect.SetActive(true);
+        anim.SetTrigger("dead"); 
+        Destroy(gameObject, 5f);
+        Destroy(die_Effect, 5f);
+    }
+    void Attack()
+    {
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½
+        attackDelayTime += Time.deltaTime;
+
+        // 1ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        if (attackDelayTime >= 1)
+        {
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
+            anim.SetTrigger("attack");
+
+            // 0ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ø¼ï¿½ ï¿½Ù½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            attackDelayTime = 0;
+        }
+        // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ï¿½
+        if (away > 5)
+        {
+            // ï¿½Ìµï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½È¯
+            eState = EnemyState.Walk;
+        }
+    }
+
+    IEnumerator Move_C()
+    {
+        while (true)
+        {
+            dirX = Random.Range(-1, 2);
+            dirZ = Random.Range(-1, 2);
+
+            rb.velocity = new Vector3(dirX, 0, dirZ);
+            yield return new WaitForSeconds(2f);
+
+        }
+    }
+
     IEnumerator Attack_C()
     {
         while (true)
         {
             switch (Boss_AttackNum)
             {
-                // ³´ ÇÑ¹ø ÈÖµÎ¸£±â 
+                // ï¿½ï¿½ ï¿½Ñ¹ï¿½ ï¿½ÖµÎ¸ï¿½ï¿½ï¿½ 
                 case 1:
 
                     break;
-                // ³´ µÎ¹ø ÈÖµÎ¸£±â 
+                // ï¿½ï¿½ ï¿½Î¹ï¿½ ï¿½ÖµÎ¸ï¿½ï¿½ï¿½ 
                 case 2:
 
                     break;
-                // ¸¶¹ý °ø°Ý(¸ÞÅ×¿À ¼ÒÈ¯)
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×¿ï¿½ ï¿½ï¿½È¯)
                 case 3:
-                    // ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡¸¦ ¾ò¾î¿È
-                    Vector3 playerPosition = playerTransform.position;
-                    // ¸ÞÅ×¿À¸¦ ÇÃ·¹ÀÌ¾îÀÇ ÇöÀç À§Ä¡¿¡ »ý¼º
+                    // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                    Vector3 playerPosition = Player.position;
+                    // ï¿½ï¿½ï¿½×¿ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                     Vector3 meteorPosition = new Vector3(playerPosition.x, playerPosition.y + 3f, playerPosition.z);
-                    GameObject meteor = Instantiate(meteorPrefab, playerPosition, Quaternion.identity);
-                    // »ý¼ºµÈ ¸ÞÅ×¿À¿¡ ´ëÇÑ Ãß°¡ ¼³Á¤ÀÌ ÇÊ¿äÇÏ´Ù¸é ¿©±â¿¡ Ãß°¡ ÄÚµå ÀÛ¼º
+                    GameObject meteor = boss_Attack.GetItem(meteorPosition);
+                    meteor.GetComponent<Meteor_2Stage>().boss_Attack = this.boss_Attack;
+                    //// GameObject meteor = Instantiate(meteorPrefab, meteorPosition, Quaternion.identity);
+                    if (meteor.transform.position.y <= -0.5)
+                        boss_Attack.FreeItem(meteor);
+
+
+                    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½×¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½Ï´Ù¸ï¿½ ï¿½ï¿½ï¿½â¿¡ ï¿½ß°ï¿½ ï¿½Úµï¿½ ï¿½Û¼ï¿½
                     break;
             }
             yield return new WaitForSeconds(2f);

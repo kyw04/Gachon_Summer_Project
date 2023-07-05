@@ -5,34 +5,29 @@ using UnityEngine;
 public class BossAttackManager : MonoBehaviour
 {
 
+
     public GameObject player;
 
-    public GameObject Atk2;
+    public GameObject Atk2; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½×¿ï¿½
+    public GameObject Atk3; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ , ï¿½ï¿½ï¿½ï¿½
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-
-        StartCoroutine(Atk());
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-
-
-    //°ø°Ý
-    IEnumerator Atk()
-    {
-        while(true)
+        if(Input.GetKeyDown(KeyCode.J))
         {
-            yield return new WaitForSeconds(3);
-            Instantiate(Atk2, player.transform.position, Quaternion.identity);
+            Instantiate(Atk2, new Vector3(player.transform.position.x, 0, player.transform.position.z), Quaternion.identity);
         }
-        
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Instantiate(Atk3, new Vector3(player.transform.position.x, 0, player.transform.position.z), Quaternion.identity);
+        }
 
     }
 }
