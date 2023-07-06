@@ -22,7 +22,7 @@ public class ShiftSkill : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift) && !cool)
         {
             cool = true;
-            StartCoroutine(CoolTime(3.0f));
+            StartCoroutine(CoolTime(4.0f));
             time = 3;
             //  Debug.Log("cool");
 

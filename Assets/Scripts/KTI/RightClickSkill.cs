@@ -21,7 +21,7 @@ public class RightClickSkill : MonoBehaviour
         { 
         
             cool = true;
-            StartCoroutine(CoolTime(5.0f));
+            StartCoroutine(CoolTime(6.0f));
             time = 5;
           //  Debug.Log("cool");
 

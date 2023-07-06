@@ -15,6 +15,26 @@ public class BtnManager : MonoBehaviour
         StartCoroutine(Scene_Move());
     }
 
+    public void OnClick_NextScene() // 보스1 클리어 화면에서 Start 눌렀을때 실행되는 함수
+    {
+        sceneNum = 6;
+        StartCoroutine(Scene_Move());
+
+    }
+
+    public void OnClick_GameOver_Restart() // 게임오버 화면에서 Restart 눌렀을때 실행되는 함수
+    {
+        sceneNum = 2;
+        StartCoroutine(Scene_Move());
+
+    }
+
+    public void OnClick_GameOver_Quit() // 게임오버 화면에서 Quit 눌렀을때 실행되는 함수
+    {
+        sceneNum = 0;
+        StartCoroutine(Scene_Move());
+
+    }
     public void OnClick_QuitBtn()
     {
 #if UNITY_EDITOR
@@ -28,8 +48,17 @@ public class BtnManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         switch (sceneNum)
         {
+            case 0:
+                LoadingScene.LoadScene("Title");
+                break;
             case 1:
                 LoadingScene.LoadScene("JYH");
+                break;
+            case 2:
+                LoadingScene.LoadScene("kti");
+                break;
+            case 6:
+                LoadingScene.LoadScene("SB(Boss)");
                 break;
         }
     }
