@@ -9653,7 +9653,6 @@ GameObject:
   - component: {fileID: 2965782669630418535}
   - component: {fileID: 1194425061302803955}
   - component: {fileID: 5472425224790503407}
-  - component: {fileID: -7454922630616910218}
   - component: {fileID: 6950177171475131442}
   m_Layer: 0
   m_Name: ATK3
@@ -14519,21 +14518,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &-7454922630616910218
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2915212575394185170}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5429f8d9d5e49c4f98f7733c36db1dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Grow: 0
-  Shrink: 0
-  Explosion: {fileID: 5810108391660024706, guid: 53a08a0aeafb18840abd454e53de0027, type: 3}
 --- !u!135 &6950177171475131442
 SphereCollider:
   m_ObjectHideFlags: 0
