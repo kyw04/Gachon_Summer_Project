@@ -9,18 +9,18 @@ using UnityEngine;
 
 sealed class PlayerDataController : BattleableDataControllerBase
 {
-    public static string tableName = "PlayerData";
+    public static string TableName = "PlayerData";
 
-    public PlayerDataController(string _dbName)
+    public PlayerDataController(string dbName)
     {
-        dbConnection = new SqliteConnection(ConnectionString + _dbName);
+        dbConnection = new SqliteConnection(ConnectionString + dbName);
     }
 
     public override BattleableVOBase getData()
     {
         BattleableVOBase result = default;
 
-        var table = UseSelect($"select * from {tableName} where uid = '{SystemInfo.deviceUniqueIdentifier}' ");
+        var table = UseSelect($"select * from {TableName} where uid = '{SystemInfo.deviceUniqueIdentifier}' ");
 
         foreach (var row in table)
         {
@@ -59,10 +59,11 @@ sealed class PlayerDataController : BattleableDataControllerBase
                         dataReader.GetInt32(5),
                         dataReader.GetInt32(6),
                         dataReader.GetFloat(7),
+                        dataReader.GetString(8),
                         new Vector3(
-                            dataReader.GetFloat(8),
                             dataReader.GetFloat(9),
-                            dataReader.GetFloat(10)
+                            dataReader.GetFloat(10),
+                            dataReader.GetFloat(11)
                             ))
                     );
             }
@@ -71,17 +72,18 @@ sealed class PlayerDataController : BattleableDataControllerBase
         }
         catch (Exception e)
         {
-            //if (e.Message.Equals("INVAID_QUERY"))
-            //{
-            //    Debug.Log("uid 미발견");
-            //    Debug.Log(UseInsert($"insert into {tableName} (UID, Name) values ('{SystemInfo.deviceUniqueIdentifier}2', 'DON')"));
+            if (e.Message.Equals("INVAID_QUERY"))
+            {
+                CloseConnection();
+                Debug.Log("uid 미발견");
+                Debug.Log(UseInsert($"insert into {TableName} (UID, Name) values ('{SystemInfo.deviceUniqueIdentifier}', 'DON')"));
 
-            //    result = (List<BattleableVOBase>)UseSelect($"select * from {tableName} where uid = '{SystemInfo.deviceUniqueIdentifier}2' ");
-            //}
+                result = (List<BattleableVOBase>)UseSelect($"select * from {TableName} where uid = '{SystemInfo.deviceUniqueIdentifier}' ");
+            }
         }
         finally
         {
-            ConnectionClose();
+            CloseConnection();
         }
         return result;
     }
@@ -110,11 +112,11 @@ sealed class PlayerDataController : BattleableDataControllerBase
         }
         finally
         {
-            ConnectionClose();
+            CloseConnection();
         }
         return result;
     }
-    public override bool UseUpdate(Vector3 position)
+    public override bool UseUpdate(int id, Vector3 position)
     {
         bool result = true;
         try
@@ -122,7 +124,7 @@ sealed class PlayerDataController : BattleableDataControllerBase
             dbConnection.Open();
             dbCommand = dbConnection.CreateCommand();
             dbCommand.CommandText =
-                $"update PlayerData set x = {position.x}, y = {position.y}, z = {position.z}";
+                $"update PlayerData set x = {position.x}, y = {position.y}, z = {position.z} where id = {id}";
             dbCommand.ExecuteNonQuery();
         }
         catch(Exception e)
@@ -131,7 +133,7 @@ sealed class PlayerDataController : BattleableDataControllerBase
         }
         finally
         {
-            ConnectionClose();
+            CloseConnection();
         }
         return result;
     }
@@ -151,7 +153,7 @@ sealed class PlayerDataController : BattleableDataControllerBase
         }
         finally
         {
-            ConnectionClose();
+            CloseConnection();
         }
         return result;
     }
@@ -173,12 +175,12 @@ sealed class PlayerDataController : BattleableDataControllerBase
         }
         finally
         {
-            ConnectionClose();
+            CloseConnection();
         }
         return result;
     }
 
-    private void ConnectionClose()
+    private void CloseConnection()
     {
         dataReader.Dispose();
         dbCommand.Dispose();

@@ -13,6 +13,7 @@ public class BattleableVOBase
     public int attackPoint = 10;
     public int defencePoint = 5;
     public float spd = 4;
+    public string modelName = "Dummy";
 
     public Vector3 position;
 }
