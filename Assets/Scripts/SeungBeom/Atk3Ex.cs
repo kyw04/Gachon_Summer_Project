@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Atk3Ex : MonoBehaviour
 {
+
     public GameObject Atk3Circle;
     public GameObject Atk3Explosion;
 
@@ -17,6 +18,8 @@ public class Atk3Ex : MonoBehaviour
         Atk3Explosion = transform.GetChild(1).gameObject;
 
         Atk3Explosion.SetActive(false);
+        Atk3Circle.SetActive(true);
+
 
         StartCoroutine(Growing());
     }
@@ -26,11 +29,13 @@ public class Atk3Ex : MonoBehaviour
     {
         if (Grow)
         {
+
             Atk3Circle.transform.localScale += new Vector3(100 * Time.deltaTime, 100 * Time.deltaTime, 100 * Time.deltaTime);
         }
         if (Shrink)
         {
-            Atk3Circle.transform.localScale -= new Vector3(100 * Time.deltaTime, 100 * Time.deltaTime, 100 * Time.deltaTime);
+           Atk3Circle.transform.localScale -= new Vector3(100 * Time.deltaTime, 100 * Time.deltaTime, 100 * Time.deltaTime);
+
         }
     }
     IEnumerator Growing()
@@ -39,6 +44,7 @@ public class Atk3Ex : MonoBehaviour
         Grow = true;
         yield return new WaitForSeconds(2f);
         Grow = false;
+
 
         yield return new WaitForSeconds(3f);    //5초후에 폭발을 생성해야 합니다.
         Atk3Explosion.SetActive(true);

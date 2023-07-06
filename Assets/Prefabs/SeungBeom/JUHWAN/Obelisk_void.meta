@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Prefabs/SeungBeom/JUHWAN/Obelisk_void.meta
 guid: 9fabd6502b930e6428c715c0bf76ae0a
+========
+guid: bb86fba477b38934785622cbeec4c5e1
+>>>>>>>> develop:Assets/JUHWAN/Obelisk_void.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
