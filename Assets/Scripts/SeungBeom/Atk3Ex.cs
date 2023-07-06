@@ -9,7 +9,7 @@ public class Atk3Ex : MonoBehaviour
     public GameObject Circle;
     public GameObject Explosion;
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         Circle = transform.GetChild(0).gameObject;
         Explosion = transform.GetChild(1).gameObject;
@@ -46,6 +46,8 @@ public class Atk3Ex : MonoBehaviour
         
         Shrink = true;
         yield return new WaitForSeconds(2f);
+        Shrink = false;
+        Circle.transform.localScale = new Vector3(0, 0, 0);
         gameObject.SetActive(false);
     }
 }
