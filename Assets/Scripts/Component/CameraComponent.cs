@@ -21,7 +21,7 @@ public class CameraComponent : MonoBehaviour
         _anchor = this.transform.parent;
 
         followingTarget.lookFoward = _anchor.transform.forward.normalized;
-        followingTarget.lookRight = _anchor.transform.right.normalized;
+        followingTarget.lookFoward = _anchor.transform.right.normalized;
 
     }
 

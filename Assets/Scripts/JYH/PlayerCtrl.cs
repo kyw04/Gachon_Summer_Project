@@ -49,13 +49,11 @@ namespace JYH
             cc.Move(dir * CurSpeed * Time.deltaTime);
         }
 
-        private void OnTriggerEnter(Collider other)
+        void Damaged(float damage)
         {
-            if (other.gameObject.CompareTag("Scythe"))
-            {
-                Debug.Log("공격 받음");
-                hp.value -= 0.2f;
-            }
+            hp.value -= damage;
+            if (hp.value <= 0)
+                Debug.Log("Player Die");
         }
     }
 }
