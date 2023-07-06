@@ -11,7 +11,7 @@ public class Atk2Ex : MonoBehaviour
     bool Grow;
     bool Shrink;
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         Circle = transform.GetChild(0).gameObject;
         Meteor = transform.GetChild(1).gameObject;
@@ -47,7 +47,10 @@ public class Atk2Ex : MonoBehaviour
         Shrink = true;
         
         yield return new WaitForSeconds(0.6f);
+        Shrink = false;
+        Circle.transform.localScale = new Vector3(1, 1, 1);
         Circle.SetActive(false);
+        
         yield return new WaitForSeconds(2.9f);
         gameObject.SetActive(false);
     }

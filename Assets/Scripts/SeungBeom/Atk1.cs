@@ -5,27 +5,19 @@ using UnityEngine;
 public class Atk1 : MonoBehaviour
 {
     public GameObject Bullet;
+    public float Firerate;
     GameObject Target;
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         StartCoroutine(BulletFire());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-        Target = GameObject.FindGameObjectWithTag("Player");
-        Vector3 Dir = Target.transform.position - transform.position;
-
     }
 
     IEnumerator BulletFire()
     {
         while(true)
         {
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(Firerate);
             Instantiate(Bullet, transform.position, Quaternion.identity);
         }
     }
