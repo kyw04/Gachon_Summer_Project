@@ -1,6 +1,4 @@
 ﻿//"플레이어 오브젝트" 의 데이터를 담을 VO
-using UnityEngine;
-
 public class PlayerVO : BattleableVOBase
 {
     public PlayerVO()
@@ -11,19 +9,15 @@ public class PlayerVO : BattleableVOBase
         attackPoint = 10;
         defencePoint = 5;
         spd = 4;
-        position = new Vector3(0, 0, 0);
     }
 
-    public PlayerVO(int id, string name, int maxHealthPoint, int maxStaminaPoint, int attackPoint, int defencePoint, float spd, string modelName, Vector3 position)
+    public PlayerVO(string name, int maxHealthPoint, int maxStaminaPoint, int attackPoint, int defencePoint, float spd)
     {
-        this.id = id;
-        this.name = name;
+        base.name = name;
         this.maxHealthPoint = maxHealthPoint;
         this.maxStaminaPoint = maxStaminaPoint;
         this.attackPoint = attackPoint;
         this.defencePoint = defencePoint;
         this.spd = spd;
-        this.modelName = modelName;
-        this.position = position;
     }
 }

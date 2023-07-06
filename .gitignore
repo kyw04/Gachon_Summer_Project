@@ -11,11 +11,6 @@
 /[Uu]ser[Ss]ettings/
 /Assets/External/
 
-*.zip
-*.zip.meta
-Assets/Resources/PlayerModels/Asuna/CharacterStandardEquipment/
-Assets/Resources/PlayerModels/Asuna/Textures/CharacterStandardEquipment/
-
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/

@@ -8,12 +8,12 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
 
-public abstract class BattleableComponentBase : MonoBehaviour, IBattleable, ICameraFollowable
+public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
 {
     public BattleableVOBase Status;
-    protected BattleableDataControllerBase dataController;
 
     //현재 체력
     [SerializeField]
@@ -24,7 +24,8 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable, ICam
     public Animator animator;
     protected Rigidbody Rigidbody;
     //현재 카메라가 바라보고 있는 방향을 바라보고 있는 변수
-
+    public Vector3 lookFoward;
+    public Vector3 lookRight;
     
     // BattleableComponentBase.BattleableVOBase.AttackPoint 등으로 공격력, 체력 등의 스테이터스 정보를 가져 올 수 있음
     // ex) : PlayerComponent.Status.AttackPoint 
@@ -34,13 +35,11 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable, ICam
     [SerializeField]
     protected bool isAttacking = false;
 
-    public Vector3 lookFoward { get; set; }
-    public Vector3 lookRight { get; set; }
-
     // 전투 가능한 오브젝트들의 스테이터스를 보관할 VO.
-
+    
     private void Awake()
     {
+        new SQLConnector();
         //컴포넌트를 가져옴
         animator = GetComponent<Animator>();
         Rigidbody = GetComponent<Rigidbody>();
