@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using JYH;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,33 +11,29 @@ public class Stage2_Boss : MonoBehaviour
     Animator anim;
     NavMeshAgent agent;
 
+
     Rigidbody rb;
-    [SerializeField] int Boss_AttackNum;
 
-    [SerializeField] int ranNum;
+    [Header("¿øÇüÀ¸·Î °ø°ÝÇÏ´Â ÇÁ¸®ÆÕ °ü·Ã º¯¼öµé")]
+    public float meteorSpeed;
+    [SerializeField] Transform[] spawnPoint;
 
-    public ObjectPoolComponent boss_Attack;
-    float attackDelayTime;
 
+    public ObjectPoolComponent[] boss_Attack;
     public GameObject die_Effect;
 
     float away;
     public Transform Player;
-
-    // Transform playerTransform;
-    IEnumerator attack;
-
     Vector3 dir;
 
-    public float dirX;
-    public float dirZ;
+    float delay_Time;
 
+    public float dirZ;
     public enum EnemyState
     {
         Idle,
         Walk,
-        Attack1,
-        Attack2,
+        Attack,
         Damaged,
         Dead
     }
@@ -51,26 +48,16 @@ public class Stage2_Boss : MonoBehaviour
     }
     void Start()
     {
+
         Player = FindObjectOfType<PlayerCtrl>().transform;
-
         eState = EnemyState.Idle;
-
-        //GameObject player = GameObject.Find("Player");
-        //if (player != null)
-        //{
-        //    playerTransform = player.transform;
-        //}
-        attack = Attack_C();
-        StartCoroutine(attack);
-        //  StartCoroutine(Move_C());
-
-
-
     }
 
     void Update()
     {
-        away = Vector3.Distance(transform.position, Player.position);
+        away = Vector3.Distance(transform.position, Player.position); // Àû°ú ÇÃ·¹ÀÌ¾îÀÇ °Å¸®
+        Vector3 playerPosition = Player.position; // ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡
+
         //  Debug.Log(away);
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -88,10 +75,10 @@ public class Stage2_Boss : MonoBehaviour
                 break;
 
             case EnemyState.Walk:
-                Walk(dir);
+                Walk();
                 break;
 
-            case EnemyState.Attack1:
+            case EnemyState.Attack:
                 Attack();
                 break;
 
@@ -102,124 +89,117 @@ public class Stage2_Boss : MonoBehaviour
     }
     public void Idle()
     {
-        // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ ï¿½à°£ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-        if (away <= 10)
-        {
-            // ï¿½Ìµï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½È¯
-            eState = EnemyState.Walk;
-            // ï¿½Ìµï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
-            anim.SetFloat("Z", 1);
-        }
+        agent.isStopped = true; // ±æÃ£±â Á¾·á
+        StartCoroutine(Idle_Delay());
+        eState = EnemyState.Walk;
     }
-
-    public void Walk(Vector3 dir)
+    IEnumerator Idle_Delay()
     {
-        //dir = Vector3.Lerp(dir, new Vector3(dirX, 0, dirZ), Time.deltaTime * 5);
-        //anim.SetFloat("Z", dir.z);
-        //anim.SetFloat("X", dir.x);
-
-        if (away <= 5)
-        {
-            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ ï¿½ï¿½ï¿½Ú¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-            attackDelayTime = 1;
-            eState = EnemyState.Attack1;
-        }
-        // ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½âº» ï¿½ï¿½ï¿½ï¿½
-        else if (away > 10)
-        {
-            eState = EnemyState.Idle;
-
-            // ï¿½âº» ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
-            anim.SetFloat("Z", 0);
-
-            // ï¿½ï¿½Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-            agent.isStopped = true;
-        }
-        //ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
-        else
-        {
-            Debug.Log("ï¿½Ã·ï¿½ï¿½Ì¾î¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
-            anim.SetFloat("Z", 1);
-            // ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾î¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (destination)
-            agent.destination = Player.position;
-            // ï¿½ï¿½Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-            agent.isStopped = false;
-        }
+        anim.StopPlayback();
+        yield return new WaitForSeconds(2f);
     }
-
+    public void Walk()
+    {
+        agent.destination = Player.position;     // °è¼ÓÇØ¼­ ÇÃ·¹ÀÌ¾î¸¦ ÇâÇØ ÀÌµ¿ÇÏµµ·Ï ¸ñÀûÁö ¼³Á¤ (destination)
+        agent.isStopped = false; // ±æÃ£±â ½ÃÀÛ
+        // dir = Vector3.Lerp(dir, new Vector3(0, 0, dirZ), Time.deltaTime * 5);
+        // anim.SetFloat("Z", dir.z);
+        anim.SetFloat("Z", 1);
+        if (away <= 10)
+            eState = EnemyState.Attack;
+    }
     void Dead()
     {
         die_Effect.SetActive(true);
-        anim.SetTrigger("dead"); 
-        Destroy(gameObject, 5f);
-        Destroy(die_Effect, 5f);
+        anim.SetTrigger("dead");
     }
     void Attack()
     {
-        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½
-        attackDelayTime += Time.deltaTime;
-
-        // 1ï¿½Ê°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-        if (attackDelayTime >= 1)
+        if (delay_Time <= Time.time)
         {
-            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
-            anim.SetTrigger("attack");
+            delay_Time = Time.time + 3f;
 
-            // 0ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½Ø¼ï¿½ ï¿½Ù½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-            attackDelayTime = 0;
-        }
-        // ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½ï¿½
-        if (away > 5)
-        {
-            // ï¿½Ìµï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½È¯
-            eState = EnemyState.Walk;
-        }
-    }
-
-    IEnumerator Move_C()
-    {
-        while (true)
-        {
-            dirX = Random.Range(-1, 2);
-            dirZ = Random.Range(-1, 2);
-
-            rb.velocity = new Vector3(dirX, 0, dirZ);
-            yield return new WaitForSeconds(2f);
-
-        }
-    }
-
-    IEnumerator Attack_C()
-    {
-        while (true)
-        {
-            switch (Boss_AttackNum)
+            int attackNum = Random.Range(1, 4);
+            Debug.Log(attackNum);
+            switch (attackNum)
             {
-                // ï¿½ï¿½ ï¿½Ñ¹ï¿½ ï¿½ÖµÎ¸ï¿½ï¿½ï¿½ 
                 case 1:
-
+                    Slash();
                     break;
-                // ï¿½ï¿½ ï¿½Î¹ï¿½ ï¿½ÖµÎ¸ï¿½ï¿½ï¿½ 
                 case 2:
-
+                    CircleMeteorAttack();
                     break;
-                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½×¿ï¿½ ï¿½ï¿½È¯)
                 case 3:
-                    // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-                    Vector3 playerPosition = Player.position;
-                    // ï¿½ï¿½ï¿½×¿ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-                    Vector3 meteorPosition = new Vector3(playerPosition.x, playerPosition.y + 3f, playerPosition.z);
-                    GameObject meteor = boss_Attack.GetItem(meteorPosition);
-                    meteor.GetComponent<Meteor_2Stage>().boss_Attack = this.boss_Attack;
-                    //// GameObject meteor = Instantiate(meteorPrefab, meteorPosition, Quaternion.identity);
-                    if (meteor.transform.position.y <= -0.5)
-                        boss_Attack.FreeItem(meteor);
-
-
-                    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½×¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½Ï´Ù¸ï¿½ ï¿½ï¿½ï¿½â¿¡ ï¿½ß°ï¿½ ï¿½Úµï¿½ ï¿½Û¼ï¿½
+                    SpawnMeteor_Attack();
                     break;
             }
-            yield return new WaitForSeconds(2f);
         }
+    }
+
+    public void Slash()
+    {
+        if (away <= 5)
+            anim.SetTrigger("Slash");
+    }
+    public void CircleMeteorAttack() // ¿øÇüÀ¸·Î ¸ÞÅ×¿À »ý¼º
+    {
+        anim.SetTrigger("shootMeteor");
+        Debug.Log("¿øÇü ¸ÞÅ×¿À");
+    }
+
+    void Real_CircleMeteor_Attack()
+    {
+        for (int i = 0; i < spawnPoint.Length; i++)
+        {
+            Debug.Log("Real_CircleMeteor_Attack µé¾î¿È");
+            GameObject meteor0 = boss_Attack[1].GetItem(spawnPoint[i].position);
+            Vector3 direction = spawnPoint[i].position - transform.position; // ÇöÀç À§Ä¡¿¡¼­ spawnPoint À§Ä¡·Î ÇâÇÏ´Â º¤ÅÍ
+            meteor0.GetComponent<Rigidbody>().velocity = direction.normalized * meteorSpeed;
+        }
+    }
+
+    void Off_Speed()
+    {
+        agent.speed = 0;
+        //  eState = EnemyState.Idle;
+    }
+
+    void On_Speed()
+    {
+        agent.speed = 3.5f;
+    }
+
+
+    void SpawnMeteor_Attack() // À§¿¡¼­ ¸ÞÅ×¿À »ý¼º
+    {
+        anim.SetTrigger("spawn_Meteor");
+        Debug.Log("sky¸ÞÅ×¿À");
+    }
+
+    void Real_SpawnMeteor_Attack()
+    {
+        //    Debug.Log("Real_SpawnMeteor_Attack µé¾î¿È");
+        // ¸ÞÅ×¿À¸¦ ÇÃ·¹ÀÌ¾îÀÇ ÇöÀç À§Ä¡¿¡ »ý¼º
+        Vector3 meteorPosition = new Vector3(Player.position.x, Player.position.y + 3f, Player.position.z);
+        GameObject meteor = boss_Attack[0].GetItem(meteorPosition);
+        meteor.GetComponent<Meteor_2Stage>().boss_Attack = boss_Attack[0];
+        if (meteor.transform.position.y <= -0.5)
+            boss_Attack[0].FreeItem(meteor);
+
+        eState = EnemyState.Idle;
+
+    }
+
+    void RealDead()
+    {
+        Destroy(gameObject);
+    }
+    void RealAttack()
+    {
+        if (away <= 3)
+        {
+            Player.SendMessage("Damaged", 0.2f);
+        }
+        eState = EnemyState.Idle;
     }
 }
