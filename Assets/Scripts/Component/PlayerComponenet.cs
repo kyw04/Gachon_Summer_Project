@@ -26,18 +26,14 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     private void Start()
     {
         //현재 체력을 최대 체력에 맞춤
-        dataController = new PlayerDataController("/Battleable.db");
-        Status = dataController.getData();
-        this.transform.position = Status.position;
+        Status = new PlayerVO();
         healthPoint = Status.maxHealthPoint;
         StaminaPoint = Status.maxStaminaPoint;
-
     }
 
     private void FixedUpdate()
     {
         Command();
-        dataController.UseUpdate(this.transform.position);
     }
 
     #region 기능적인 메소드

@@ -11,8 +11,6 @@ public class SQLConnector
 
         IDbConnection dbConnection = new SqliteConnection(ConnectionString + dbName);
         dbConnection.Open();
-        dbConnection.Close();
-        dbConnection.Open();
 
         IDbCommand dbCommand = dbConnection.CreateCommand();
         dbCommand.CommandText = "select * from PlayerData";
@@ -27,11 +25,8 @@ public class SQLConnector
             var attackPoint = dataReader.GetInt32(3);
             var defencePoint = dataReader.GetInt32(4);
             var spd = dataReader.GetInt32(5);
-
-            Debug.Log($" {name}\n {maxHealthPoint}\n {maxStaminaPoint}\n {attackPoint}\n {defencePoint}\n {spd}");
             
             //연동 성공
         }
-        dbConnection.Close();
     }
 }
