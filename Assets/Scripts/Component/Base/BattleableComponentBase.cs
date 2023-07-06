@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 [RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
 
 public abstract class BattleableComponentBase : MonoBehaviour, IBattleable, ICameraFollowable

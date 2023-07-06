@@ -18,7 +18,7 @@ public abstract class BattleableDataControllerBase: IDataController
 
     public abstract ICollection<BattleableVOBase> UseSelect(string _query);
     public abstract bool UseUpdate(BattleableVOBase status);
-    public abstract bool UseUpdate(Vector3 position);
+    public abstract bool UseUpdate(int id, Vector3 position);
     public abstract bool UseUpdate(string _query);
     public abstract bool UseDelete(string _query);
     public abstract bool UseInsert(string _query);

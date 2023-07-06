@@ -4,7 +4,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.Serialization;
 
 public sealed class PlayerComponenet : BattleableComponentBase, IControllable
@@ -26,18 +29,15 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     private void Start()
     {
         //현재 체력을 최대 체력에 맞춤
-        dataController = new PlayerDataController("/Battleable.db");
-        Status = dataController.getData();
-        this.transform.position = Status.position;
-        healthPoint = Status.maxHealthPoint;
-        StaminaPoint = Status.maxStaminaPoint;
+        SetUpPlayer();
 
     }
 
     private void FixedUpdate()
     {
         Command();
-        dataController.UseUpdate(this.transform.position);
+        Status.position = transform.position;
+        dataController.UseUpdate(Status.id, Status.position);
     }
 
     #region 기능적인 메소드
@@ -57,7 +57,56 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
             //체력이 회복 되었을 경우 일어날 동작을 구현
         }
 
-    } 
+    }
+
+    private void SetUpPlayer()
+    {
+        dataController = new PlayerDataController("/Battleable.db");
+        Status = dataController.getData();
+
+        animator.enabled = false;
+        
+        var playerModel = Resources.Load<GameObject>($"PlayerModels/{Status.modelName}/Model");
+        //var playerAvatar = Resources.Load($"PlayerModels/Avatar/{Status.modelName}");
+        //Debug.Log(playerAvatar.GetType().ToString());
+
+        GameObject modelInstance = null;
+
+        try
+        {
+            modelInstance = Instantiate(playerModel);
+        }
+        catch
+        {
+            Debug.Log($"Do Not Found {Status.modelName} Prefab.\n Use Dummy Object");
+            playerModel = Resources.Load<GameObject>("PlayerModels/Dummy/Model");
+            modelInstance = Instantiate(playerModel);
+        }
+        finally
+        {
+            
+            foreach (var child in this.transform.GetComponentsInChildren<Transform>())
+            {
+                if (child.transform == this.transform || child.gameObject.name == this.gameObject.name)
+                    continue;
+                child.gameObject.SetActive(false);
+            }
+            animator.avatar = modelInstance.GetComponent<Animator>().avatar;
+
+            modelInstance.transform.position = Vector3.zero;
+            modelInstance.transform.parent = this.transform;
+        }
+        
+        this.transform.position = Status.position;
+        healthPoint = Status.maxHealthPoint;
+        StaminaPoint = Status.maxStaminaPoint;
+
+        animator.Rebind();
+        animator.enabled = true;
+        
+        Destroy(this.transform.GetChild(0).gameObject);
+    }
+    
     public override void Die()
     {
         base.Die();
@@ -82,7 +131,8 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         //조작키들은 임의로 정해진 키로 작동하므로 나중에 정해지면 수정 바람 (2023. 06. 29)
         if (Input.GetButton("Attack"))
         {
-            action = isControllable ? Attack : Move;
+            if (!isControllable) return;
+            action = Attack;
             isControllable = false;
         }
         else if (Input.GetButton("Dodge"))
@@ -200,6 +250,11 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
                 isDodging = false;
                 break;
         }
+    }
+
+    public void setActive(bool status)
+    {
+        this.gameObject.SetActive(status);
     }
 
 }
