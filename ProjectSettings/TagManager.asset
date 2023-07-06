@@ -10,6 +10,7 @@ TagManager:
   - Weapon
   - DestroyLine
   - Scythe
+  - Zombie
   layers:
   - Default
   - TransparentFX

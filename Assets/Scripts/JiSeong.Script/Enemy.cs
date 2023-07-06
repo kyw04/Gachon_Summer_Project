@@ -18,6 +18,8 @@ public class Enemy : MonoBehaviour
     private bool isAttacking = false; // 공격 중 여부
     private Rigidbody rb; // Rigidbody 컴포넌트
     private float ignoreCollisionTimer; // 충돌 무시 타이머
+    private bool isDying = false;
+    private Renderer objectRenderer;
 
     private static readonly int MoveSpeedHash = Animator.StringToHash("MoveSpeed");
     private static readonly int AttackTriggerHash = Animator.StringToHash("Attack");
@@ -27,6 +29,7 @@ public class Enemy : MonoBehaviour
     {
         animator = GetComponent<Animator>(); // Animator 컴포넌트 가져오기
         rb = GetComponent<Rigidbody>(); // Rigidbody 컴포넌트 가져오기
+        objectRenderer = GetComponent<Renderer>();
     }
 
     private void Update()
@@ -77,6 +80,21 @@ public class Enemy : MonoBehaviour
             ignoreCollisionTimer -= Time.deltaTime;
         }
     }
+    public void Die()
+    {
+        if (!isDying)
+        {
+            isDying = true;
+            StartCoroutine(DieCoroutine());
+        }
+    }
+    private System.Collections.IEnumerator DieCoroutine()
+    {
+        yield return new WaitForSeconds(5f);
+
+        // 4초 뒤에 오브젝트 사라지게 하기
+        Destroy(gameObject);
+    }
     private void OnCollisionEnter(Collision collision)
     {
         // 충돌이 발생한 경우
@@ -98,8 +116,13 @@ public class Enemy : MonoBehaviour
         if (EnemyHp <= 0)
         {
             transform.rotation = Quaternion.Euler(0,0,0);
+            Vector3 direction = target.position - transform.position;
+            direction.y = 0; // 수평 방향으로 제한 (y축 회전 방지)
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = targetRotation;
             rb.isKinematic = true;
             animator.SetTrigger("isDie");
+            Die();
         }
 
         yield return new WaitForSeconds(ignoreCollisionDuration);
