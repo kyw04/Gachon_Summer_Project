@@ -13,32 +13,45 @@ using UnityEngine.Serialization;
 
 public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
 {
-    //공격을 시작했을 경우 true로 변했다가 공격 애니메이션이 끝나면 false로
-    public bool isAttacking = false;
-    //현재 체력
-    public int healthPoint;
+    public BattleableVOBase Status;
 
-    protected Animator Animator;
+    //현재 체력
+    [SerializeField]
+    protected int healthPoint;
+    protected int StaminaPoint;
+    protected float AttackDelay;
+
+    public Animator animator;
     protected Rigidbody Rigidbody;
+    //현재 카메라가 바라보고 있는 방향을 바라보고 있는 변수
+    public Vector3 lookFoward;
+    public Vector3 lookRight;
     
     // BattleableComponentBase.BattleableVOBase.AttackPoint 등으로 공격력, 체력 등의 스테이터스 정보를 가져 올 수 있음
     // ex) : PlayerComponent.Status.AttackPoint 
     // 상속 받은 후 Start문에서 객체 생성해줘야함.
-    public BattleableVOBase Status;
+    
+    //공격을 시작했을 경우 true로 변했다가 공격 애니메이션이 끝나면 false로
+    [SerializeField]
+    protected bool isAttacking = false;
 
     // 전투 가능한 오브젝트들의 스테이터스를 보관할 VO.
     
     private void Awake()
     {
+        new SQLConnector();
         //컴포넌트를 가져옴
-        Animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
         Rigidbody = GetComponent<Rigidbody>();
     }
+
     public virtual void Attack()
     {
         if (isAttacking) return;
         else isAttacking = !isAttacking;
         //공격 구현 
+        animator.SetTrigger("Attack");
+        animator.SetInteger("AttackType", 1);
 
     }
 
@@ -67,4 +80,10 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
     public abstract void Move();
     protected abstract void OnCollisionEnter(Collision other);
     protected abstract void OnCollisionStay(Collision other);
+
+    #region Animation Event를 위한 메소드
+
+    public abstract void AnimEvt(string cmd);
+
+    #endregion
 }

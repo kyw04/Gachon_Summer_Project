@@ -1,18 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Tutorial : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameObject[] zombieObjects; // Zombie 태그를 가진 오브젝트 배열
+    public GameObject D_Object;
+
+    private void Start()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        zombieObjects = GameObject.FindGameObjectsWithTag("Zombie");
+        // Zombie 태그를 가진 오브젝트가 전부 사라졌을 때
+        if (zombieObjects.Length == 0)
+        {
+            Destroy(D_Object); // Zombie 전부 사라지면 이벤트 발생
+        }
     }
 }

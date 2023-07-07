@@ -4,7 +4,13 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Anchor
   - Plane
+  - Enemy
+  - Weapon
+  - DestroyLine
+  - Scythe
+  - Zombie
   layers:
   - Default
   - TransparentFX
