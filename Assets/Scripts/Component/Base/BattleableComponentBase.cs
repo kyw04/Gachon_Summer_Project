@@ -52,7 +52,6 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
         else isAttacking = !isAttacking;
         //공격 구현 
         animator.SetTrigger("Attack");
-        animator.SetInteger("AttackType", 1);
 
     }
 
