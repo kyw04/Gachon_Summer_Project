@@ -4,12 +4,20 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.AI;
 
 public class Stage2_Boss : MonoBehaviour
 {
     Animator anim;
     NavMeshAgent agent;
+
+    [Header("보스체력 관련 UI")]
+    public Slider hp_Bar;
+    public int hp;
+    [SerializeField] Text hp_T;
+    Image fillImage;
+    [SerializeField] Color32[] hp_Bar_Change_Color;
 
 
     Rigidbody rb;
@@ -20,6 +28,7 @@ public class Stage2_Boss : MonoBehaviour
 
 
     public ObjectPoolComponent[] boss_Attack;
+    public ObjectPoolComponent[] boss_Partical;
     public GameObject die_Effect;
 
     float away;
@@ -48,7 +57,7 @@ public class Stage2_Boss : MonoBehaviour
     }
     void Start()
     {
-
+        fillImage = hp_Bar.fillRect.GetComponentInChildren<Image>();
         Player = FindObjectOfType<PlayerCtrl>().transform;
         eState = EnemyState.Idle;
     }
@@ -60,12 +69,29 @@ public class Stage2_Boss : MonoBehaviour
 
         //  Debug.Log(away);
 
-        if (Input.GetKeyDown(KeyCode.Q))
-            eState = EnemyState.Dead;
+        if (Input.GetKeyDown(KeyCode.Z))
+            Damaged(0.2f);
 
         ChangeEnemyState();
     }
-
+    void Damaged(float damage) // 플레이어가 공격했을때 이 함수 호출 
+    {
+        hp_Bar.value -= damage;
+        if (hp_Bar.value <= 0f)
+        {
+            hp -= 1;
+            hp_T.text = "X" + hp.ToString();
+            hp_Bar.value = 1f;
+            fillImage.color = hp_Bar_Change_Color[hp / hp_Bar_Change_Color.Length];
+            if (hp <= 0)
+            {
+                hp = 0;
+                Boss_Dead();
+                hp_Bar.value = 0f;
+                hp_T.text = "X" + hp.ToString();
+            }
+        }
+    }
     void ChangeEnemyState()
     {
         switch (eState)
@@ -182,17 +208,26 @@ public class Stage2_Boss : MonoBehaviour
         // 메테오를 플레이어의 현재 위치에 생성
         Vector3 meteorPosition = new Vector3(Player.position.x, Player.position.y + 3f, Player.position.z);
         GameObject meteor = boss_Attack[0].GetItem(meteorPosition);
+        GameObject partical = boss_Partical[0].GetItem(meteorPosition);
+
         meteor.GetComponent<Meteor_2Stage>().boss_Attack = boss_Attack[0];
         if (meteor.transform.position.y <= -0.5)
             boss_Attack[0].FreeItem(meteor);
 
         eState = EnemyState.Idle;
-
+        
     }
 
+    void Boss_Dead()
+    {
+        if (hp <= 0)
+            eState = EnemyState.Dead;
+
+    }
     void RealDead()
     {
         Destroy(gameObject);
+        Time.timeScale = 0;
     }
     void RealAttack()
     {

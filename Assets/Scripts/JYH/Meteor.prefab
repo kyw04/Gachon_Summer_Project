@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 9617906}
   - component: {fileID: 8206854}
   - component: {fileID: 13509832}
+  - component: {fileID: -1369480670393154928}
   m_Layer: 0
   m_Name: Meteor
   m_TagString: Untagged
@@ -348,6 +349,19 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-1369480670393154928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 164416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ea61ffe8f95fef4c9635d380f101402, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boss_Attack: {fileID: 0}
 --- !u!1 &3715661882557141139
 GameObject:
   m_ObjectHideFlags: 0
