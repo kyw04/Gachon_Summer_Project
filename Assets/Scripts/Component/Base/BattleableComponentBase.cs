@@ -20,6 +20,8 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
     protected int healthPoint;
     protected int StaminaPoint;
     protected float AttackDelay;
+    
+    protected BattleableDataControllerBase dataController;
 
     public Animator animator;
     protected Rigidbody Rigidbody;
@@ -39,7 +41,6 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
     
     private void Awake()
     {
-        new SQLConnector();
         //컴포넌트를 가져옴
         animator = GetComponent<Animator>();
         Rigidbody = GetComponent<Rigidbody>();
