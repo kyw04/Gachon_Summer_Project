@@ -58,7 +58,7 @@ public class Stage2_Boss : MonoBehaviour
     void Start()
     {
         fillImage = hp_Bar.fillRect.GetComponentInChildren<Image>();
-        Player = FindObjectOfType<PlayerCtrl>().transform;
+        Player = FindObjectOfType<PlayerComponent>().transform;
         eState = EnemyState.Idle;
         StartCoroutine(Destroy_Partical());
     }
