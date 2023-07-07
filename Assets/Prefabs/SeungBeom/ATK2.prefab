@@ -4823,7 +4823,6 @@ GameObject:
   - component: {fileID: 5030391410849981265}
   - component: {fileID: 8967909899970285765}
   - component: {fileID: 2816698610718171865}
-  - component: {fileID: 8603606199713088523}
   m_Layer: 0
   m_Name: ATK2
   m_TagString: Untagged
@@ -9688,21 +9687,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &8603606199713088523
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4941561143692374756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b56c4c7b151b8c4a80163c754ea4a88, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Grow: 0
-  Shrink: 0
-  Meteor: {fileID: 8880611722866564074, guid: 1d3b279637d909e4c8ae6755e87ee02a, type: 3}
 --- !u!1 &5115128682079697848
 GameObject:
   m_ObjectHideFlags: 0
