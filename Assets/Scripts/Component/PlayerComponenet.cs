@@ -62,7 +62,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     private void SetUpPlayer()
     {
         dataController = new PlayerDataController("/Battleable.db");
-        Status = dataController.getData();
+        Status = dataController.getDatum();
 
         animator.enabled = false;
 
@@ -257,9 +257,8 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     {
         while (isDodging)
         {
-            this.transform.position += lookFoward.normalized * 0.5f;
-            Debug.Log("true");
-            yield return new WaitForSeconds(0.05f);
+            this.transform.position += lookFoward.normalized * 0.2f;
+            yield return new WaitForSeconds(0.02f);
         }
         yield break;
     }
