@@ -8,7 +8,7 @@ using UnityEngine;
 
 public abstract class BattleableDataControllerBase: IDataController
 {
-    public readonly static string ConnectionString = "URI=file:" + Application.streamingAssetsPath;
+    public readonly static string ConnectionString = "URI=file:" + Application.persistentDataPath;
 
     protected IDbConnection dbConnection;
     protected IDbCommand dbCommand;

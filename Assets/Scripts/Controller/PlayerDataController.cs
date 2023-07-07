@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,9 @@ sealed class PlayerDataController : BattleableDataControllerBase
 
     public PlayerDataController(string dbName)
     {
+        Debug.Log(Application.persistentDataPath);
+        if (!File.Exists(Application.persistentDataPath + dbName))
+            File.Copy(Application.streamingAssetsPath + dbName, Application.persistentDataPath + dbName);
         dbConnection = new SqliteConnection(ConnectionString + dbName);
     }
 
@@ -20,11 +24,11 @@ sealed class PlayerDataController : BattleableDataControllerBase
     {
         BattleableVOBase result = default;
 
-        var table = UseSelect($"select * from {TableName} where uid = '{SystemInfo.deviceUniqueIdentifier}' ");
+        var tables = UseSelect($"select * from {TableName} where UID = '{SystemInfo.deviceUniqueIdentifier}' ");
 
-        foreach (var row in table)
+        foreach (var table in tables)
         {
-            result = row;
+            result = table;
         }
 
      //연동 성공
@@ -80,6 +84,8 @@ sealed class PlayerDataController : BattleableDataControllerBase
 
                 result = (List<BattleableVOBase>)UseSelect($"select * from {TableName} where uid = '{SystemInfo.deviceUniqueIdentifier}' ");
             }
+            else
+                Debug.Log("failed " + e.Message);
         }
         finally
         {
@@ -102,7 +108,8 @@ sealed class PlayerDataController : BattleableDataControllerBase
                                       $"attackPoint = {status.attackPoint}," +
                                       $"defencePoint = {status.defencePoint}," +
                                       $"spd = {status.spd}," +
-                                      $"x = {status.position.x}, y = {status.position.y}, z = {status.position.z}" +
+                                      $"modelName = '{status.modelName}'," +
+                                      $"x = {status.position.x}, y = {status.position.y}, z = {status.position.z} " +
                                       $"where id = {status.id}";
             dbCommand.ExecuteNonQuery();
         }
@@ -182,7 +189,7 @@ sealed class PlayerDataController : BattleableDataControllerBase
 
     private void CloseConnection()
     {
-        dataReader.Dispose();
+        dataReader?.Dispose();
         dbCommand.Dispose();
         dbConnection.Close();
     }
