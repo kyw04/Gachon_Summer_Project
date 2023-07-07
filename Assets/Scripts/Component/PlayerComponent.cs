@@ -7,7 +7,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public sealed class PlayerComponenet : BattleableComponentBase, IControllable
+public sealed class PlayerComponent : BattleableComponentBase, IControllable
 {
     #region  Variable
 
@@ -19,7 +19,6 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         private int AttackStatus = 0;
 
         #endregion
-    
     delegate void Act();
 
     //Awake는 base에 사용 중이므로 기본 설정은 Start를 통해 해주세요
@@ -62,7 +61,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     private void SetUpPlayer()
     {
         dataController = new PlayerDataController("/Battleable.db");
-        Status = dataController.getData();
+        Status = dataController.getDatum();
 
         animator.enabled = false;
 
@@ -164,6 +163,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
                 else isJumping = !isJumping;
                 isControllable = false;
                 //점프 구현
+                animator.SetTrigger("Jump");
             };
         }
 
@@ -245,6 +245,9 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
             case "RollEnd":
                 isDodging = false;
                 break;
+            case "Jump":
+                StartCoroutine(Jump());
+                break;
             case "JumpEnd":
                 isJumping = false;
                 break;
@@ -257,9 +260,17 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     {
         while (isDodging)
         {
-            this.transform.position += lookFoward.normalized * 0.5f;
-            Debug.Log("true");
-            yield return new WaitForSeconds(0.05f);
+            this.transform.position += lookFoward.normalized * 0.2f;
+            yield return new WaitForSeconds(0.02f);
+        }
+        yield break;
+    }
+    IEnumerator Jump()
+    {
+        while (isJumping)
+        {
+            this.transform.position += Vector3.up * 0.15f;
+            yield return new WaitForSeconds(0.02f);
         }
         yield break;
     }

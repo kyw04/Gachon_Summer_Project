@@ -9886,7 +9886,7 @@ GameObject:
   - component: {fileID: 198254599480890864}
   - component: {fileID: 199614621488648482}
   m_Layer: 0
-  m_Name: Ground shine
+  m_Name: Fall_Meteor_Partical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9901,7 +9901,7 @@ Transform:
   m_GameObject: {fileID: 1515678706149418}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 50, y: 50, z: 50}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4489713281878910}
@@ -10002,7 +10002,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.4
+      scalar: 1
       minScalar: 0.2
       maxCurve:
         serializedVersion: 2
