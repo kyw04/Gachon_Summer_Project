@@ -25,15 +25,14 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     //Awake는 base에 사용 중이므로 기본 설정은 Start를 통해 해주세요
     private void Start()
     {
-        //현재 체력을 최대 체력에 맞춤
-        Status = new PlayerVO();
-        healthPoint = Status.maxHealthPoint;
-        StaminaPoint = Status.maxStaminaPoint;
+        SetUpPlayer();
     }
 
     private void FixedUpdate()
     {
         Command();
+        Status.position = this.transform.position;
+        dataController.UseUpdate(Status.id, Status.position);
     }
 
     #region 기능적인 메소드
@@ -60,6 +59,53 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         //플레이어의 사망시 발생할 상황을 구현
     }
 
+    private void SetUpPlayer()
+    {
+        dataController = new PlayerDataController("/Battleable.db");
+        Status = dataController.getData();
+
+        animator.enabled = false;
+
+        var playerModel = Resources.Load<GameObject>($"PlayerModels/{Status.modelName}/Model");
+
+        GameObject modelInstance = null;
+
+        try
+        {
+            modelInstance = Instantiate(playerModel);
+        }
+        catch
+        {
+            Debug.Log($"Do Not Found {Status.modelName} Prefab.\n Use Dummy Object");
+            playerModel = Resources.Load<GameObject>("PlayerModels/Dummy/Model");
+            modelInstance = Instantiate(playerModel);
+        }
+        finally
+        {
+
+            foreach (var child in this.transform.GetComponentsInChildren<Transform>())
+            {
+                if (child.transform == this.transform || child.gameObject.name == this.gameObject.name)
+                    continue;
+                child.gameObject.SetActive(false);
+            }
+
+            animator.avatar = modelInstance.GetComponent<Animator>().avatar;
+
+            modelInstance.transform.position = Vector3.zero;
+            modelInstance.transform.parent = this.transform;
+        }
+
+        this.transform.position = Status.position;
+        healthPoint = Status.maxHealthPoint;
+        StaminaPoint = Status.maxStaminaPoint;
+
+        animator.Rebind();
+        animator.enabled = true;
+
+        Destroy(this.transform.GetChild(0).gameObject);
+    }
+
     #endregion
 
     #region 플레이어 조작과 관련한 메소드
@@ -78,7 +124,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         //조작키들은 임의로 정해진 키로 작동하므로 나중에 정해지면 수정 바람 (2023. 06. 29)
         if (Input.GetButton("Attack"))
         {
-            action = isControllable ? Attack : Move;
+            if (isControllable) action = Attack;
             isControllable = false;
         }
         else if (Input.GetButton("Dodge"))
@@ -109,7 +155,6 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         {
             action = () =>
             {
-
                 if (isJumping || !isControllable) return;
                 else isJumping = !isJumping;
                 isControllable = false;

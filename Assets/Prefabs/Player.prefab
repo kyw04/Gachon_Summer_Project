@@ -75,6 +75,8 @@ MonoBehaviour:
     position: {x: 0, y: 0, z: 0}
   healthPoint: 0
   animator: {fileID: 0}
+  lookFoward: {x: 0, y: 0, z: 0}
+  lookRight: {x: 0, y: 0, z: 0}
   isAttacking: 0
   isDodging: 0
   isWiring: 0
@@ -155,7 +157,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9209814815576578583, guid: 100b746e3e6948b4f9b036d7b586afa0, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 100b746e3e6948b4f9b036d7b586afa0, type: 3}
 --- !u!4 &1112698498597983888 stripped
 Transform:
