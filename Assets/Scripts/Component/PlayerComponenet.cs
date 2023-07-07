@@ -164,6 +164,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
                 else isJumping = !isJumping;
                 isControllable = false;
                 //점프 구현
+                animator.SetTrigger("Jump");
             };
         }
 
@@ -245,6 +246,9 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
             case "RollEnd":
                 isDodging = false;
                 break;
+            case "Jump":
+                StartCoroutine(Jump());
+                break;
             case "JumpEnd":
                 isJumping = false;
                 break;
@@ -258,6 +262,15 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         while (isDodging)
         {
             this.transform.position += lookFoward.normalized * 0.2f;
+            yield return new WaitForSeconds(0.02f);
+        }
+        yield break;
+    }
+    IEnumerator Jump()
+    {
+        while (isJumping)
+        {
+            this.transform.position += Vector3.up * 0.15f;
             yield return new WaitForSeconds(0.02f);
         }
         yield break;
