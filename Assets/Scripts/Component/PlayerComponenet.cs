@@ -95,7 +95,9 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
             modelInstance.transform.position = Vector3.zero;
             modelInstance.transform.parent = this.transform;
         }
-
+        
+        GC.SuppressFinalize(playerModel);
+        
         this.transform.position = Status.position;
         healthPoint = Status.maxHealthPoint;
         StaminaPoint = Status.maxStaminaPoint;
@@ -138,6 +140,9 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
 
                 this.transform.forward = lookFoward * (Input.GetAxisRaw("Vertical") == -1 ? -1 : 1);
 
+                StartCoroutine(Roll());
+
+
             };
         }
         else if (Input.GetButton("Wiring"))
@@ -168,7 +173,6 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
     {
         if (!isControllable) return;
         var dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        this.transform.forward = lookFoward;
         
         //에니메이터에 있는 bool 타입의 파라미터들을 한 번에 false로
         var boolParamName =
@@ -182,6 +186,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         //플레이어가 이동 중 일 경우
         if (dir.magnitude != 0)
         {
+            this.transform.forward = lookFoward;
             var moveDir = lookFoward * dir.y + lookRight * dir.x;
             if (dir.x == 0)
             {
@@ -240,7 +245,26 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
             case "RollEnd":
                 isDodging = false;
                 break;
+            case "JumpEnd":
+                isJumping = false;
+                break;
         }
     }
+
+    #region IEnumerator
+
+    IEnumerator Roll()
+    {
+        while (isDodging)
+        {
+            this.transform.position += lookFoward.normalized * 0.5f;
+            Debug.Log("true");
+            yield return new WaitForSeconds(0.05f);
+        }
+        yield break;
+    }
+    
+
+    #endregion
 
 }
