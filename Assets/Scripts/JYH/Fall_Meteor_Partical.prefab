@@ -9886,7 +9886,7 @@ GameObject:
   - component: {fileID: 198254599480890864}
   - component: {fileID: 199614621488648482}
   m_Layer: 0
-  m_Name: Ground shine
+  m_Name: Fall_Meteor_Partical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
