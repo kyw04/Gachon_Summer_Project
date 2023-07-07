@@ -91,7 +91,7 @@ sealed class PlayerDataController : BattleableDataControllerBase
             {
                 CloseConnection();
                 Debug.Log("uid 미발견");
-                Debug.Log(UseInsert($"insert into {TableName} (UID, Name) values ('{SystemInfo.deviceUniqueIdentifier}', 'DON')"));
+                Debug.Log(UseInsert($"insert into {TableName} (UID, modelName, Name) values ('{SystemInfo.deviceUniqueIdentifier}','Kohaku', 'DON')"));
 
                 result = (List<BattleableVOBase>)UseSelect($"select * from {TableName} where uid = '{SystemInfo.deviceUniqueIdentifier}' ");
             }

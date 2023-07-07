@@ -7,7 +7,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public sealed class PlayerComponenet : BattleableComponentBase, IControllable
+public sealed class PlayerComponent : BattleableComponentBase, IControllable
 {
     #region  Variable
 
@@ -19,7 +19,6 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
         private int AttackStatus = 0;
 
         #endregion
-    
     delegate void Act();
 
     //Awake는 base에 사용 중이므로 기본 설정은 Start를 통해 해주세요
