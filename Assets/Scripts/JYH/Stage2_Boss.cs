@@ -60,6 +60,7 @@ public class Stage2_Boss : MonoBehaviour
         fillImage = hp_Bar.fillRect.GetComponentInChildren<Image>();
         Player = FindObjectOfType<PlayerCtrl>().transform;
         eState = EnemyState.Idle;
+        StartCoroutine(Destroy_Partical());
     }
 
     void Update()
@@ -210,19 +211,21 @@ public class Stage2_Boss : MonoBehaviour
         GameObject meteor = boss_Attack[0].GetItem(meteorPosition);
         GameObject partical1 = boss_Partical[0].GetItem(meteorPosition);
 
-        meteor.GetComponent<Meteor_2Stage>().boss_Attack = boss_Attack[0];
-        if (meteor.transform.position.y <= -2f)
-        {
-            boss_Attack[0].FreeItem(meteor);
-            boss_Partical[0].FreeItem(partical1);
+        boss_Attack[0].FreeItem(meteor, 2f);
+        boss_Partical[0].FreeItem(partical1, 2f);
 
-            GameObject partical2 = boss_Partical[2].GetItem(meteorPosition); // 바닥에 닿았을때 생성, 2초뒤 삭제
-            
-            Debug.Log("삭제완료");
-        }
 
         eState = EnemyState.Idle;
 
+    }
+
+    IEnumerator Destroy_Partical() 
+    {
+        yield return new WaitForSeconds(3f);
+        Vector3 PlayerPosition = new Vector3(Player.position.x, Player.position.y - 5f, Player.position.z);
+        GameObject partical2 = boss_Partical[1].GetItem(PlayerPosition); // 바닥에 닿았을때 생성, 2초뒤 삭제
+        yield return new WaitForSeconds(5f);
+        boss_Partical[1].FreeItem(partical2); // 바닥에 닿았을때 생성, 2초뒤 삭제
     }
 
     void Boss_Dead()
