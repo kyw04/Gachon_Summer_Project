@@ -20,6 +20,8 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
     protected int healthPoint;
     protected int StaminaPoint;
     protected float AttackDelay;
+    
+    protected BattleableDataControllerBase dataController;
 
     public Animator animator;
     protected Rigidbody Rigidbody;
