@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,10 +14,12 @@ sealed class PlayerDataController : BattleableDataControllerBase
 
     public PlayerDataController(string dbName)
     {
+        if (!File.Exists(Application.persistentDataPath + dbName))
+            File.Copy(Application.streamingAssetsPath + dbName, Application.persistentDataPath + dbName);
         dbConnection = new SqliteConnection(ConnectionString + dbName);
     }
 
-    public override BattleableVOBase getData()
+    public override BattleableVOBase getDatum()
     {
         BattleableVOBase result = default;
 
@@ -27,8 +30,20 @@ sealed class PlayerDataController : BattleableDataControllerBase
             result = table;
         }
 
-     //연동 성공
+        //연동 성공
         return result;
+    }
+    
+    public ICollection<BattleableVOBase> getData()
+    {
+        BattleableVOBase result = default;
+
+        var tables = UseSelect($"select * from {TableName} where UID = '{SystemInfo.deviceUniqueIdentifier}' ");
+
+        if (tables.Count == 0)
+            throw new Exception("Failed to Collection Data");
+
+        return tables;
     }
 
     public override bool UseDelete(string _query)
