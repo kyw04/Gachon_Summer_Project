@@ -11,11 +11,14 @@ TagManager:
   - DestroyLine
   - Scythe
   - Zombie
+  - Fire
+  - palyer
+  - enemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - 
