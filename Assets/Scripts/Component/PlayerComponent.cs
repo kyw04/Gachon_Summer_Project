@@ -7,7 +7,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public sealed class PlayerComponenet : BattleableComponentBase, IControllable
+public sealed class PlayerComponent : BattleableComponentBase, IControllable
 {
     #region  Variable
 
@@ -141,8 +141,6 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
                 this.transform.forward = lookFoward * (Input.GetAxisRaw("Vertical") == -1 ? -1 : 1);
 
                 StartCoroutine(Roll());
-
-
             };
         }
         else if (Input.GetButton("Wiring"))
@@ -156,7 +154,7 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
 
             };
         }
-        else if (Input.GetButton("Jump"))
+        else if (Input.GetButton("Jump") && Rigidbody.velocity.y > -0.1f) 
         {
             action = () =>
             {
@@ -164,6 +162,9 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
                 else isJumping = !isJumping;
                 isControllable = false;
                 //점프 구현
+                animator.SetTrigger("Jump");
+                animator.SetBool("isIdle", false);
+                StartCoroutine(Jump());
             };
         }
 
@@ -260,6 +261,16 @@ public sealed class PlayerComponenet : BattleableComponentBase, IControllable
             this.transform.position += lookFoward.normalized * 0.2f;
             yield return new WaitForSeconds(0.02f);
         }
+        yield break;
+    }
+    IEnumerator Jump()
+    {
+        while (isJumping)
+        {
+            this.transform.position += Vector3.up * 0.15f;
+            yield return new WaitForSeconds(0.02f);
+        }
+        animator.SetTrigger("Rolling");
         yield break;
     }
     
