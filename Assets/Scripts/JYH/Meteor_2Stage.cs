@@ -9,10 +9,7 @@ public class Meteor_2Stage : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("DestroyLine"))
-        {
             boss_Attack.FreeItem(gameObject);
-            Debug.Log("123123");
-        }
         else if (collision.gameObject.CompareTag("Player"))
             Debug.Log("플레이어가 맞음"); // player에게 sendmassage 사용
     }

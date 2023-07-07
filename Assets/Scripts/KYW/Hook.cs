@@ -20,7 +20,6 @@ public struct HookedTarget
     }
 }
 
-[RequireComponent(typeof(LineRenderer))]
 public class Hook : MonoBehaviour
 {
     public Transform hookHead;
@@ -29,7 +28,6 @@ public class Hook : MonoBehaviour
     public float speed;
     public float range;
 
-    private LineRenderer chain;
     private Transform movingObject;
     private HookedTarget hookedTarget;
     private Vector3 direction;
@@ -42,7 +40,6 @@ public class Hook : MonoBehaviour
 
     private void Start()
     {
-        chain = GetComponent<LineRenderer>();
         isBack = false;
         isMove = false;
         isFixed = false;
@@ -52,11 +49,7 @@ public class Hook : MonoBehaviour
     {
         if (isFixed && Input.GetButtonDown("Fire1"))
         {
-            if (hookedTarget.mass != -1 && hookedTarget.mass < power)
-            {
-                isBack = true;
-                Retract(transform, hookHead);
-            }
+            Retract(hookHead, this.transform);
         }
         //if  (Input.GetButtonUp("Fire1"))
         //{
@@ -71,11 +64,11 @@ public class Hook : MonoBehaviour
                 {
                     Detach();
                 }
-                else
+                else if (hookedTarget.mass != -1 && hookedTarget.mass < power)
                 {
-                    Retract(hookHead, this.transform);
+                    isBack = true;
+                    Retract(transform, hookHead);
                 }
-                
             }
             else
             {
@@ -91,13 +84,7 @@ public class Hook : MonoBehaviour
 
         if (isMove)
         {
-            Rigidbody rb = movingObject.GetComponent<Rigidbody>();
-            if (rb == null)
-            {
-                rb = movingObject.GetComponentInChildren<Rigidbody>();
-            }
-
-            bool isMoving = Move(movingObject, destination, direction, rb);
+            bool isMoving = Move(movingObject, destination, direction, movingObject.GetComponent<Rigidbody>());
             if (!isMoving)
             {
                 isMove = false;
@@ -125,14 +112,6 @@ public class Hook : MonoBehaviour
                     }
                 }
             }
-        }
-
-        if (movingObject)
-        {
-            Vector3[] chainPos = new Vector3[2];
-            chainPos[0] = movingObject.position;
-            chainPos[1] = movingObject == transform ? hookHead.position : transform.position;
-            chain.SetPositions(chainPos);
         }
     }
 
@@ -162,14 +141,12 @@ public class Hook : MonoBehaviour
             if (rb)
             {
                 rb.velocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
                 rb.useGravity = true;
 
-                if (Input.GetButton("Fire2"))
+                if (Input.GetButton("Fire1"))
                 {
                     rb.useGravity = false;
                     rb.velocity = Vector3.zero;
-                    rb.angularVelocity = Vector3.zero;
 
                     //Move(moveObj, des, dir, rb);
                     return true;
@@ -182,7 +159,6 @@ public class Hook : MonoBehaviour
         //hookHead.position = Vector3.Lerp(hookHead.position, direction, Time.deltaTime * movementSpeed);
         moveObj.position += dir * movementSpeed * Time.deltaTime;
         lastDistance = dis;
-        
         return true;
     }
 
@@ -225,9 +201,6 @@ public class Hook : MonoBehaviour
 
     public void Retract(Transform pullingObj, Transform pulledTarget)
     {
-        if (isMove)
-            return;
-
         isMove = true;
 
         movingObject = pulledTarget;

@@ -208,21 +208,14 @@ public class Stage2_Boss : MonoBehaviour
         // 메테오를 플레이어의 현재 위치에 생성
         Vector3 meteorPosition = new Vector3(Player.position.x, Player.position.y + 3f, Player.position.z);
         GameObject meteor = boss_Attack[0].GetItem(meteorPosition);
-        GameObject partical1 = boss_Partical[0].GetItem(meteorPosition);
+        GameObject partical = boss_Partical[0].GetItem(meteorPosition);
 
         meteor.GetComponent<Meteor_2Stage>().boss_Attack = boss_Attack[0];
-        if (meteor.transform.position.y <= -2f)
-        {
+        if (meteor.transform.position.y <= -0.5)
             boss_Attack[0].FreeItem(meteor);
-            boss_Partical[0].FreeItem(partical1);
-
-            GameObject partical2 = boss_Partical[2].GetItem(meteorPosition); // 바닥에 닿았을때 생성, 2초뒤 삭제
-            
-            Debug.Log("삭제완료");
-        }
 
         eState = EnemyState.Idle;
-
+        
     }
 
     void Boss_Dead()
