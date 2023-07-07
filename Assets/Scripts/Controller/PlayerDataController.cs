@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,9 @@ sealed class PlayerDataController : BattleableDataControllerBase
 
     public PlayerDataController(string dbName)
     {
+        Debug.Log(Application.persistentDataPath);
+        if (!File.Exists(Application.persistentDataPath + dbName))
+            File.Copy(Application.streamingAssetsPath + dbName, Application.persistentDataPath + dbName);
         dbConnection = new SqliteConnection(ConnectionString + dbName);
     }
 
