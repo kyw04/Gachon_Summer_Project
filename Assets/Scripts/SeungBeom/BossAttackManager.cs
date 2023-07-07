@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BossAttackManager : MonoBehaviour
 {
+    public float WaitSeconds = 10;
+    public int Rand;
 
     public Atk2Pool attack2Pool;      //2번 패턴 풀
     public Atk3Pool a3pool;             //3번 패턴 풀
@@ -25,22 +27,13 @@ public class BossAttackManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
 
         Atk1.SetActive(false);
+        StartCoroutine(AttackSelect());
+        StartCoroutine(ATK1());
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            Atk1Active = true;
-            Debug.Log("atk1 활성화");
-        }
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            Atk1Active = false;
-            Debug.Log("atk1 비활성화");
-        }
-
         if(Atk1Active)
         {
             Atk1.SetActive(true);
@@ -48,27 +41,76 @@ public class BossAttackManager : MonoBehaviour
         if(!Atk1Active)
         {
             Atk1.SetActive(false);
-        }    
+        }
 
-
-
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Rand == 0)
         {
-            GameObject newObj = attack2Pool.GetItem();
-            newObj.transform.position = new Vector3(player.transform.position.x, 0, player.transform.position.z);
-            newObj.transform.rotation = Quaternion.identity;
-             //Instantiate(Atk2, new Vector3(player.transform.position.x, 0, player.transform.position.z), Quaternion.identity);
+            StartCoroutine(ATK2());
+        }
+        if (Rand == 1)
+        {
+            GameObject Atk3 = a3pool.GetItem();
+
+            Atk3.transform.position = new Vector3(player.transform.position.x, -0.1f, player.transform.position.z);
+            Atk3.transform.rotation = Quaternion.identity;
+
+            WaitSeconds -= 2;
         }
 
 
 
         if (Input.GetKeyDown(KeyCode.K))
-        {
+        {   
             GameObject Atk3 = a3pool.GetItem();
 
-            Atk3.transform.position = new Vector3(player.transform.position.x, 0, player.transform.position.z);
+            Atk3.transform.position = new Vector3(player.transform.position.x, -0.1f, player.transform.position.z);
             Atk3.transform.rotation = Quaternion.identity;
         }
-
     }
+    IEnumerator AttackSelect()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(WaitSeconds);
+            Rand = Random.Range(0, 2); //  0 운석 / 1 폭발 
+            yield return new WaitForSeconds(0.01f);
+            Rand = 5;
+        }
+        
+    }
+    IEnumerator ATK1()
+    {
+        while(true)
+        {
+            Atk1Active = true;
+            yield return new WaitForSeconds(5);
+            Atk1Active = false;
+            yield return new WaitForSeconds(15);
+        }
+    }
+    IEnumerator ATK2()
+    {
+
+        GameObject newObj = attack2Pool.GetItem();
+        newObj.transform.position = new Vector3(player.transform.position.x, -0.1f, player.transform.position.z);
+        newObj.transform.rotation = Quaternion.identity;
+
+        yield return new WaitForSeconds(1.5f);
+
+        newObj = attack2Pool.GetItem();
+        newObj.transform.position = new Vector3(player.transform.position.x, -0.1f, player.transform.position.z);
+        newObj.transform.rotation = Quaternion.identity;
+
+        yield return new WaitForSeconds(1.5f);
+
+        newObj = attack2Pool.GetItem();
+        newObj.transform.position = new Vector3(player.transform.position.x, -0.1f, player.transform.position.z);
+        newObj.transform.rotation = Quaternion.identity;
+
+        WaitSeconds += 2;
+        
+    }
+    
+
+
 }
