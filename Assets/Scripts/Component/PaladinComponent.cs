@@ -41,8 +41,8 @@ public class PaladinComponent : BattleableComponentBase
     {
         this.transform.LookAt(playerInstance.transform);
 
-        this.transform.forward = lookFoward;
-        this.transform.right = lookRight;
+        lookFoward = this.transform.forward;
+        lookRight = this.transform.right;
 
         Rigidbody.velocity = (lookRight + lookFoward).normalized * Status.spd;
         
