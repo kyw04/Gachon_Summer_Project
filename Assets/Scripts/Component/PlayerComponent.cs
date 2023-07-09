@@ -274,7 +274,6 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         }
         yield break;
     }
-    
 
     #endregion
 

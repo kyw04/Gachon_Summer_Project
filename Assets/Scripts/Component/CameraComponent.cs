@@ -46,16 +46,21 @@ public class CameraComponent : MonoBehaviour
             camAngle.z
         );
         _anchor.transform.position = followingTarget.transform.position + offset;
-        followingTarget.lookFoward = new Vector3(
-            _anchor.forward.x,
-            0,
-            _anchor.forward.z
-        ).normalized;
+
+        if (followingTarget is PlayerComponent)
+        {
+            
+            followingTarget.lookFoward = new Vector3(
+                _anchor.forward.x,
+                0,
+                _anchor.forward.z
+            ).normalized;
         
-        followingTarget.lookRight = new Vector3(
-            _anchor.right.x,
-            0,
-            _anchor.right.z
-        ).normalized;
+            followingTarget.lookRight = new Vector3(
+                _anchor.right.x,
+                0,
+                _anchor.right.z
+            ).normalized;
+        }
     }
 }
