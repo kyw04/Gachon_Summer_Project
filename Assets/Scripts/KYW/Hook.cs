@@ -4,13 +4,13 @@ using UnityEngine;
 
 public struct HookedTarget
 {
-    public GameObject targetObj;
+    public Transform targetObj;
     public Vector3 hitPoint;
     public Vector3 normal;
     public float distance;
     public float mass;
 
-    public HookedTarget(GameObject _target, Vector3 _hitPoint, Vector3 _normal, float _distance, float _mass)
+    public HookedTarget(Transform _target, Vector3 _hitPoint, Vector3 _normal, float _distance, float _mass)
     {
         this.targetObj = _target;
         this.hitPoint = _hitPoint;
@@ -53,76 +53,101 @@ public class Hook : MonoBehaviour
 
     private void Update()
     {
-        if (isFixed && Input.GetButtonDown("Fire1"))
+        if (!isMove)
         {
-            if (hookedTarget.mass < power)
+            if (isFixed && Input.GetButtonDown("Fire1"))
             {
-                //Debug.Log($"Fire1 mass = {hookedTarget.mass}");
-                isBack = true;
-                Retract(firePosition, hookHead);
-            }
-        }
-        else if (Input.GetButtonDown("Fire2"))
-        {
-            if (isFixed)
-            {
-                if (Input.GetKey(KeyCode.LeftShift))
+                if (hookedTarget.mass < power)
                 {
-                    Detach();
+                    //Debug.Log($"Fire1 mass = {hookedTarget.mass}");
+                    isBack = true;
+                    Retract(firePosition, hookedTarget.targetObj);
+                }
+            }
+            else if (Input.GetButtonDown("Fire2"))
+            {
+                if (isFixed)
+                {
+                    if (Input.GetKey(KeyCode.LeftShift))
+                    {
+                        Detach();
+                    }
+                    else
+                    {
+                        Retract(hookHead, transform);
+                    }
+
                 }
                 else
                 {
-                    Retract(hookHead, transform);
+                    Fire();
                 }
-
-            }
-            else
-            {
-                Fire();
             }
         }
+    }
 
+    private void FixedUpdate()
+    {
         if (isBack)
         {
             destination = firePosition.position;
             direction = (destination - hookHead.position).normalized;
         }
 
-        if (isMove)
+        Rigidbody rb = null;
+        if (movingObject)
         {
-            Rigidbody rb = movingObject.GetComponent<Rigidbody>();
+            rb = movingObject.GetComponent<Rigidbody>();
             if (rb == null)
             {
                 rb = movingObject.GetComponentInChildren<Rigidbody>();
             }
+        }
 
+        if (isMove)
+        {
             bool isMoving = Move(movingObject, destination, direction, rb);
             if (!isMoving)
             {
                 hookHead.DetachChildren();
                 chain.enabled = false;
-
                 isMove = false;
+                //if (rb != null)
+                //    rb.useGravity = true;
+
                 if (isBack || isFixed)
                 {
                     isBack = false;
                     isFixed = false;
+                    hookHead.position = firePosition.position;
 
                     if (hookedTarget.targetObj)
-                        hookedTarget.targetObj.transform.parent = null;
+                        hookHead.parent = null;
                     hookHead.parent = firePosition;
+                }
+                else if (hookedTarget.targetObj == null)
+                {
+                    Detach(rb);
                 }
                 else
                 {
-                    if (hookedTarget.targetObj == null)
-                    {
-                        Detach();
-                    }
-                    else
-                    {
-                        isFixed = true;
-                        hookedTarget.targetObj.transform.parent = hookHead;
-                    }
+                    isFixed = true;
+                    hookHead.parent = hookedTarget.targetObj;
+                }
+            }
+        }
+
+        if (isFixed)
+        {
+            RaycastHit hit;
+            Vector3 dir = (hookHead.position - firePosition.position).normalized;
+            float dis = Vector3.Distance(hookHead.position, firePosition.position);
+            if (Physics.Raycast(firePosition.position, dir, out hit, dis, mask))
+            {
+                if (hit.collider.gameObject != hookedTarget.targetObj.gameObject)
+                {
+                    Debug.Log($"hit: {hit.collider.name}, hooked: {hookedTarget.targetObj.name}");
+                    Detach(rb);
                 }
             }
         }
@@ -149,24 +174,24 @@ public class Hook : MonoBehaviour
         if (dis > lastDistance)
         {
             //Debug.Log(dis);
-            moveObj.position = des;
+            if (!isBack)
+                moveObj.position = des;
 
             if (rb)
             {
                 rb.velocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
 
-                if (Input.GetButton("Fire2")) // hold
+                if (Input.GetButton("Fire2") && moveObj == transform) // hold
                 {
+                    //Debug.Log("Hold");
                     rb.useGravity = false;
                     return true;
                 }
                 rb.useGravity = true;
             }
-
             return false;
         }
-
         //hookHead.position = Vector3.Lerp(hookHead.position, direction, Time.deltaTime * movementSpeed);
         moveObj.position += dir * movementSpeed * Time.deltaTime;
         lastDistance = dis;
@@ -192,7 +217,7 @@ public class Hook : MonoBehaviour
         {
             point = hit.point + hit.normal * hookHead.localScale.y/* * 0.51f*/;
 
-            hookedTarget = new HookedTarget(hit.collider.gameObject, point, hit.normal, hit.distance, float.PositiveInfinity);
+            hookedTarget = new HookedTarget(hit.collider.transform, point, hit.normal, hit.distance, float.PositiveInfinity);
             if (hit.collider.GetComponent<Rigidbody>())
             {
                 hookedTarget.mass = hit.collider.GetComponent<Rigidbody>().mass;
@@ -212,6 +237,7 @@ public class Hook : MonoBehaviour
         if (isMove)
             return;
 
+        //Debug.Log("Retract");
         isMove = true;
 
         SetDirection(pulledTarget, pulledTarget.position, pullingObj.position);
@@ -223,12 +249,18 @@ public class Hook : MonoBehaviour
 
         //Debug.Log($"{lastDistance.ToString("F1")} {Vector3.Distance(movingObject.position, destination)}");
     }
+    public void Detach(Rigidbody rb)
+    {
+        if (rb)
+            rb.useGravity = true;
+        Detach();
+    }
     public void Detach()
     {
         if (destination == firePosition.position)
             return;
-        //Debug.Log("detach");
 
+        //Debug.Log("Detach");
         isBack = true;
         isFixed = false;
         isMove = true;
@@ -236,7 +268,7 @@ public class Hook : MonoBehaviour
 
         if (hookedTarget.targetObj)
         {
-            hookedTarget.targetObj.transform.parent = null;
+            hookHead.parent = null;
             hookedTarget.targetObj = null;
         }
 
@@ -257,7 +289,8 @@ public class Hook : MonoBehaviour
             //Debug.Log(hit.collider.name);
             des = hit.point + hit.normal * hookHead.localScale.y/* * 0.51f*/;
 
-            hookedTarget = new HookedTarget(hit.collider.gameObject, des, hit.normal, hit.distance, float.PositiveInfinity);
+            hookedTarget = new HookedTarget(hit.collider.transform, des, hit.normal, hit.distance, float.PositiveInfinity);
+            //Debug.Log(hit.distance);
             if (hit.collider.GetComponent<Rigidbody>())
             {
                 hookedTarget.mass = hit.collider.GetComponent<Rigidbody>().mass;
@@ -274,5 +307,10 @@ public class Hook : MonoBehaviour
         Gizmos.DrawRay(mainCamera.position, mainCamera.forward * range);
         Gizmos.color = Color.red;
         Gizmos.DrawRay(firePosition.position, direction * range);
+
+        Gizmos.color = Color.green;
+        Vector3 dir = (hookHead.position - firePosition.position).normalized;
+        float dis = Vector3.Distance(hookHead.position, firePosition.position);
+        Gizmos.DrawRay(firePosition.position, dir * dis);
     }
 }
