@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 4563761}
   - component: {fileID: 4563760}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: Cube_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2954,6 +2954,7 @@ MonoBehaviour:
   power: 10
   speed: 100
   range: 30
+  playerHeight: 1.8
   isBack: 0
   isMove: 0
   isFixed: 0

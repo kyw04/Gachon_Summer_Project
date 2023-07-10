@@ -28,9 +28,11 @@ public class Hook : MonoBehaviour
     public float power;
     public float speed;
     public float range;
+    public float playerHeight;
 
     private LineRenderer chain;
     private Transform movingObject;
+    private Rigidbody rb;
     private HookedTarget hookedTarget;
     private Vector3 direction;
     private Vector3 destination;
@@ -55,14 +57,11 @@ public class Hook : MonoBehaviour
     {
         if (!isMove)
         {
-            if (isFixed && Input.GetButtonDown("Fire1"))
+            if (isFixed && hookedTarget.mass < power && Input.GetButtonDown("Fire1"))
             {
-                if (hookedTarget.mass < power)
-                {
-                    //Debug.Log($"Fire1 mass = {hookedTarget.mass}");
-                    isBack = true;
-                    Retract(firePosition, hookedTarget.targetObj);
-                }
+                //Debug.Log($"Fire1 mass = {hookedTarget.mass}");
+                isBack = true;
+                Retract(firePosition, hookedTarget.targetObj);
             }
             else if (Input.GetButtonDown("Fire2"))
             {
@@ -76,7 +75,6 @@ public class Hook : MonoBehaviour
                     {
                         Retract(hookHead, transform);
                     }
-
                 }
                 else
                 {
@@ -88,13 +86,6 @@ public class Hook : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isBack)
-        {
-            destination = firePosition.position;
-            direction = (destination - hookHead.position).normalized;
-        }
-
-        Rigidbody rb = null;
         if (movingObject)
         {
             rb = movingObject.GetComponent<Rigidbody>();
@@ -104,16 +95,41 @@ public class Hook : MonoBehaviour
             }
         }
 
+        if (isBack)
+        {
+            destination = firePosition.position;
+            direction = (destination - hookHead.position).normalized;
+        }
+
+        if (isFixed)
+        {
+            RaycastHit hit;
+            Vector3 dir = (hookHead.position - firePosition.position).normalized;
+            float dis = Vector3.Distance(hookHead.position, firePosition.position);
+            if (Physics.Raycast(firePosition.position, dir, out hit, dis, mask))
+            {
+                if (hit.collider.gameObject != hookedTarget.targetObj.gameObject)
+                {
+                    Debug.Log($"hit: {hit.collider.name}, hooked: {hookedTarget.targetObj.name}");
+                    Detach(rb);
+                }
+            }
+
+            destination = hookHead.position;
+            if (Physics.Raycast(hookHead.position, Vector3.up, playerHeight, mask))
+            {
+                destination.y -= playerHeight;
+            }
+        }
+
         if (isMove)
         {
             bool isMoving = Move(movingObject, destination, direction, rb);
             if (!isMoving)
             {
-                hookHead.DetachChildren();
                 chain.enabled = false;
                 isMove = false;
-                //if (rb != null)
-                //    rb.useGravity = true;
+                hookHead.DetachChildren();
 
                 if (isBack || isFixed)
                 {
@@ -133,21 +149,6 @@ public class Hook : MonoBehaviour
                 {
                     isFixed = true;
                     hookHead.parent = hookedTarget.targetObj;
-                }
-            }
-        }
-
-        if (isFixed)
-        {
-            RaycastHit hit;
-            Vector3 dir = (hookHead.position - firePosition.position).normalized;
-            float dis = Vector3.Distance(hookHead.position, firePosition.position);
-            if (Physics.Raycast(firePosition.position, dir, out hit, dis, mask))
-            {
-                if (hit.collider.gameObject != hookedTarget.targetObj.gameObject)
-                {
-                    Debug.Log($"hit: {hit.collider.name}, hooked: {hookedTarget.targetObj.name}");
-                    Detach(rb);
                 }
             }
         }
@@ -185,6 +186,11 @@ public class Hook : MonoBehaviour
                 if (Input.GetButton("Fire2") && moveObj == transform) // hold
                 {
                     //Debug.Log("Hold");
+                    moveObj.position = hookHead.position;
+                    if (Physics.Raycast(hookHead.position, Vector3.up, playerHeight, mask))
+                    {
+                        moveObj.position += Vector3.down * playerHeight;
+                    }
                     rb.useGravity = false;
                     return true;
                 }
@@ -216,7 +222,7 @@ public class Hook : MonoBehaviour
         if (Physics.Raycast(mainCamera.position, mainCamera.forward, out hit, range, mask)) // find camera destination
         {
             point = hit.point + hit.normal * hookHead.localScale.y/* * 0.51f*/;
-
+            
             hookedTarget = new HookedTarget(hit.collider.transform, point, hit.normal, hit.distance, float.PositiveInfinity);
             if (hit.collider.GetComponent<Rigidbody>())
             {
@@ -277,6 +283,7 @@ public class Hook : MonoBehaviour
     }
     private void SetDirection(Transform moveObj, Vector3 startPos, Vector3 endPos) // real destination setting
     {
+        //Debug.Log("set dir");
         movingObject = moveObj;
         direction = (endPos - startPos).normalized;
         lastDistance = float.PositiveInfinity;
@@ -312,5 +319,8 @@ public class Hook : MonoBehaviour
         Vector3 dir = (hookHead.position - firePosition.position).normalized;
         float dis = Vector3.Distance(hookHead.position, firePosition.position);
         Gizmos.DrawRay(firePosition.position, dir * dis);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawRay(hookHead.position, Vector3.up * playerHeight);
     }
 }
