@@ -23,7 +23,25 @@ public class PlayerHPViewer : MonoBehaviour
         P_hpbar.minValue = 0;
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
 
+        if (collision.gameObject.tag == "Enemy")
+        {
+            if (P_curHp > 0)
+            {
+                P_curHp -= 10f;
+                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());   
+            }
+        }
+            if (P_hpbar.value <= 0)
+            {
+                //P_hpbar.value = 0;
+                //hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+                SceneManager.LoadScene(4);
+            }
+    }
+    
 
 
 
