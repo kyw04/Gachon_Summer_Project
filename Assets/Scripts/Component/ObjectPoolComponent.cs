@@ -108,6 +108,18 @@ public class ObjectPoolComponent : MonoBehaviour
         return true;
     }
 
+    public bool FreeItem(GameObject item, float seconds) // 
+    {
+        StartCoroutine(LaterFreeItem(item, seconds));
+        return true;
+    }
+
+    private IEnumerator LaterFreeItem(GameObject item, float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        FreeItem(item);
+    }
+
     public void StartPooling(Queue<GameObject> queue)
     {
         StartCoroutine(Pooling(queue));

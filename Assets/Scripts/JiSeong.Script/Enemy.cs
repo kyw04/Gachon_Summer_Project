@@ -107,9 +107,6 @@ public class Enemy : MonoBehaviour
     }
     private System.Collections.IEnumerator ResetIgnoreCollisionTimer()
     {
-
-        
-
         // HP∏¶ ∞®º“Ω√≈¥
         EnemyHp--;
 

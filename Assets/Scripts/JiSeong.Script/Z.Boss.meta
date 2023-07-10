@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scripts/JiSeong.Script/Z.Boss.meta
+guid: 7f09bb5fe1f550e4cb75122ab24f1dcd
+folderAsset: yes
+DefaultImporter:
+========
+guid: 45d0ee0ece6d5a34486a7646127fe938
+NativeFormatImporter:
+>>>>>>>> develop:Assets/Animation/Dummy/Jump.anim.meta
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

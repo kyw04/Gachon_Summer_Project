@@ -14,13 +14,12 @@ sealed class PlayerDataController : BattleableDataControllerBase
 
     public PlayerDataController(string dbName)
     {
-        Debug.Log(Application.persistentDataPath);
         if (!File.Exists(Application.persistentDataPath + dbName))
             File.Copy(Application.streamingAssetsPath + dbName, Application.persistentDataPath + dbName);
         dbConnection = new SqliteConnection(ConnectionString + dbName);
     }
 
-    public override BattleableVOBase getData()
+    public override BattleableVOBase getDatum()
     {
         BattleableVOBase result = default;
 
@@ -31,8 +30,20 @@ sealed class PlayerDataController : BattleableDataControllerBase
             result = table;
         }
 
-     //연동 성공
+        //연동 성공
         return result;
+    }
+    
+    public ICollection<BattleableVOBase> getData()
+    {
+        BattleableVOBase result = default;
+
+        var tables = UseSelect($"select * from {TableName} where UID = '{SystemInfo.deviceUniqueIdentifier}' ");
+
+        if (tables.Count == 0)
+            throw new Exception("Failed to Collection Data");
+
+        return tables;
     }
 
     public override bool UseDelete(string _query)
@@ -80,7 +91,7 @@ sealed class PlayerDataController : BattleableDataControllerBase
             {
                 CloseConnection();
                 Debug.Log("uid 미발견");
-                Debug.Log(UseInsert($"insert into {TableName} (UID, Name) values ('{SystemInfo.deviceUniqueIdentifier}', 'DON')"));
+                Debug.Log(UseInsert($"insert into {TableName} (UID, modelName, Name) values ('{SystemInfo.deviceUniqueIdentifier}','Kohaku', 'DON')"));
 
                 result = (List<BattleableVOBase>)UseSelect($"select * from {TableName} where uid = '{SystemInfo.deviceUniqueIdentifier}' ");
             }
