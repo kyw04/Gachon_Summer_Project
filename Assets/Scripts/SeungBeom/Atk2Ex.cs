@@ -8,6 +8,9 @@ public class Atk2Ex : MonoBehaviour
     public GameObject Circle;
     public GameObject Meteor;
 
+    public float MagicAccuracy;
+    Vector3 offset;
+
     bool Grow;
     bool Shrink;
     // Start is called before the first frame update
@@ -20,6 +23,33 @@ public class Atk2Ex : MonoBehaviour
         Circle.SetActive(true);
 
         StartCoroutine(Growing());
+
+        /*
+        if (MagicAccuracy != 100)
+        {
+            MagicAccuracy = 1 - (MagicAccuracy / 100);
+
+            for (int i = 0; i < 2; i++)
+            {
+                var val = 1 * Random.Range(-MagicAccuracy, MagicAccuracy);
+                var index = Random.Range(0, 2);
+                if (i == 0)
+                {
+                    if (index == 0)
+                        offset = new Vector3(-val * 20, 0, 0);
+                    else
+                        offset = new Vector3(val * 20, 0, 0);
+                }
+                else
+                {
+                    if (index == 0)
+                        offset = new Vector3(offset.x, 0, -val * 20);
+                    else
+                        offset = new Vector3(offset.x, 0, val * 20);
+                }
+            }
+        }
+        */
     }
 
     // Update is called once per frame
@@ -27,11 +57,11 @@ public class Atk2Ex : MonoBehaviour
     {
         if (Grow)
         {
-            Circle.transform.localScale += new Vector3(2 * 91 * Time.deltaTime, 2 * 91 * Time.deltaTime, 2 * 91 * Time.deltaTime);
+            Circle.transform.localScale += new Vector3(2 * 22.5f * Time.deltaTime, 2 * 22.5f * Time.deltaTime, 2 * 22.5f * Time.deltaTime);
         }
         if (Shrink)
         {
-            Circle.transform.localScale -= new Vector3(2 * 91 * Time.deltaTime, 2 * 91 * Time.deltaTime, 2 * 91 * Time.deltaTime);
+            Circle.transform.localScale -= new Vector3(2 * 22.5f * Time.deltaTime, 2 * 22.5f * Time.deltaTime, 2 * 22.5f * Time.deltaTime);
         }
     }
     IEnumerator Growing()

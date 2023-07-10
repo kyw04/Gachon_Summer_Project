@@ -1,6 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Prefabs/Magic Missiles and Lasers v1.0.unitypackage.meta
+guid: 548cf2a9256f04343a44568af09bcfc9
+========
 guid: 6e94f03bbefd59a42b421e9412c6478a
 folderAsset: yes
+>>>>>>>> develop:Assets/Prefabs/Asuna/Materials.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

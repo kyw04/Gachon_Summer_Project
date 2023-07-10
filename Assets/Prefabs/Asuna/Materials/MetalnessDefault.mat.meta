@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Prefabs/SeungBeom/GabrielAguiarProductions/Unique_Projectiles_Volume_1/HDRP/UniqueProjectilesVol1_HDRP_2018.3.7f1.unitypackage.meta
+guid: 02957454043f88e41aeefa2999655288
+DefaultImporter:
+========
 guid: b43a40e321f78824abbf968a39c8158e
 NativeFormatImporter:
+>>>>>>>> develop:Assets/Prefabs/Asuna/Materials/MetalnessDefault.mat.meta
   externalObjects: {}
   mainObjectFileID: 2100000
   userData: 

@@ -35,27 +35,18 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     }
 
     #region 기능적인 메소드
-    
-    public override void ModifyHealthPoint(int amount)
-    {
-        if (amount < 0)
-        {
-            if ((healthPoint -= amount) < 0)
-            {
-                healthPoint = 0;
-                Die();
-            }
-        }
-        else
-        {
-            //체력이 회복 되었을 경우 일어날 동작을 구현
-        }
 
-    } 
+    public override int ModifyHealthPoint(int amount)
+    {
+        isControllable = false;
+        return base.ModifyHealthPoint(amount);
+    }
+
     public override void Die()
     {
         base.Die();
         //플레이어의 사망시 발생할 상황을 구현
+        isControllable = false;
     }
 
     private void SetUpPlayer()
@@ -215,9 +206,6 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
             animator.SetBool("isIdle", true);
         }
     }
-
-
-
     #endregion
     
     #region Collision Func
@@ -250,6 +238,11 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
                 break;
             case "JumpEnd":
                 isJumping = false;
+                break;            
+            case "Damaged":
+                isAttacking = false;
+                isDodging = false;
+                isJumping = false;
                 break;
         }
     }
@@ -274,7 +267,6 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         }
         yield break;
     }
-    
 
     #endregion
 
