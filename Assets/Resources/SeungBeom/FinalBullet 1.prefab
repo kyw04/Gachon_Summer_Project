@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6384139646990284320}
   - component: {fileID: 6384139646990284323}
   m_Layer: 6
-  m_Name: FinalBullet
+  m_Name: FinalBullet 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,6 +65,7 @@ MonoBehaviour:
   HitPrefab: {fileID: 0}
   Accuracy: 85
   Speed: 50
+  Sentinel: 0
 --- !u!54 &6384139646990284323
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -342,15 +343,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4488862101063296, guid: a17580581e360e74db460cc3d5dc0396, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4488862101063296, guid: a17580581e360e74db460cc3d5dc0396, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4488862101063296, guid: a17580581e360e74db460cc3d5dc0396, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4488862101063296, guid: a17580581e360e74db460cc3d5dc0396, type: 3}
       propertyPath: m_LocalPosition.x

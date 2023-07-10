@@ -14,21 +14,31 @@ public class ExperiBullet : MonoBehaviour
     BoxCollider BoxCol;
     GameObject Target;
 
+    public int Sentinel;
 
     Vector3 Reposition;
 
     void OnEnable()
     {
-
+        
         Projectile = transform.GetChild(0).gameObject;              // 투사체
         HitPrefab = transform.GetChild(1).gameObject;               // 피격 이펙트
 
         HitPrefab.SetActive(false);
 
+
+        if(Sentinel == 1)
+        {
+            Refresh();
+        }
+
+
+
         Target = GameObject.FindGameObjectWithTag("Player");
         Rb = GetComponent<Rigidbody>();
         BoxCol = GetComponent<BoxCollider>();
 
+        
 
         transform.LookAt(Target.transform);
 
@@ -61,6 +71,8 @@ public class ExperiBullet : MonoBehaviour
     void Update()
     {
         Rb.velocity += (transform.forward + Reposition) * (Speed * Time.deltaTime);
+
+        Projectile.transform.Rotate(new Vector3(0, 0, 720 * Time.deltaTime));
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -72,21 +84,35 @@ public class ExperiBullet : MonoBehaviour
 
     IEnumerator BulletHit()         //착탄 후 총알의 동작을 관리합니다.
     {
-        Rb.velocity = Vector3.zero;                 // 총알의 속도는 0이 됩니다.
+        Rb.velocity = Vector3.zero;                 // 총알의 속도는 0이 됩니다.'
+        Rb.angularVelocity = Vector3.zero;
+
+        Sentinel = 1;
+
+        Accuracy = 100;                             //총알 재활용 시 탄퍼짐이 더 *추가* 되지 않도록.
+
+        Rb.constraints = RigidbodyConstraints.FreezeAll;
 
         BoxCol.enabled = false;                     //collider 를 사용하지 않게 합니다.
 
         Projectile.SetActive(false);                // 투사체(총알)을 비활성화 합니다.
-        Debug.Log("총알 없어짐 / 이펙트 출력");
 
         HitPrefab.SetActive(true);                  // 착탄 이펙트를 활성화합니다
 
 
         yield return new WaitForSeconds(1.2f);
-
+        Rb.constraints = RigidbodyConstraints.None;
 
         gameObject.SetActive(false);                //착탄 시점으로부터 1.2초 후, 총알을 비활성화 합니다.
 
+    }
+
+    private void Refresh()
+    {
+
+        Projectile.SetActive(true);
+        transform.position = new Vector3(0, 19, 0);
+        BoxCol.enabled = true;
     }
 
 
