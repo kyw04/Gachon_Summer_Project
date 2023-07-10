@@ -10,7 +10,7 @@ public class Meteor_2Stage : MonoBehaviour
 
     void Start()
     {
-        Player = FindObjectOfType<PlayerCtrl>().transform;
+        Player = FindObjectOfType<PlayerComponent>().transform;
     }
 
 

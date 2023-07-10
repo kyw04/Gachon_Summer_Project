@@ -31,6 +31,11 @@ public class Stage2_Boss : MonoBehaviour
     public ObjectPoolComponent[] boss_Partical;
     public GameObject die_Effect;
 
+
+    [Header("보스 사운드")]
+    [SerializeField] private AudioClip[] _clip;
+
+
     float away;
     public Transform Player;
     Vector3 dir;
@@ -61,6 +66,8 @@ public class Stage2_Boss : MonoBehaviour
         Player = FindObjectOfType<PlayerComponent>().transform;
         eState = EnemyState.Idle;
         StartCoroutine(Destroy_Partical());
+
+
     }
 
     void Update()
@@ -71,7 +78,9 @@ public class Stage2_Boss : MonoBehaviour
         //  Debug.Log(away);
 
         if (Input.GetKeyDown(KeyCode.Z))
+        {
             Damaged(0.2f);
+        }
 
         ChangeEnemyState();
     }
@@ -83,7 +92,8 @@ public class Stage2_Boss : MonoBehaviour
             hp -= 1;
             hp_T.text = "X" + hp.ToString();
             hp_Bar.value = 1f;
-            fillImage.color = hp_Bar_Change_Color[hp / hp_Bar_Change_Color.Length];
+            // 9-1/3 = 3 
+            fillImage.color = hp_Bar_Change_Color[(hp - 1) / hp_Bar_Change_Color.Length];
             if (hp <= 0)
             {
                 hp = 0;
@@ -93,6 +103,15 @@ public class Stage2_Boss : MonoBehaviour
             }
         }
     }
+
+    /*void RealAttack() // 플레이어가 공격했을때: 플레이어 스크립트에 넣을 예정인 코드
+    {
+        if (away<=2.5)
+        {
+             Enemy.SendMessage("Damaged", 입힐 데미지);
+        }
+    } 
+    */
     void ChangeEnemyState()
     {
         switch (eState)
@@ -166,7 +185,9 @@ public class Stage2_Boss : MonoBehaviour
     public void Slash()
     {
         if (away <= 5)
-            anim.SetTrigger("Slash");
+        {
+            anim.SetTrigger("slash");
+        }
     }
     public void CircleMeteorAttack() // 원형으로 메테오 생성
     {
@@ -181,6 +202,7 @@ public class Stage2_Boss : MonoBehaviour
             Debug.Log("Real_CircleMeteor_Attack 들어옴");
             GameObject meteor0 = boss_Attack[1].GetItem(spawnPoint[i].position);
             Vector3 direction = spawnPoint[i].position - transform.position; // 현재 위치에서 spawnPoint 위치로 향하는 벡터
+            direction.y = 0f;
             meteor0.GetComponent<Rigidbody>().velocity = direction.normalized * meteorSpeed;
         }
     }
@@ -219,7 +241,7 @@ public class Stage2_Boss : MonoBehaviour
 
     }
 
-    IEnumerator Destroy_Partical() 
+    IEnumerator Destroy_Partical()
     {
         yield return new WaitForSeconds(3f);
         Vector3 PlayerPosition = new Vector3(Player.position.x, Player.position.y - 5f, Player.position.z);
@@ -231,8 +253,10 @@ public class Stage2_Boss : MonoBehaviour
     void Boss_Dead()
     {
         if (hp <= 0)
+        {
             eState = EnemyState.Dead;
-
+            SoundManager.instance.Boss_PlaySound(_clip[1]);
+        }
     }
     void RealDead()
     {
@@ -246,5 +270,18 @@ public class Stage2_Boss : MonoBehaviour
             Player.SendMessage("Damaged", 0.2f);
         }
         eState = EnemyState.Idle;
+    }
+
+    void Slash_Sound()
+    {
+        SoundManager.instance.Boss_PlaySound(_clip[0]);
+    }
+
+    void Spawn_Meteor_Sound()
+    {
+    }
+
+    void CircleMeteor_Sound()
+    {
     }
 }
