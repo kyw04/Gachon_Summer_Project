@@ -21,7 +21,7 @@ public class PaladinComponent : BattleableComponentBase
 
     private void Think()
     {
-        if (Vector3.Distance(this.transform.position, playerInstance.transform.position) <= 2f)
+        if (Vector3.Distance(this.transform.position, playerInstance.transform.position) <= 3f)
         {
             Attack();
         }
@@ -44,7 +44,7 @@ public class PaladinComponent : BattleableComponentBase
         lookFoward = this.transform.forward;
         lookRight = this.transform.right;
 
-        Rigidbody.velocity = (lookRight + lookFoward).normalized * Status.spd;
+        Rigidbody.velocity = lookFoward.normalized * Status.spd;
         
         animator.SetBool("isWalkingForward", true);
     }
@@ -63,6 +63,7 @@ public class PaladinComponent : BattleableComponentBase
         {
             case "AttackEnd":
                 isAttacking = false;
+                this.transform.LookAt(playerInstance.transform);
                 break;
         }
     }

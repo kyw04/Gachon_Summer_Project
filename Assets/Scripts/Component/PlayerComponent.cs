@@ -35,27 +35,11 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     }
 
     #region 기능적인 메소드
-    
-    public override void ModifyHealthPoint(int amount)
-    {
-        if (amount < 0)
-        {
-            if ((healthPoint -= amount) < 0)
-            {
-                healthPoint = 0;
-                Die();
-            }
-        }
-        else
-        {
-            //체력이 회복 되었을 경우 일어날 동작을 구현
-        }
-
-    } 
     public override void Die()
     {
         base.Die();
         //플레이어의 사망시 발생할 상황을 구현
+        isControllable = false;
     }
 
     private void SetUpPlayer()
