@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using JYH;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -38,6 +37,8 @@ public class Stage2_Boss : MonoBehaviour
 
     float away;
     public Transform Player;
+    public Boss_Line boss_Line;
+
     Vector3 dir;
 
     float delay_Time;
@@ -65,24 +66,23 @@ public class Stage2_Boss : MonoBehaviour
         fillImage = hp_Bar.fillRect.GetComponentInChildren<Image>();
         Player = FindObjectOfType<PlayerComponent>().transform;
         eState = EnemyState.Idle;
-        StartCoroutine(Destroy_Partical());
-
-
+        boss_Line.isArrive_Boss = false;
+       //StartCoroutine(Destroy_Partical());
     }
 
     void Update()
     {
+        Debug.Log(boss_Line.isArrive_Boss);
         away = Vector3.Distance(transform.position, Player.position); // 적과 플레이어의 거리
         Vector3 playerPosition = Player.position; // 플레이어의 위치
 
         //  Debug.Log(away);
 
         if (Input.GetKeyDown(KeyCode.Z))
-        {
             Damaged(0.2f);
-        }
 
-        ChangeEnemyState();
+        if (boss_Line.isArrive_Boss)
+            ChangeEnemyState();
     }
     void Damaged(float damage) // 플레이어가 공격했을때 이 함수 호출 
     {
@@ -114,6 +114,7 @@ public class Stage2_Boss : MonoBehaviour
     */
     void ChangeEnemyState()
     {
+        Debug.Log("123");
         switch (eState)
         {
             case EnemyState.Idle:
@@ -146,6 +147,7 @@ public class Stage2_Boss : MonoBehaviour
     }
     public void Walk()
     {
+
         agent.destination = Player.position;     // 계속해서 플레이어를 향해 이동하도록 목적지 설정 (destination)
         agent.isStopped = false; // 길찾기 시작
         // dir = Vector3.Lerp(dir, new Vector3(0, 0, dirZ), Time.deltaTime * 5);
@@ -236,11 +238,10 @@ public class Stage2_Boss : MonoBehaviour
         boss_Attack[0].FreeItem(meteor, 2f);
         boss_Partical[0].FreeItem(partical1, 2f);
 
-
         eState = EnemyState.Idle;
-
     }
 
+    // 메테오 생성후 닿으면 사라지도록 구현
     IEnumerator Destroy_Partical()
     {
         yield return new WaitForSeconds(3f);
