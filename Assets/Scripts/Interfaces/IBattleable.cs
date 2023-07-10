@@ -2,7 +2,7 @@
 public interface IBattleable
 {
     public void Attack();
-    public void ModifyHealthPoint(int amount);
+    public int ModifyHealthPoint(int amount);
     public void Die();
 
     public void Move();

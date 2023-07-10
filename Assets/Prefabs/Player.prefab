@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 787976283229579776}
   - component: {fileID: 787976283229579777}
   - component: {fileID: 787976283229579806}
+  - component: {fileID: 1287306314}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -95,13 +96,26 @@ Animator:
   m_Controller: {fileID: 9100000, guid: f27434154ff689643bb9c3fd7a3d872a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!65 &1287306314
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787976283229579782}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.2, y: 0.2, z: 0.2}
+  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!1001 &3433504303407555492
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -165,3 +179,22 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2366457553768609076, guid: 100b746e3e6948b4f9b036d7b586afa0, type: 3}
   m_PrefabInstance: {fileID: 3433504303407555492}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8106967942829247312 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6856727807485077748, guid: 100b746e3e6948b4f9b036d7b586afa0, type: 3}
+  m_PrefabInstance: {fileID: 3433504303407555492}
+  m_PrefabAsset: {fileID: 0}
+--- !u!136 &1821386247
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8106967942829247312}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.15
+  m_Height: 0.15
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.15, z: 0}
