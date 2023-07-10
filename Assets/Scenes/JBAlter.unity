@@ -569,6 +569,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5660840824010038398, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5c7494bf8826ed4488a87e174cca57d4, type: 2}
     - target: {fileID: 7062042774189236792, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -613,9 +617,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7317174023108063589, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
+      propertyPath: coolDown
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7317174023108063589, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
+      propertyPath: cooldown
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7317174023108063589, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
+      propertyPath: isActing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7317174023108063589, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
+      propertyPath: isActable
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7587081925758138498, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
       propertyPath: m_Name
       value: Paladin
       objectReference: {fileID: 0}
+    - target: {fileID: 7795767827823944002, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d7a5f71a4818dd848ac219ceb0c07ab3, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
