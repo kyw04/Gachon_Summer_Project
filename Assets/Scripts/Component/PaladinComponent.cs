@@ -8,7 +8,9 @@ using Random = UnityEngine.Random;
 public class PaladinComponent : BattleableComponentBase
 {
     public bool isActing;
-    
+    public bool isActionable;
+    public float coolDown; 
+
     [SerializeField]
     private PlayerComponent playerInstance;
 
@@ -24,31 +26,31 @@ public class PaladinComponent : BattleableComponentBase
     void FixedUpdate()
     {
         Think();
+        Move();
     }
 
     private void Think()
     {
-        if (isActing) return;
+        if (isActing || !isActionable) return;
 
-        Act action = Move;
+        isActionable = false;
+        Act action = Cast;
+
         if (Vector3.Distance(this.transform.position, playerInstance.transform.position) <= 3f)
-        {
-            switch (Random.Range(0,2))
-            {
-                case 0:
-                    action = Attack;
-                    break;
-                case 1:
-                    action = () =>
-                    {
-                        isActing = true;
-                        animator.SetTrigger("Cast");
-                    };
-                    break;
-            }
-        }
-
+            action = Attack;
+        StartCoroutine(CallMethodWaitForSeconds(coolDown, () => { isActionable = true;}));
         action();
+    }
+    
+    public void Cast()
+    {
+        isActing = true;
+        animator.SetTrigger("Cast");
+
+        var Instance = Instantiate(Resources.Load("Magic/Metor/Magic") as GameObject);
+        Instance.GetComponent<MagicComponent>().caster = this;
+        Instance.gameObject.tag = "Enemy";
+        Instance.transform.position += playerInstance.transform.position;
     }
 
     public override void Attack()
@@ -63,13 +65,21 @@ public class PaladinComponent : BattleableComponentBase
         if (isActing) return;
         this.transform.LookAt(playerInstance.transform);
 
-        lookFoward = this.transform.forward;
-        lookRight = this.transform.right;
+        if (Vector3.Distance(this.transform.position, playerInstance.transform.position) <= 3f)
+        {
+            Rigidbody.velocity = Vector3.zero;
+            animator.SetBool("isWalkingForward", false);
+            animator.SetBool("isIdle", true);
+        }
+        else
+        {
+            lookFoward = this.transform.forward;
+            lookRight = this.transform.right;
 
-        Rigidbody.velocity = lookFoward.normalized * Status.spd;
-        
-        animator.SetBool("isWalkingForward", true);
-        animator.SetBool("isIdle", false);
+            Rigidbody.velocity = lookFoward.normalized * Status.spd;
+            animator.SetBool("isWalkingForward", true);
+            animator.SetBool("isIdle", false);
+        }
     }
 
     protected override void OnCollisionEnter(Collision other)

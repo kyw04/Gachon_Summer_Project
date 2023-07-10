@@ -245,7 +245,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5c7494bf8826ed4488a87e174cca57d4, type: 2}
+  - {fileID: 2100000, guid: d7a5f71a4818dd848ac219ceb0c07ab3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2418,6 +2418,9 @@ MonoBehaviour:
   lookFoward: {x: 0, y: 0, z: 0}
   lookRight: {x: 0, y: 0, z: 0}
   isAttacking: 0
+  isActing: 0
+  isActionable: 1
+  coolDown: 5
   playerInstance: {fileID: 0}
 --- !u!1 &7678307087704153049
 GameObject:
@@ -2505,7 +2508,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d7a5f71a4818dd848ac219ceb0c07ab3, type: 2}
+  - {fileID: 2100000, guid: 5c7494bf8826ed4488a87e174cca57d4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
