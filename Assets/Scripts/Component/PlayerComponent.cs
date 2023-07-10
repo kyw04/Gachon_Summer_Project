@@ -199,9 +199,6 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
             animator.SetBool("isIdle", true);
         }
     }
-
-
-
     #endregion
     
     #region Collision Func

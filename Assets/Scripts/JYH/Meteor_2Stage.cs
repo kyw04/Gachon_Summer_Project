@@ -1,4 +1,3 @@
-using JYH;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -10,7 +9,7 @@ public class Meteor_2Stage : MonoBehaviour
 
     void Start()
     {
-        Player = FindObjectOfType<PlayerCtrl>().transform;
+        Player = FindObjectOfType<PlayerComponent>().transform;
     }
 
 
