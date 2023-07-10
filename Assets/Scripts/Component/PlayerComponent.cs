@@ -35,6 +35,13 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     }
 
     #region 기능적인 메소드
+
+    public override int ModifyHealthPoint(int amount)
+    {
+        isControllable = false;
+        return base.ModifyHealthPoint(amount);
+    }
+
     public override void Die()
     {
         base.Die();
@@ -230,6 +237,11 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
                 StartCoroutine(Jump());
                 break;
             case "JumpEnd":
+                isJumping = false;
+                break;            
+            case "Damaged":
+                isAttacking = false;
+                isDodging = false;
                 isJumping = false;
                 break;
         }

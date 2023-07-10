@@ -44,7 +44,6 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
         //컴포넌트를 가져옴
         animator = GetComponent<Animator>();
         Rigidbody = GetComponent<Rigidbody>();
-        Status = new BattleableVOBase();
     }
 
     public virtual void Attack()
@@ -77,7 +76,7 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
                 select param.name;
             foreach (var paramName in  boolParamName)
                 animator.SetBool(paramName, false);
-            
+
             return 0;
         }
         else

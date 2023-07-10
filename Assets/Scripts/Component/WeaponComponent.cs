@@ -22,7 +22,6 @@ public class WeaponComponent : MonoBehaviour
     {
         if (col.gameObject.CompareTag("Player"))
         {
-            Debug.Log(col.gameObject.name);
             var component = col.transform.root.GetComponent<PlayerComponent>();
             if (_owner.isAttacking)
             {
