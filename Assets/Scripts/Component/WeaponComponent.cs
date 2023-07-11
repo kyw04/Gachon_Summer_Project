@@ -20,9 +20,23 @@ public class WeaponComponent : MonoBehaviour
 
     private void OnCollisionEnter(Collision col)
     {
+        //if(col.gameObject.CompareTag(_owner.gameObject.tag)) return;
+        
+        Debug.Log(col.gameObject.tag + " " + col.gameObject.name);
         if (col.gameObject.CompareTag("Player"))
         {
             var component = col.transform.root.GetComponent<PlayerComponent>();
+            if (_owner.isAttacking)
+            {
+                if (component.ModifyHealthPoint(_attackPoint * -1) == -1)
+                {
+                    _owner.animator.SetTrigger("Dancing");
+                }
+            }
+        }
+        else if (col.gameObject.CompareTag("Enemy"))
+        {
+            var component = col.transform.root.GetComponent<BattleableComponentBase>();
             if (_owner.isAttacking)
             {
                 if (component.ModifyHealthPoint(_attackPoint * -1) == -1)
