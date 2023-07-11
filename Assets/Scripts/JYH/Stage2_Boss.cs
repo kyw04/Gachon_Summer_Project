@@ -29,6 +29,7 @@ public class Stage2_Boss : MonoBehaviour
     public ObjectPoolComponent[] boss_Attack;
     public ObjectPoolComponent[] boss_Partical;
     public GameObject die_Effect;
+    public GameObject cast_Effect;
 
 
     [Header("보스 사운드")]
@@ -76,7 +77,7 @@ public class Stage2_Boss : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(boss_Line.isArrive_Boss);
+        //Debug.Log(boss_Line.isArrive_Boss);
         away = Vector3.Distance(transform.position, Player.position); // 적과 플레이어의 거리
         Vector3 playerPosition = Player.position; // 플레이어의 위치
 
@@ -203,14 +204,15 @@ public class Stage2_Boss : MonoBehaviour
     public void CircleMeteorAttack() // 원형으로 메테오 생성
     {
         anim.SetTrigger("shootMeteor");
-        Debug.Log("원형 메테오");
+        //Debug.Log("원형 메테오");
     }
 
+    
     void Real_CircleMeteor_Attack()
     {
         for (int i = 0; i < spawnPoint.Length; i++)
         {
-            Debug.Log("Real_CircleMeteor_Attack 들어옴");
+            //Debug.Log("Real_CircleMeteor_Attack 들어옴");
             GameObject meteor0 = boss_Attack[1].GetItem(spawnPoint[i].position);
             Vector3 direction = spawnPoint[i].position - transform.position; // 현재 위치에서 spawnPoint 위치로 향하는 벡터
             direction.y = 0f;
@@ -233,7 +235,7 @@ public class Stage2_Boss : MonoBehaviour
     void SpawnMeteor_Attack() // 위에서 메테오 생성
     {
         anim.SetTrigger("spawn_Meteor");
-        Debug.Log("sky메테오");
+        //Debug.Log("sky메테오");
     }
 
     void Real_SpawnMeteor_Attack()
@@ -247,10 +249,6 @@ public class Stage2_Boss : MonoBehaviour
         boss_Attack[0].FreeItem(meteor, 2f);
         boss_Partical[0].FreeItem(partical1, 2f);
         eState = EnemyState.Idle;
-    }
-
-    void SpawnMeteor_Destroy_Partical()
-    {
     }
 
     // 메테오 생성후 닿으면 사라지도록 구현
@@ -280,7 +278,7 @@ public class Stage2_Boss : MonoBehaviour
     {
         if (away <= 3)
         {
-            Player.SendMessage("Damaged", 0.2f);
+            Player.SendMessage("Damaged", 20f);
         }
         eState = EnemyState.Idle;
     }
@@ -295,7 +293,15 @@ public class Stage2_Boss : MonoBehaviour
         SoundManager.instance.Boss_PlaySound(_clip[2]);
     }
 
+    void Cast_CircleMeteor_Attack()
+    {
+        cast_Effect.SetActive(true);
+        SoundManager.instance.Boss_PlaySound(_clip[3]);
+    }
+
     void CircleMeteor_Sound()
     {
+        cast_Effect.SetActive(false);
+        SoundManager.instance.Boss_PlaySound(_clip[4]);
     }
 }

@@ -5,7 +5,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Serialization;
+using TMPro;
 
 public sealed class PlayerComponent : BattleableComponentBase, IControllable
 {
@@ -21,9 +23,16 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     #endregion
     delegate void Act();
 
+    [Header("HP관련")]
+    private float maxHp = 100f; // 플레이어 최대 체력
+    private float curHp = 100f; // 플레이어 현재 체력
+    [SerializeField] public Text hp_T;
+    [SerializeField] public Slider hp_Bar;
+
     //Awake는 base에 사용 중이므로 기본 설정은 Start를 통해 해주세요
     private void Start()
     {
+        hp_Bar.value = (float)curHp / (float)maxHp;
         SetUpPlayer();
     }
 
@@ -35,6 +44,20 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     }
 
     #region 기능적인 메소드
+
+    void Damaged(float damage)
+    {
+        if (curHp > 0)
+        {
+            curHp -= damage;
+            hp_Bar.value = (float)curHp / (float)maxHp;
+            hp_T.text = curHp.ToString() + "/" + maxHp.ToString();
+        }
+        else
+        {
+            Debug.Log("게임 오버");
+        }
+    }
 
     public override int ModifyHealthPoint(int amount)
     {
