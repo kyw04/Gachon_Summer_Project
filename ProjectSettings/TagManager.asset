@@ -17,6 +17,9 @@ TagManager:
   - BossMeteor
   - Floor
   - Wall
+  - Ball
+  - Bottom
+  - Boss
   layers:
   - Default
   - TransparentFX
