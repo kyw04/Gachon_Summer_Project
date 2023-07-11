@@ -5,26 +5,35 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Serialization;
+using TMPro;
 
 public sealed class PlayerComponent : BattleableComponentBase, IControllable
 {
     #region  Variable
+    
+    public bool isDodging = false;
+    public bool isWiring = false;
+    public bool isJumping = false;
+    public bool isControllable = true;
+    public bool isJumpable = true;
+    [SerializeField] AudioClip[] clip;
+    private int AttackStatus = 0
 
-        public bool isDodging = false;
-        public bool isWiring = false;
-        public bool isJumping = false;
-        public bool isControllable = true;
-        public bool isJumpable = true;
-
-        private int AttackStatus = 0;
-
-        #endregion
+    #endregion
     delegate void Act();
+
+    [Header("HP관련")]
+    private float maxHp = 100f; // 플레이어 최대 체력
+    private float curHp = 100f; // 플레이어 현재 체력
+    [SerializeField] public Text hp_T;
+    [SerializeField] public Slider hp_Bar;
 
     //Awake는 base에 사용 중이므로 기본 설정은 Start를 통해 해주세요
     private void Start()
     {
+        hp_Bar.value = (float)curHp / (float)maxHp;
         SetUpPlayer();
     }
 
@@ -37,6 +46,20 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     }
 
     #region 기능적인 메소드
+
+    void Damaged(float damage)
+    {
+        if (curHp > 0)
+        {
+            curHp -= damage;
+            hp_Bar.value = (float)curHp / (float)maxHp;
+            hp_T.text = curHp.ToString() + "/" + maxHp.ToString();
+        }
+        else
+        {
+            Debug.Log("게임 오버");
+        }
+    }
 
     public override int ModifyHealthPoint(int amount)
     {
@@ -88,9 +111,9 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
             modelInstance.transform.position = Vector3.zero;
             modelInstance.transform.parent = this.transform;
         }
-        
+
         GC.SuppressFinalize(playerModel);
-        
+
         this.transform.position = Status.position;
         healthPoint = Status.maxHealthPoint;
         StaminaPoint = Status.maxStaminaPoint;
@@ -107,15 +130,16 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
 
     public override void Attack()
     {
+        SoundManager.instance.Player_Sound(clip[0]);
         base.Attack();
-        animator.SetInteger("AttackType", AttackStatus++ % 2 );
+        animator.SetInteger("AttackType", AttackStatus++ % 2);
     }
 
     public void Command()
     {
         //기본적으로 MOVE함수를 실행시키며 특정한 INPUT이 있으면 그에 맞는 메소드를 실행
         Act action = Move;
-        
+
         //조작키들은 임의로 정해진 키로 작동하므로 나중에 정해지면 수정 바람 (2023. 06. 29)
         if (Input.GetButton("Attack"))
         {
@@ -166,16 +190,16 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     {
         if (!isControllable) return;
         var dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        
+
         //에니메이터에 있는 bool 타입의 파라미터들을 한 번에 false로
         var boolParamName =
             from param in animator.parameters
             where param.type == AnimatorControllerParameterType.Bool
             select param.name;
-        foreach (var paramName in  boolParamName)
+        foreach (var paramName in boolParamName)
             animator.SetBool(paramName, false);
-        
-        
+
+
         //플레이어가 이동 중 일 경우
         if (dir.magnitude != 0)
         {
@@ -189,7 +213,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
             {
                 if (dir.y == 0)
                 {
-                    
+
                     animator.SetBool(dir.x < 0 ? "isWalkingLeft" : "isWalkingRight", true);
                 }
                 else
@@ -209,21 +233,21 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         }
     }
     #endregion
-    
+
     #region Collision Func
 
     protected override void OnCollisionEnter(Collision other)
     {
-        
+
     }
 
     protected override void OnCollisionStay(Collision other)
     {
-        
+
     }
 
     #endregion
-    
+
     public override void AnimEvt(string cmd)
     {
         isControllable = true;
@@ -240,7 +264,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
                 break;
             case "JumpEnd":
                 isJumping = false;
-                break;            
+                break;
             case "Damaged":
                 isAttacking = false;
                 isJumping = false;

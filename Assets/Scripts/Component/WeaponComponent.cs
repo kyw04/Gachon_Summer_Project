@@ -21,7 +21,6 @@ public class WeaponComponent : MonoBehaviour
     private void OnCollisionEnter(Collision col)
     {
         //if(col.gameObject.CompareTag(_owner.gameObject.tag)) return;
-
         var instance = col.gameObject.transform.root.gameObject;
         if (instance.Equals(_owner.gameObject)) return;
         if (instance.CompareTag("Player"))
