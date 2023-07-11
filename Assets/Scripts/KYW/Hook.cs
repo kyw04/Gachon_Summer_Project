@@ -119,7 +119,7 @@ public class Hook : MonoBehaviour
 
             if (!isMove)
                 destination = hookHead.position;
-            if (Physics.Raycast(hookHead.position, Vector3.up, playerHeight, mask))
+            if (Physics.Raycast(destination, Vector3.up, playerHeight, mask))
             {
                 destination.y -= playerHeight;
             }
