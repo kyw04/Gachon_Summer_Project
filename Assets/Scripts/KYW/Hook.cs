@@ -117,7 +117,8 @@ public class Hook : MonoBehaviour
                 }
             }
 
-            destination = hookHead.position;
+            if (!isMove)
+                destination = hookHead.position;
             if (Physics.Raycast(hookHead.position, Vector3.up, playerHeight, mask))
             {
                 destination.y -= playerHeight;
@@ -166,7 +167,7 @@ public class Hook : MonoBehaviour
         float dis = Vector3.Distance(moveObj.position + moveObj.localScale, des);
         if (dis > lastDistance)
         {
-            Debug.Log($"{dis} > {lastDistance}");
+            //Debug.Log($"{dis} > {lastDistance}");
             if (!isBack)
                 moveObj.position = des;
 
@@ -244,7 +245,7 @@ public class Hook : MonoBehaviour
         if (isMove)
             return;
 
-        Debug.Log("Retract");
+        //Debug.Log("Retract");
         isMove = true;
 
         SetDirection(pulledTarget, pulledTarget.position, pullingObj.position);
@@ -265,7 +266,7 @@ public class Hook : MonoBehaviour
         if (destination == firePosition.position)
             return;
 
-        Debug.Log("Detach");
+        //Debug.Log("Detach");
         isFixed = false;
         isBack = true;
         isMove = true;
