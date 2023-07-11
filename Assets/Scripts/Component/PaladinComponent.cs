@@ -9,7 +9,7 @@ public class PaladinComponent : BattleableComponentBase
 {
     public bool isActing;
     public bool isActionable;
-    public float coolDown; 
+    public float coolDown;
 
     [SerializeField]
     private PlayerComponent playerInstance;
@@ -20,6 +20,7 @@ public class PaladinComponent : BattleableComponentBase
     {
         Status = new BattleableVOBase(){spd = 2};
         playerInstance = GameObject.FindWithTag("Player").GetComponent<PlayerComponent>();
+        healthPoint = Status.maxHealthPoint;
     }
 
     // Update is called once per frame
@@ -36,8 +37,16 @@ public class PaladinComponent : BattleableComponentBase
         isActionable = false;
         Act action = Cast;
 
-        if (Vector3.Distance(this.transform.position, playerInstance.transform.position) <= 3f)
+        var distance = Vector3.Distance(this.transform.position, playerInstance.transform.position);
+        if (distance <= 1.5f)
+            action = () =>
+            {
+                isActing = true;
+                animator.SetTrigger("Kick");
+            };
+        else if (distance <= 3f)
             action = Attack;
+        
         StartCoroutine(CallMethodWaitForSeconds(coolDown, () => { isActionable = true;}));
         action();
     }
@@ -65,7 +74,8 @@ public class PaladinComponent : BattleableComponentBase
         if (isActing) return;
         this.transform.LookAt(playerInstance.transform);
 
-        if (Vector3.Distance(this.transform.position, playerInstance.transform.position) <= 3f)
+        var distance = Vector3.Distance(this.transform.position, playerInstance.transform.position);
+        if (distance <= 3f)
         {
             Rigidbody.velocity = Vector3.zero;
             animator.SetBool("isWalkingForward", false);
@@ -82,6 +92,18 @@ public class PaladinComponent : BattleableComponentBase
         }
     }
 
+    public override int ModifyHealthPoint(int amount)
+    {
+        isActionable = false;
+        return base.ModifyHealthPoint(amount);
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        isActionable = false;
+    }
+
     protected override void OnCollisionEnter(Collision other)
     {
     }
@@ -92,15 +114,23 @@ public class PaladinComponent : BattleableComponentBase
 
     public override void AnimEvt(string cmd)
     {
-        isActing = !isActing;
+        isActing = false;
         switch (cmd)
         {
             case "AttackEnd":
                 isAttacking = false;
-                this.transform.LookAt(playerInstance.transform);
+                //this.transform.LookAt(playerInstance.transform);
                 break;
             case "Damaged":
-                isAttacking = false;;
+                isAttacking = false;
+                isActionable = true;
+                break;
+            case "Kick":
+                playerInstance.ModifyHealthPoint(Status.attackPoint * -1);
+                StartCoroutine(playerInstance.HitBack(playerInstance.lookFoward * -1, 0.1f, 4f));
+                break;
+            case "KickEnd":
+                isActionable = true;
                 break;
         }
     }
