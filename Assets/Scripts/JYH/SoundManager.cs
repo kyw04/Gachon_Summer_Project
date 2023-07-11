@@ -7,7 +7,11 @@ public class SoundManager : MonoBehaviour
 {
     static public SoundManager instance;
 
-    [SerializeField] AudioSource _bgmSource, _boss_EffectSource;
+    [SerializeField] AudioSource _boss_EffectSource;
+    [SerializeField] AudioSource _player_EffectSource;
+    public AudioSource Bgm;
+    public AudioClip[] Bgm_clips; // 0: ³· 1: ¹ã
+
 
     private void Awake()
     {
@@ -21,17 +25,19 @@ public class SoundManager : MonoBehaviour
         else
             Destroy(gameObject);
     }
-
-
     public void Boss_PlaySound(AudioClip clip)
     {
         _boss_EffectSource.PlayOneShot(clip);
     }
 
-    public void BGM_PlaySound(AudioClip clip)
+    public void BGM_Sound(int clipNum)
     {
-        _bgmSource.PlayOneShot(clip);
+        Bgm.clip = Bgm_clips[clipNum];
+        Bgm.Play();
     }
 
-
+    public void Player_Sound(AudioClip clip)
+    {
+        _player_EffectSource.PlayOneShot(clip);
+    }
 }

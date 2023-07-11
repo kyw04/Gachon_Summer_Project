@@ -12,19 +12,19 @@ public class Stage2_Boss : MonoBehaviour
     NavMeshAgent agent;
 
     [Header("보스체력 관련 UI")]
+    public GameObject hp_Bar_gameobj;
+    public GameObject hp_Name_gameobj;
     public Slider hp_Bar;
     public int hp;
     [SerializeField] Text hp_T;
     Image fillImage;
     [SerializeField] Color32[] hp_Bar_Change_Color;
 
-
     Rigidbody rb;
 
     [Header("원형으로 공격하는 프리팹 관련 변수들")]
     public float meteorSpeed;
     [SerializeField] Transform[] spawnPoint;
-
 
     public ObjectPoolComponent[] boss_Attack;
     public ObjectPoolComponent[] boss_Partical;
@@ -33,6 +33,7 @@ public class Stage2_Boss : MonoBehaviour
 
     [Header("보스 사운드")]
     [SerializeField] private AudioClip[] _clip;
+    [SerializeField] private AudioClip[] _bgmClip; 
 
 
     float away;
@@ -67,7 +68,10 @@ public class Stage2_Boss : MonoBehaviour
         Player = FindObjectOfType<PlayerComponent>().transform;
         eState = EnemyState.Idle;
         boss_Line.isArrive_Boss = false;
-       //StartCoroutine(Destroy_Partical());
+
+        SoundManager.instance.BGM_Sound(0);
+
+      //  SoundManager.instance.BGM_PlaySound(_bgmClip[0]);
     }
 
     void Update()
@@ -102,6 +106,12 @@ public class Stage2_Boss : MonoBehaviour
                 hp_T.text = "X" + hp.ToString();
             }
         }
+    }
+    // 보스 입장 Coll에 닿았을시, 활성화되는 함수 Boss_Line에서 SendMassage함
+    void Health_Bar()
+    {
+        hp_Bar_gameobj.SetActive(true);
+        hp_Name_gameobj.SetActive(true);
     }
 
     /*void RealAttack() // 플레이어가 공격했을때: 플레이어 스크립트에 넣을 예정인 코드
@@ -168,7 +178,6 @@ public class Stage2_Boss : MonoBehaviour
             delay_Time = Time.time + 3f;
 
             int attackNum = Random.Range(1, 4);
-            Debug.Log(attackNum);
             switch (attackNum)
             {
                 case 1:
@@ -230,15 +239,18 @@ public class Stage2_Boss : MonoBehaviour
     void Real_SpawnMeteor_Attack()
     {
         //    Debug.Log("Real_SpawnMeteor_Attack 들어옴");
+        Vector3 meteorPosition = new Vector3(Player.position.x, Player.position.y + 10f, Player.position.z);
         // 메테오를 플레이어의 현재 위치에 생성
-        Vector3 meteorPosition = new Vector3(Player.position.x, Player.position.y + 3f, Player.position.z);
         GameObject meteor = boss_Attack[0].GetItem(meteorPosition);
         GameObject partical1 = boss_Partical[0].GetItem(meteorPosition);
 
         boss_Attack[0].FreeItem(meteor, 2f);
         boss_Partical[0].FreeItem(partical1, 2f);
-
         eState = EnemyState.Idle;
+    }
+
+    void SpawnMeteor_Destroy_Partical()
+    {
     }
 
     // 메테오 생성후 닿으면 사라지도록 구현
@@ -280,6 +292,7 @@ public class Stage2_Boss : MonoBehaviour
 
     void Spawn_Meteor_Sound()
     {
+        SoundManager.instance.Boss_PlaySound(_clip[2]);
     }
 
     void CircleMeteor_Sound()

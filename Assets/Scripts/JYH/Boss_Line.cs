@@ -5,14 +5,18 @@ using UnityEngine;
 
 public class Boss_Line : MonoBehaviour
 {
+    public Stage2_Boss boss;
     public GameObject boss_Wall;
     public bool isArrive_Boss;
-    void OnCollisionEnter(Collision collision)
+
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player"))
         {
+            SoundManager.instance.BGM_Sound(1);
             boss_Wall.SetActive(true);
             isArrive_Boss = true;
+            boss.SendMessage("Health_Bar");
         }
     }
 }
