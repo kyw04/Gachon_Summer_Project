@@ -21,11 +21,12 @@ public class WeaponComponent : MonoBehaviour
     private void OnCollisionEnter(Collision col)
     {
         //if(col.gameObject.CompareTag(_owner.gameObject.tag)) return;
-        
-        Debug.Log(col.gameObject.tag + " " + col.gameObject.name);
-        if (col.gameObject.CompareTag("Player"))
+
+        var instance = col.gameObject.transform.root.gameObject;
+        if (instance.Equals(_owner.gameObject)) return;
+        if (instance.CompareTag("Player"))
         {
-            var component = col.transform.root.GetComponent<PlayerComponent>();
+            var component = instance.GetComponent<PlayerComponent>();
             if (_owner.isAttacking)
             {
                 if (component.ModifyHealthPoint(_attackPoint * -1) == -1)
@@ -34,9 +35,9 @@ public class WeaponComponent : MonoBehaviour
                 }
             }
         }
-        else if (col.gameObject.CompareTag("Enemy"))
+        else if (instance.CompareTag("Enemy"))
         {
-            var component = col.transform.root.GetComponent<BattleableComponentBase>();
+            var component = instance.GetComponent<BattleableComponentBase>();
             if (_owner.isAttacking)
             {
                 if (component.ModifyHealthPoint(_attackPoint * -1) == -1)

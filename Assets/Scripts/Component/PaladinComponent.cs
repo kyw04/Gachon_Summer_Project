@@ -1,19 +1,24 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
+using Vector3 = UnityEngine.Vector3;
 
 public class PaladinComponent : BattleableComponentBase
 {
     public bool isActing;
     public bool isActionable;
+    public bool isDamageable = true;
     public float coolDown;
+
+    public List<GameObject> magicInstances;
 
     [SerializeField]
     private PlayerComponent playerInstance;
-
+    private float distance = 0;
     delegate void Act();
     // Start is called before the first frame update
     void Start()
@@ -26,25 +31,25 @@ public class PaladinComponent : BattleableComponentBase
     // Update is called once per frame
     void FixedUpdate()
     {
+        distance = Vector3.Distance(this.transform.position, playerInstance.transform.position);
         Think();
         Move();
     }
 
     private void Think()
     {
-        if (isActing || !isActionable) return;
+        if (isActing || !isActionable || healthPoint == 0) return;
 
         isActionable = false;
         Act action = Cast;
 
-        var distance = Vector3.Distance(this.transform.position, playerInstance.transform.position);
         if (distance <= 1.5f)
             action = () =>
             {
                 isActing = true;
                 animator.SetTrigger("Kick");
             };
-        else if (distance <= 3f)
+        else if (distance <= 2.5f)
             action = Attack;
         
         StartCoroutine(CallMethodWaitForSeconds(coolDown, () => { isActionable = true;}));
@@ -56,10 +61,9 @@ public class PaladinComponent : BattleableComponentBase
         isActing = true;
         animator.SetTrigger("Cast");
 
-        var Instance = Instantiate(Resources.Load("Magic/Metor/Magic") as GameObject);
-        Instance.GetComponent<MagicComponent>().caster = this;
-        Instance.gameObject.tag = "Enemy";
-        Instance.transform.position += playerInstance.transform.position;
+
+        StartCoroutine(Casting());
+        
     }
 
     public override void Attack()
@@ -71,10 +75,9 @@ public class PaladinComponent : BattleableComponentBase
 
     public override void Move()
     {
-        if (isActing) return;
+        if (isActing || this.healthPoint <= 0) return;
         this.transform.LookAt(playerInstance.transform);
 
-        var distance = Vector3.Distance(this.transform.position, playerInstance.transform.position);
         if (distance <= 3f)
         {
             Rigidbody.velocity = Vector3.zero;
@@ -94,7 +97,12 @@ public class PaladinComponent : BattleableComponentBase
 
     public override int ModifyHealthPoint(int amount)
     {
+        if (this.healthPoint == 0) return -1;
+        if (!isDamageable) return 0;
+        isDamageable = false;
         isActionable = false;
+        StopAllCoroutines();
+        StartCoroutine(CallMethodWaitForSeconds(1.5f, () => { isDamageable = true; }));
         return base.ModifyHealthPoint(amount);
     }
 
@@ -102,6 +110,8 @@ public class PaladinComponent : BattleableComponentBase
     {
         base.Die();
         isActionable = false;
+        isActing = true;
+        Debug.Log(true);
     }
 
     protected override void OnCollisionEnter(Collision other)
@@ -127,14 +137,29 @@ public class PaladinComponent : BattleableComponentBase
                 break;
             case "Kick":
                 playerInstance.ModifyHealthPoint(Status.attackPoint * -1);
-                StartCoroutine(playerInstance.HitBack(playerInstance.lookFoward * -1, 0.1f, 4f));
+                StartCoroutine(playerInstance.HitBack(playerInstance.lookFoward * -1, 0.1f, 3f));
                 break;
             case "KickEnd":
                 isActionable = true;
                 break;
         }
     }
-    
+
+    private IEnumerator Casting()
+    {
+        int i = 0;
+        foreach (var _object in magicInstances)
+        {
+            var instance = Instantiate(_object);
+            instance.gameObject.tag = "Enemy";
+            instance.gameObject.GetComponent<MagicComponent>().caster = this;
+            var offset =  i != 0 ? new Vector3(Random.Range(-20f, 20f), 0, Random.Range(-20f, 20f)) : Vector3.zero;
+            instance.transform.position += playerInstance.transform.position + offset;
+            i += 1;
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
     public IEnumerator CallMethodWaitForSeconds(float duration, Action act)
     {
         yield return new WaitForSeconds(duration);

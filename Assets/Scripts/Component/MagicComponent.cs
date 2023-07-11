@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -14,11 +15,12 @@ public class MagicComponent : MonoBehaviour
         this.transform.position += spawnOffset;
     }
 
-    private void OnCollisionEnter(Collision other)
+    protected virtual void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.collider.CompareTag("Enemy")) return;
+        if (other.gameObject.CompareTag("Player"))
         {
-            other.gameObject.GetComponent<PlayerComponent>().ModifyHealthPoint(-1 * caster.Status.attackPoint);
+            other.transform.root.gameObject.GetComponent<PlayerComponent>().ModifyHealthPoint(-1 * caster.Status.attackPoint);
         }
         Destroy(this.gameObject);
     }

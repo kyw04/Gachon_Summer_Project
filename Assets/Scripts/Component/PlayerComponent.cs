@@ -15,6 +15,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         public bool isWiring = false;
         public bool isJumping = false;
         public bool isControllable = true;
+        public bool isJumpable = true;
 
         private int AttackStatus = 0;
 
@@ -32,6 +33,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         Command();
         Status.position = this.transform.position;
         dataController.UseUpdate(Status.id, Status.position);
+        isJumpable = Rigidbody.velocity.y > 0;
     }
 
     #region 기능적인 메소드
@@ -40,7 +42,6 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     {
         isControllable = false;
         StopAllCoroutines();
-        AnimEvt("Damaged");
         return base.ModifyHealthPoint(amount);
     }
 
@@ -151,7 +152,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         {
             action = () =>
             {
-                if (isJumping || !isControllable) return;
+                if (healthPoint <= 0) return;
                 else isJumping = !isJumping;
                 isControllable = false;
                 //점프 구현
@@ -242,8 +243,8 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
                 break;            
             case "Damaged":
                 isAttacking = false;
-                isDodging = false;
                 isJumping = false;
+                isDodging = false;
                 break;
         }
     }
@@ -257,8 +258,8 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         this.transform.forward = dir * coefficient;
         while (isDodging)
         {
-            this.transform.position += dir.normalized * 0.2f * coefficient;
-            yield return new WaitForSeconds(0.02f);
+            this.transform.position += dir.normalized * 0.1f * coefficient;
+            yield return new WaitForSeconds(0.01f);
         }
         yield break;
     }
@@ -266,8 +267,8 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     {
         while (isJumping)
         {
-            this.transform.position += Vector3.up * 0.5f;
-            yield return new WaitForSeconds(0.02f);
+            this.transform.position += Vector3.up * 0.15f;
+            yield return new WaitForSeconds(0.01f);
         }
         yield break;
     }
@@ -277,10 +278,10 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         var time = 0f;
         while (true)
         {
-            this.transform.position += dir.normalized * 0.1f * power;
+            this.transform.position += dir.normalized * 0.05f * power;
             time += 0.02f;
             if (time >= duration) yield break;
-            yield return new WaitForSeconds(0.02f);
+            yield return new WaitForSeconds(0.01f);
         }
         yield break;
     }

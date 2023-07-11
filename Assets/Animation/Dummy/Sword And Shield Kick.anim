@@ -39700,7 +39700,7 @@ AnimationClip:
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
     m_StopTime: 1.5666667
-    m_OrientationOffsetY: 0
+    m_OrientationOffsetY: -40
     m_Level: 0
     m_CycleOffset: 0
     m_HasAdditiveReferencePose: 0
@@ -39709,7 +39709,7 @@ AnimationClip:
     m_LoopBlendOrientation: 1
     m_LoopBlendPositionY: 1
     m_LoopBlendPositionXZ: 1
-    m_KeepOriginalOrientation: 1
+    m_KeepOriginalOrientation: 0
     m_KeepOriginalPositionY: 0
     m_KeepOriginalPositionXZ: 1
     m_HeightFromFeet: 1
@@ -78484,10 +78484,10 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 1.4166666
+  - time: 1.25
     functionName: AnimEvt
     data: KickEnd
-    objectReferenceParameter: {fileID: 0}
+    objectReferenceParameter: {fileID: 7587081925758138498, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
