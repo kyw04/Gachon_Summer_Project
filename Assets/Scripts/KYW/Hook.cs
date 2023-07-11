@@ -41,6 +41,7 @@ public class Hook : MonoBehaviour
     public bool isBack;
     public bool isMove;
     public bool isFixed;
+    public bool isHold;
 
     private void Start()
     {
@@ -53,6 +54,7 @@ public class Hook : MonoBehaviour
         isBack = false;
         isMove = false;
         isFixed = false;
+        isHold = false;
     }
 
     private void Update()
@@ -165,7 +167,7 @@ public class Hook : MonoBehaviour
         }
 
         float dis = Vector3.Distance(moveObj.position + moveObj.localScale, des);
-        if (dis > lastDistance)
+        if (isHold || dis > lastDistance)
         {
             //Debug.Log($"{dis} > {lastDistance}");
             if (!isBack)
@@ -178,14 +180,12 @@ public class Hook : MonoBehaviour
 
                 if (Input.GetButton("Fire2") && moveObj == transform) // hold
                 {
-                    moveObj.position = hookHead.position;
-                    if (Physics.Raycast(hookHead.position, Vector3.up, playerHeight, mask))
-                    {
-                        moveObj.position += Vector3.down * playerHeight;
-                    }
+                    moveObj.position = des;
+                    isHold = true;
                     rb.useGravity = false;
                     return true;
                 }
+                isHold = false;
                 rb.useGravity = true;
             }
             return false;
