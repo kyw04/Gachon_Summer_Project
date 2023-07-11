@@ -14,11 +14,8 @@ public class Atk4Pivot : MonoBehaviour
     GameObject six;
     GameObject seven;
     GameObject eight;
-
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        
         TARGET = GameObject.FindGameObjectWithTag("Player").transform;
         //Targetposition.position = new Vector3(TARGET.transform.position.x, 0, TARGET.transform.position.z);
         transform.LookAt(new Vector3(TARGET.position.x, transform.position.y, TARGET.position.z));
@@ -32,36 +29,49 @@ public class Atk4Pivot : MonoBehaviour
         seven = transform.GetChild(6).gameObject;
         eight = transform.GetChild(7).gameObject;
     }
-
-    // Update is called once per frame
-    void Update()
+    // Start is called before the first frame update
+    void Start()
     {
-        
-    }
+        eight.SetActive(false);
 
+        one.SetActive(false);
+
+        two.SetActive(false);
+        
+        three.SetActive(false);
+        
+        four.SetActive(false);
+        
+        five.SetActive(false);
+       
+        six.SetActive(false);
+
+        seven.SetActive(false);
+
+        StartCoroutine(Atk4pivot());
+    }
     IEnumerator Atk4pivot()
     {
         while(true)
         {
-            
             yield return new WaitForSeconds(2);
             transform.LookAt(new Vector3(TARGET.position.x, transform.position.y,TARGET.position.z));
             eight.SetActive(true);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
             one.SetActive(true);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
             two.SetActive(true);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
             three.SetActive(true);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
             four.SetActive(true);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
             five.SetActive(true);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
             six.SetActive(true);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.2f);
             seven.SetActive(true);
-            yield return new WaitForSeconds(6.6f);
+            yield return new WaitForSeconds(6);
         }
     }
 }
