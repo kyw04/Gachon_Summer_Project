@@ -7,36 +7,31 @@ using UnityEngine.SceneManagement;
 
 
 
-public class Bullet :MonoBehaviour
-{ 
-    public int damdge;
-    public bool isBall;
-
-    BossHPViewer boss;
+public class SkyEvasion : MonoBehaviour
+{
+    BossHPViewer boss1;
 
     private void Start()
     {
-        boss = GameObject.Find("BossHPSlider").GetComponent<BossHPViewer>();
+        boss1 = GameObject.Find("BossHPSlider").GetComponent<BossHPViewer>();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(!isBall && collision.gameObject.tag == "Floor") 
+        if (collision.gameObject.tag == "Bottom")
         {
             Destroy(gameObject);
+            boss1.Sky();
         }
-        if (collision.gameObject.tag == "Player")
-        {
-            Destroy(gameObject);
-        }
+ 
         if (collision.gameObject.tag == "Wall")
         {
             Destroy(gameObject);
-            boss.Fire();
+            boss1.Sky();
         }
     }
 }
 
-   
- 
+
+
 

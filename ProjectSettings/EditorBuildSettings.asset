@@ -17,9 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/1Boss_Clear.unity
     guid: 4f81ea9caae154a4981431d9edb629b0
-  - enabled: 1
-    path: Assets/Scenes/Game Over.unity
-    guid: bab5a9ae05615e14692f7b2020695a49
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/JYH.unity
     guid: 6d0b2e085610afd41aefe53dd42fe5e9

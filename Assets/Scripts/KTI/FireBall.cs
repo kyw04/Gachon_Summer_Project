@@ -8,6 +8,7 @@ public class FireBall : Bullet
     float angularPower = 2;
     float scaleValue = 0.1f;
     bool isShoot;
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody>();  
@@ -33,5 +34,6 @@ public class FireBall : Bullet
         }
 
     }
+   
 }
 
