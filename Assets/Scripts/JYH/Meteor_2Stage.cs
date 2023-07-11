@@ -5,20 +5,21 @@ using UnityEngine;
 
 public class Meteor_2Stage : MonoBehaviour
 {
-    public Transform Player;
+    PlayerComponent Player;
 
-    void Start()
+    private void Start()
     {
-        Player = FindObjectOfType<PlayerComponent>().transform;
+        Player = GameObject.Find("Player").GetComponent<PlayerComponent>();
     }
 
-
-    void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag("Player"))
         {
-            Player.SendMessage("Damaged", 0.2f);
-            Debug.Log("플레이어가 맞음"); // player에게 sendmassage 사용
+            Player.ModifyHealthPoint(-20);
+            Debug.Log(other.name);
+            Player.SendMessage("Damaged", 20f);
+            Destroy(gameObject);
         }
     }
 }

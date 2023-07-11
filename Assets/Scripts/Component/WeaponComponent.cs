@@ -22,7 +22,7 @@ public class WeaponComponent : MonoBehaviour
     {
         //if(col.gameObject.CompareTag(_owner.gameObject.tag)) return;
         
-        Debug.Log(col.gameObject.tag + " " + col.gameObject.name);
+        //Debug.Log(col.gameObject.tag + " " + col.gameObject.name);
         if (col.gameObject.CompareTag("Player"))
         {
             var component = col.transform.root.GetComponent<PlayerComponent>();

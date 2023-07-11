@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -6552248768829235822}
   - component: {fileID: 5474233424360834405}
   - component: {fileID: -9102640991684872542}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: 1HSword
   m_TagString: Player
   m_Icon: {fileID: 0}
