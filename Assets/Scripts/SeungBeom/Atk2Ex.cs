@@ -8,8 +8,6 @@ public class Atk2Ex : MonoBehaviour
     public GameObject Circle;
     public GameObject Meteor;
 
-    public float MagicAccuracy;
-    Vector3 offset;
 
     bool Grow;
     bool Shrink;
@@ -24,32 +22,7 @@ public class Atk2Ex : MonoBehaviour
 
         StartCoroutine(Growing());
 
-        /*
-        if (MagicAccuracy != 100)
-        {
-            MagicAccuracy = 1 - (MagicAccuracy / 100);
-
-            for (int i = 0; i < 2; i++)
-            {
-                var val = 1 * Random.Range(-MagicAccuracy, MagicAccuracy);
-                var index = Random.Range(0, 2);
-                if (i == 0)
-                {
-                    if (index == 0)
-                        offset = new Vector3(-val * 20, 0, 0);
-                    else
-                        offset = new Vector3(val * 20, 0, 0);
-                }
-                else
-                {
-                    if (index == 0)
-                        offset = new Vector3(offset.x, 0, -val * 20);
-                    else
-                        offset = new Vector3(offset.x, 0, val * 20);
-                }
-            }
-        }
-        */
+        
     }
 
     // Update is called once per frame
