@@ -164,10 +164,9 @@ public class Hook : MonoBehaviour
         }
 
         float dis = Vector3.Distance(moveObj.position + moveObj.localScale, des);
-        Debug.Log($"{dis} > {lastDistance}\n movementspeed = {movementSpeed}");
         if (dis > lastDistance)
         {
-            //Debug.Log(dis);
+            Debug.Log($"{dis} > {lastDistance}");
             if (!isBack)
                 moveObj.position = des;
 
@@ -213,7 +212,7 @@ public class Hook : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(mainCamera.position, mainCamera.forward, out hit, range, mask)) // find camera destination
         {
-            point = hit.point + hit.normal * hookHead.localScale.y/* * 0.51f*/;
+            point = hit.point + hit.normal * hookHead.localScale.y;
 
             hookedTarget = new HookedTarget(hit.collider.transform, point, hit.normal, hit.distance, float.PositiveInfinity);
             if (hit.collider.GetComponent<Rigidbody>())
@@ -245,17 +244,15 @@ public class Hook : MonoBehaviour
         if (isMove)
             return;
 
-        //Debug.Log("Retract");
+        Debug.Log("Retract");
         isMove = true;
 
         SetDirection(pulledTarget, pulledTarget.position, pullingObj.position);
-        //Debug.Log($"Retract mass = {hookedTarget.mass}");
+        //Debug.Log($"{Vector3.Distance(destination, movingObject.position)} < {lastDistance}");
         if (isBack)
         {
             movementSpeed = (power - hookedTarget.mass) / power * speed;
         }
-
-        //Debug.Log($"{lastDistance.ToString("F1")} {Vector3.Distance(movingObject.position, destination)}");
     }
     private void Detach(Rigidbody rb)
     {
@@ -268,7 +265,7 @@ public class Hook : MonoBehaviour
         if (destination == firePosition.position)
             return;
 
-        //Debug.Log("Detach");
+        Debug.Log("Detach");
         isFixed = false;
         isBack = true;
         isMove = true;
@@ -290,15 +287,12 @@ public class Hook : MonoBehaviour
         lastDistance = float.PositiveInfinity;
         Vector3 des = endPos;
 
-        //Debug.DrawRay(firePosition.position, direction * Vector3.Distance(startPos, endPos), Color.red);
         RaycastHit hit;
         if (!isBack && Physics.Raycast(firePosition.position, direction, out hit, Vector3.Distance(startPos, endPos), mask))
         {
-            //Debug.Log(hit.collider.name);
-            des = hit.point + hit.normal * hookHead.localScale.y/* * 0.51f*/;
+            des = hit.point + hit.normal * hookHead.localScale.y;
 
             hookedTarget = new HookedTarget(hit.collider.transform, des, hit.normal, hit.distance, float.PositiveInfinity);
-            //Debug.Log(hit.distance);
             if (hit.collider.GetComponent<Rigidbody>())
             {
                 hookedTarget.mass = hit.collider.GetComponent<Rigidbody>().mass;
@@ -318,13 +312,15 @@ public class Hook : MonoBehaviour
         Gizmos.color = Color.blue;
         Transform mainCamera = Camera.main.transform;
         Gizmos.DrawRay(mainCamera.position, mainCamera.forward * range);
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(firePosition.position, direction * range);
+
+        //Gizmos.color = Color.red;
+        //Gizmos.DrawRay(firePosition.position, direction * range);
 
         Gizmos.color = Color.green;
         Vector3 dir = (hookHead.position - firePosition.position).normalized;
         float dis = Vector3.Distance(hookHead.position, firePosition.position);
         Gizmos.DrawRay(firePosition.position, dir * dis);
+        Gizmos.DrawSphere(hookHead.position, 0.25f);
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawRay(hookHead.position, Vector3.up * playerHeight);
