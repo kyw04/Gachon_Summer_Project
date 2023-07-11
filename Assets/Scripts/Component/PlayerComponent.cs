@@ -39,6 +39,8 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     public override int ModifyHealthPoint(int amount)
     {
         isControllable = false;
+        StopAllCoroutines();
+        AnimEvt("Damaged");
         return base.ModifyHealthPoint(amount);
     }
 
@@ -127,11 +129,10 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
                 if (isDodging || !isControllable) return;
                 else isDodging = !isDodging;
                 isControllable = false;
+
+                //this.transform.forward = lookFoward * (Input.GetAxisRaw("Vertical") == -1 ? -1 : 1);
                 animator.SetTrigger("Rolling");
-
-                this.transform.forward = lookFoward * (Input.GetAxisRaw("Vertical") == -1 ? -1 : 1);
-
-                StartCoroutine(Roll());
+                StartCoroutine(Roll(Input.GetAxisRaw("Vertical")));
 
 
             };
@@ -250,11 +251,14 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
 
     #region IEnumerator
 
-    IEnumerator Roll()
+    IEnumerator Roll(float status)
     {
+        var dir = lookFoward;
+        var coefficient = (Mathf.Abs(status) > 0.5f ? status : 1);
+        this.transform.forward = dir * coefficient;
         while (isDodging)
         {
-            this.transform.position += lookFoward.normalized * 0.2f;
+            this.transform.position += dir.normalized * 0.2f * coefficient;
             yield return new WaitForSeconds(0.02f);
         }
         yield break;
@@ -263,7 +267,20 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     {
         while (isJumping)
         {
-            this.transform.position += Vector3.up * 0.15f;
+            this.transform.position += Vector3.up * 0.5f;
+            yield return new WaitForSeconds(0.02f);
+        }
+        yield break;
+    }
+
+    public IEnumerator HitBack(Vector3 dir, float duration, float power)
+    {
+        var time = 0f;
+        while (true)
+        {
+            this.transform.position += dir.normalized * 0.1f * power;
+            time += 0.02f;
+            if (time >= duration) yield break;
             yield return new WaitForSeconds(0.02f);
         }
         yield break;
