@@ -23,7 +23,13 @@ public class PaladinComponent : BattleableComponentBase
     // Start is called before the first frame update
     void Start()
     {
-        Status = new BattleableVOBase(){spd = 2};
+        Status = new BattleableVOBase()
+        {
+            name = Status.name,
+            attackPoint = Status.attackPoint,
+            maxHealthPoint = Status.maxHealthPoint,
+            spd = 2
+        };
         playerInstance = GameObject.FindWithTag("Player").GetComponent<PlayerComponent>();
         healthPoint = Status.maxHealthPoint;
     }

@@ -39,7 +39,7 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
 
     // 전투 가능한 오브젝트들의 스테이터스를 보관할 VO.
     
-    private void Awake()
+    protected void Awake()
     {
         //컴포넌트를 가져옴
         animator = GetComponent<Animator>();

@@ -14,12 +14,17 @@ public class Atk4Pivot : MonoBehaviour
     GameObject six;
     GameObject seven;
     GameObject eight;
+
+    GameObject Laser;
+    GameObject EndPos;
+    bool Lase;
     private void Awake()
+
     {
         TARGET = GameObject.FindGameObjectWithTag("Player").transform;
-        //Targetposition.position = new Vector3(TARGET.transform.position.x, 0, TARGET.transform.position.z);
+
         transform.LookAt(new Vector3(TARGET.position.x, transform.position.y, TARGET.position.z));
-        StartCoroutine(Atk4pivot());
+
         one = transform.GetChild(0).gameObject;
         two = transform.GetChild(1).gameObject;
         three = transform.GetChild(2).gameObject;
@@ -28,50 +33,65 @@ public class Atk4Pivot : MonoBehaviour
         six = transform.GetChild(5).gameObject;
         seven = transform.GetChild(6).gameObject;
         eight = transform.GetChild(7).gameObject;
+
+        Laser = transform.GetChild(8).gameObject;
+        EndPos = transform.GetChild(9).gameObject;
+
+        
+        Laser.SetActive(false);
     }
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-        eight.SetActive(false);
-
-        one.SetActive(false);
-
-        two.SetActive(false);
-        
-        three.SetActive(false);
-        
-        four.SetActive(false);
-        
-        five.SetActive(false);
-       
-        six.SetActive(false);
-
-        seven.SetActive(false);
-
         StartCoroutine(Atk4pivot());
+        one.SetActive(false);
+        two.SetActive(false);
+        three.SetActive(false);
+        four.SetActive(false);
+        five.SetActive(false);
+        six.SetActive(false);
+        seven.SetActive(false);
+        eight.SetActive(false);
+        Laser.transform.LookAt(this.transform.position);
+    }
+
+
+
+
+    private void Update()
+    {
+        if (Lase)
+        {
+            Laser.transform.rotation = Quaternion.Slerp(Laser.transform.rotation, Quaternion.LookRotation(EndPos.transform.position - Laser.transform.position), Time.deltaTime * 3.2f);
+
+        }
+        if (!Lase)
+        {
+            Laser.transform.LookAt(this.transform.position);
+        }
     }
     IEnumerator Atk4pivot()
     {
-        while(true)
-        {
-            yield return new WaitForSeconds(2);
-            transform.LookAt(new Vector3(TARGET.position.x, transform.position.y,TARGET.position.z));
-            eight.SetActive(true);
-            yield return new WaitForSeconds(0.2f);
-            one.SetActive(true);
-            yield return new WaitForSeconds(0.2f);
-            two.SetActive(true);
-            yield return new WaitForSeconds(0.2f);
-            three.SetActive(true);
-            yield return new WaitForSeconds(0.2f);
-            four.SetActive(true);
-            yield return new WaitForSeconds(0.2f);
-            five.SetActive(true);
-            yield return new WaitForSeconds(0.2f);
-            six.SetActive(true);
-            yield return new WaitForSeconds(0.2f);
-            seven.SetActive(true);
-            yield return new WaitForSeconds(6);
-        }
+        Laser.SetActive(true);
+        transform.LookAt(new Vector3(TARGET.position.x, transform.position.y, TARGET.position.z));
+        Lase = true;
+
+        yield return new WaitForSeconds(0.35f);
+        eight.SetActive(true);
+        yield return new WaitForSeconds(0.35f);
+        one.SetActive(true);
+        yield return new WaitForSeconds(0.35f);
+        two.SetActive(true);
+        yield return new WaitForSeconds(0.35f);
+        three.SetActive(true);
+        yield return new WaitForSeconds(0.35f);
+        four.SetActive(true);
+        yield return new WaitForSeconds(0.35f);
+        five.SetActive(true);
+        yield return new WaitForSeconds(0.35f);
+        six.SetActive(true);
+        yield return new WaitForSeconds(0.35f);
+        seven.SetActive(true);
+        Lase = false;
+        Laser.SetActive(false);
     }
 }

@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using UnityEngine.Serialization;
 using TMPro;
 
+[RequireComponent(typeof(Rope))]
 public sealed class PlayerComponent : BattleableComponentBase, IControllable
 {
     [SerializeField] AudioClip[] clip;
@@ -21,6 +22,10 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     public bool isControllable = true;
     public bool isJumpable = true;
     private int AttackStatus = 0;
+    [SerializeField] AudioClip[] clip;
+    [SerializeField] private GameObject hook;
+    private Hook _hookController;
+    private int _attackStatus = 0;
 
     #endregion
     delegate void Act();
@@ -32,10 +37,19 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     [SerializeField] public Slider hp_Bar;
 
     //Awake는 base에 사용 중이므로 기본 설정은 Start를 통해 해주세요
+    private void Awake()
+    {
+        base.Awake();
+        _hookController = GetComponent<Hook>();
+        Instantiate(hook);
+    }
+    
     private void Start()
     {
-        hp_Bar.value = (float)curHp / (float)maxHp;
         SetUpPlayer();
+        hp_Bar.maxValue = Status.maxHealthPoint;
+        hp_Bar.value = healthPoint;
+        hp_T.text = curHp + "/" + maxHp;
     }
 
     private void FixedUpdate()
@@ -53,7 +67,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         if (curHp > 0)
         {
             curHp -= damage;
-            hp_Bar.value = (float)curHp / (float)maxHp;
+        hp_Bar.value = healthPoint;
             hp_T.text = curHp.ToString() + "/" + maxHp.ToString();
         }
         else
@@ -66,7 +80,10 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     {
         isControllable = false;
         StopAllCoroutines();
-        return base.ModifyHealthPoint(amount);
+        var result = base.ModifyHealthPoint(amount);
+        hp_Bar.value = healthPoint;
+        hp_T.text = $" {healthPoint} / {Status.maxHealthPoint}";
+        return result;
     }
 
     public override void Die()
@@ -139,6 +156,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         //    boss.SendMessage("Damaged", 20f);
         //    SoundManager.instance.Player_Sound(clip[1]);
         //}
+
     }
 
     public void Command()
@@ -162,28 +180,23 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
 
                 //this.transform.forward = lookFoward * (Input.GetAxisRaw("Vertical") == -1 ? -1 : 1);
                 animator.SetTrigger("Rolling");
-                StartCoroutine(Roll(Input.GetAxisRaw("Vertical")));
+                var status = Input.GetAxisRaw("Vertical");
+                StopCoroutine(Roll(status));
+                StartCoroutine(Roll(status));
 
 
             };
         }
-        else if (Input.GetButton("Wiring"))
+        else if (Input.GetButton("Fire1") || Input.GetButton("Fire2"))
         {
-            action = () =>
-            {
-                if (isWiring || !isControllable) return;
-                else isWiring = !isWiring;
-                isControllable = false;
-                //갈고리 이동 기능 구현
-
-            };
+            action = _hookController.HookControl;
         }
         else if (Input.GetButton("Jump"))
         {
             action = () =>
             {
                 if (healthPoint <= 0) return;
-                else isJumping = !isJumping;
+                else isJumping = !isJumping;    
                 isControllable = false;
                 //점프 구현
                 animator.SetTrigger("Jump");

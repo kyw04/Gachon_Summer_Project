@@ -21,6 +21,7 @@ TagManager:
   - Bottom
   - Boss
   - Stage2_Meteor
+  - Hook
   layers:
   - Default
   - TransparentFX
@@ -31,7 +32,8 @@ TagManager:
   - EnemyMetoer
   - Pattern1Bullet
   - Sword
-  - 
+  - Hook
+  - Enemy
   - 
   - 
   - 
