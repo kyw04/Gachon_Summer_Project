@@ -18,7 +18,7 @@ public class FireBall : Bullet
 
     IEnumerator GainPowerTimer()
     {
-        yield return new WaitForSeconds(2.2f);
+        yield return new WaitForSeconds(5.2f);
         isShoot = true;
     }
 
@@ -26,7 +26,7 @@ public class FireBall : Bullet
     {
         while (!isShoot)
         {
-            angularPower += 0.02f;
+            angularPower += 5.55f;
             scaleValue += 0.005f;
             transform.localScale = Vector3.one * scaleValue;
             rigid.AddTorque(transform.right * angularPower, ForceMode.Acceleration);

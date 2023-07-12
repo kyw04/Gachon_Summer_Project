@@ -18,6 +18,10 @@ public class SkyEvasion : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (collision.gameObject.tag == "Player")
+        {
+            Destroy(gameObject);
+        }
         if (collision.gameObject.tag == "Bottom")
         {
             Destroy(gameObject);
@@ -25,6 +29,11 @@ public class SkyEvasion : MonoBehaviour
         }
  
         if (collision.gameObject.tag == "Wall")
+        {
+            Destroy(gameObject);
+            boss1.Sky();
+        }
+        if (collision.gameObject.tag == "Fire")
         {
             Destroy(gameObject);
             boss1.Sky();
