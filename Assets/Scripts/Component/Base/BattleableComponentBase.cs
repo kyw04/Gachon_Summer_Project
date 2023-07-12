@@ -17,8 +17,6 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
     public BattleableVOBase Status;
 
     //현재 체력
-    [SerializeField]
-    protected int healthPoint;
     protected int StaminaPoint;
     protected float AttackDelay;
     
@@ -46,6 +44,8 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
         Rigidbody = GetComponent<Rigidbody>();
     }
 
+    public int healthPoint { get; set; }
+
     public virtual void Attack()
     {
         if (isAttacking) return;
@@ -60,13 +60,14 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
     {
         if (amount < 0)
         {
-            Debug.Log(amount);
+            if (healthPoint == 0) return -1;
             if ((healthPoint += amount) <= 0)
             {
                 healthPoint = 0;
                 Die();
                 return -1;
             }
+            
             //데미지 받았을때의 행동 구현
             animator.SetTrigger("TakeDamage");
             

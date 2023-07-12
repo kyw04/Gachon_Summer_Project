@@ -161,6 +161,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
 
     public void Command()
     {
+        
         //기본적으로 MOVE함수를 실행시키며 특정한 INPUT이 있으면 그에 맞는 메소드를 실행
         Act action = Move;
 
@@ -175,21 +176,28 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
             action = () =>
             {
                 if (isDodging || !isControllable) return;
-                else isDodging = !isDodging;
                 isControllable = false;
 
                 //this.transform.forward = lookFoward * (Input.GetAxisRaw("Vertical") == -1 ? -1 : 1);
                 animator.SetTrigger("Rolling");
                 var status = Input.GetAxisRaw("Vertical");
-                StopCoroutine(Roll(status));
                 StartCoroutine(Roll(status));
 
 
             };
         }
-        else if (Input.GetButton("Fire1") || Input.GetButton("Fire2"))
+        //갈고리
+        else if (Input.GetButtonDown("Fire1"))
         {
+            if (!isControllable || isWiring) return;
             action = _hookController.HookControl;
+            _hookController.state = true;
+        }
+        else if (Input.GetButtonDown("Fire2"))
+        {
+            if (!isControllable || isWiring) return;
+            action = _hookController.HookControl;
+            _hookController.state = false;
         }
         else if (Input.GetButton("Jump"))
         {
@@ -208,6 +216,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     public override void Move()
     {
         if (!isControllable) return;
+        if (healthPoint == 0) Die();
         var dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
         //에니메이터에 있는 bool 타입의 파라미터들을 한 번에 false로
@@ -296,12 +305,13 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
 
     IEnumerator Roll(float status)
     {
+        isDodging = true;
         var dir = lookFoward;
         var coefficient = (Mathf.Abs(status) > 0.5f ? status : 1);
         this.transform.forward = dir * coefficient;
         while (isDodging)
         {
-            this.transform.position += dir.normalized * 0.1f * coefficient;
+            this.transform.position += dir.normalized * 0.08f * coefficient;
             yield return new WaitForSeconds(0.01f);
         }
         yield break;
