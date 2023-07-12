@@ -20,6 +20,7 @@ TagManager:
   - Ball
   - Bottom
   - Boss
+  - Hook
   layers:
   - Default
   - TransparentFX
@@ -30,7 +31,8 @@ TagManager:
   - EnemyMetoer
   - Pattern1Bullet
   - Sword
-  - 
+  - Hook
+  - Enemy
   - 
   - 
   - 
