@@ -30,26 +30,26 @@ public class Atk2Ex : MonoBehaviour
     {
         if (Grow)
         {
-            Circle.transform.localScale += new Vector3(2 * 25f * Time.deltaTime, 2 * 25f * Time.deltaTime, 2 * 25f * Time.deltaTime);
+            Circle.transform.localScale += new Vector3( 25f * Time.deltaTime,  25f * Time.deltaTime,  25f * Time.deltaTime);
         }
         if (Shrink)
         {
-            Circle.transform.localScale -= new Vector3(2 * 25f * Time.deltaTime, 2 * 25f * Time.deltaTime, 2 * 25f * Time.deltaTime);
+            Circle.transform.localScale -= new Vector3( 25f * Time.deltaTime,  25f * Time.deltaTime,  25f * Time.deltaTime);
         }
     }
     IEnumerator Growing()
     {
 
         Grow = true;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         Grow = false;
 
-        yield return new WaitForSeconds(2.5f);  //3 초 후에 폭발 발생
+        yield return new WaitForSeconds(3f);  //3 초 후에 폭발 발생
         Meteor.SetActive(true);
         yield return new WaitForSeconds(0.4f);
         Shrink = true;
         
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(1.2f);
         Shrink = false;
         Circle.transform.localScale = new Vector3(1, 1, 1);
         Circle.SetActive(false);

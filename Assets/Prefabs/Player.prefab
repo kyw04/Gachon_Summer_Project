@@ -74,7 +74,7 @@ MonoBehaviour:
     maxStaminaPoint: 0
     attackPoint: 0
     defencePoint: 0
-    spd: 1000
+    spd: 10
     modelName: Dummy
     position: {x: 0, y: 0, z: 0}
   healthPoint: 0
