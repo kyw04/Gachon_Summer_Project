@@ -372,7 +372,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 1417803604167083749}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   m_Radius: 0.06
   m_Height: 0.4
   m_Direction: 2
@@ -1349,7 +1349,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 5555542638099170394}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   m_Radius: 0.06
   m_Height: 0.4
   m_Direction: 2
@@ -2118,7 +2118,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5486830852110412567}
   - component: {fileID: 4541552340514340886}
-  - component: {fileID: 2096134718}
   m_Layer: 3
   m_Name: Mesh
   m_TagString: Player
@@ -2246,20 +2245,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.021910757, y: 0.00000020861626, z: 0.038551383}
     m_Extent: {x: 0.96946156, y: 0.90274227, z: 0.23576081}
   m_DirtyAABB: 0
---- !u!64 &2096134718
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9209322713049764938}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: a13bf9cc43b7cfe41957690a092aaa3c, type: 2}
 --- !u!1001 &7052916812156662502
 PrefabInstance:
   m_ObjectHideFlags: 0

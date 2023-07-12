@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +32,7 @@ public class Hook : MonoBehaviour
     private SpringJoint joint;
     private Transform movingObject;
     private Rigidbody rb;
-    public HookedTarget hookedTarget;
+    private HookedTarget hookedTarget;
     private Vector3 direction;
     private Vector3 destination;
     private float lastDistance;
@@ -43,7 +42,6 @@ public class Hook : MonoBehaviour
     public bool isMove;
     public bool isFixed;
     public bool isHold;
-    public bool state = true;
 
     private void Start()
     {
@@ -64,13 +62,13 @@ public class Hook : MonoBehaviour
     {
         if (!isMove)
         {
-            if (isFixed && hookedTarget.mass < power && state)
+            if (isFixed && hookedTarget.mass < power && Input.GetButtonDown("Fire1"))
             {
                 //Debug.Log($"Fire1 mass = {hookedTarget.mass}");
                 isBack = true;
                 Retract(firePosition, hookedTarget.targetObj);
             }
-            else if (!state)
+            else if (Input.GetButtonDown("Fire2"))
             {
                 if (isFixed)
                 {
@@ -95,12 +93,8 @@ public class Hook : MonoBehaviour
     {
         if (movingObject)
         {
-            try
-            {
-                rb = movingObject.GetComponent<Rigidbody>();
-                rb.velocity = rb.velocity * 1;
-            }
-            catch
+            rb = movingObject.GetComponent<Rigidbody>();
+            if (rb == null)
             {
                 rb = movingObject.GetComponentInChildren<Rigidbody>();
             }
@@ -121,6 +115,7 @@ public class Hook : MonoBehaviour
             {
                 if (hit.collider.gameObject != hookedTarget.targetObj.gameObject)
                 {
+                    Debug.Log($"hit: {hit.collider.name}, hooked: {hookedTarget.targetObj.name}");
                     Detach(rb);
                 }
             }
@@ -197,8 +192,7 @@ public class Hook : MonoBehaviour
             return false;
         }
         //hookHead.position = Vector3.Lerp(hookHead.position, direction, Time.deltaTime * movementSpeed);
-        var coefficient = movementSpeed * Time.deltaTime;
-        moveObj.position += dir * coefficient;
+        moveObj.position += dir * movementSpeed * Time.deltaTime;
         lastDistance = dis;
 
         return true;
