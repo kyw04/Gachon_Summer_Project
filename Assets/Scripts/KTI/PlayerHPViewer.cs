@@ -8,16 +8,16 @@ using UnityEngine.SceneManagement;
 public class PlayerHPViewer : MonoBehaviour
 {
     [SerializeField]
-    private Slider P_hpbar;
+    public Slider P_hpbar;
     public Text hp_text;
 
-    private float P_maxHp = 100f; // 플레이어 최대 체력
-    private float P_curHp = 100f; // 플레이어 현재 체력
+    public float P_maxHp = 100f; // 플레이어 최대 체력
+    public float P_curHp = 100f; // 플레이어 현재 체력
 
 
 
 
-    void Start()
+    public void Start()
     {
         P_hpbar.value = (float)P_curHp / (float)P_maxHp;
         P_hpbar.minValue = 0;
@@ -45,12 +45,12 @@ public class PlayerHPViewer : MonoBehaviour
 
 
 
-    private void Update()
+    public void Update()
     {
         P_hpbar.maxValue = P_maxHp;
         P_hpbar.value = P_curHp;
 
-        if (Input.GetKeyDown(KeyCode.V))
+       /* if (Input.GetKeyDown(KeyCode.V))
         {
             if (P_curHp > 0)
             {
@@ -62,9 +62,24 @@ public class PlayerHPViewer : MonoBehaviour
         {
             P_hpbar.value = 0;
             hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+          //  SceneManager.LoadScene(4);
+        } */
+    }
+    public void Ground()
+    {
+        if (P_hpbar.value > 0)
+        {
+            P_curHp -= 0.5f;
+            hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+        }
+        if (P_hpbar.value <= 0)
+        {
+            //P_hpbar.value = 0;
+            //hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
             SceneManager.LoadScene(4);
         }
     }
+
     void OnTriggerEnter(Collider other)
     {
         switch (other.gameObject.tag)
