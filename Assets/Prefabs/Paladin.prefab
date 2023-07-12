@@ -2208,8 +2208,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.1, y: 0.05, z: 1}
-  m_Center: {x: 0, y: 0, z: 0.5}
+  m_Size: {x: 0.1, y: 0.1, z: 1}
+  m_Center: {x: 0, y: -0.03, z: 0.5}
 --- !u!114 &7317174025005905256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2332,7 +2332,7 @@ Transform:
   m_GameObject: {fileID: 7587081925758138498}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.05, y: 0, z: 6.27}
-  m_LocalScale: {x: 2, y: 1.875, z: 2}
+  m_LocalScale: {x: 2.5, y: 2.25, z: 2.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3337511127891804844}
@@ -2414,7 +2414,6 @@ MonoBehaviour:
     spd: 2
     modelName: Paladin
     position: {x: 0, y: 0, z: 0}
-  healthPoint: 0
   animator: {fileID: 0}
   lookFoward: {x: 0, y: 0, z: 0}
   lookRight: {x: 0, y: 0, z: 0}
@@ -2423,16 +2422,9 @@ MonoBehaviour:
   isActionable: 1
   isDamageable: 1
   coolDown: 8
-  magicInstances:
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
   playerInstance: {fileID: 0}
+  healthPointSlider: {fileID: 0}
+  nameTextField: {fileID: 0}
 --- !u!65 &1699249495
 BoxCollider:
   m_ObjectHideFlags: 0
