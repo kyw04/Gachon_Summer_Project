@@ -12,7 +12,7 @@ using TMPro;
 [RequireComponent(typeof(Rope))]
 public sealed class PlayerComponent : BattleableComponentBase, IControllable
 {
-    [SerializeField] AudioClip[] clip;
+  
     Stage2_Boss boss;
     #region  Variable
 

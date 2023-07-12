@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class FireGround : MonoBehaviour
 {
-    PlayerHPViewer playerHP;
+    //PlayerHPViewer playerHP;
     void Start()
     {
-        playerHP = GameObject.Find("Player").GetComponent<PlayerHPViewer>();
+    //    playerHP = GameObject.Find("Player").GetComponent<PlayerHPViewer>();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            playerHP.Ground();
+        //    playerHP.Ground();
         }
     }
 }
