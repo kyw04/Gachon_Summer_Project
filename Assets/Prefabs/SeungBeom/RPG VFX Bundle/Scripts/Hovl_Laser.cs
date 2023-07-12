@@ -25,8 +25,12 @@ public class Hovl_Laser : MonoBehaviour
     private ParticleSystem[] Effects;
     private ParticleSystem[] Hit;
 
+    private int layerMask;
+
+
     void Start ()
     {
+        layerMask = ~LayerMask.GetMask("Pattern1Bullet");
         //Get LineRender and ParticleSystem components from current prefab;  
         Laser = GetComponent<LineRenderer>();
         Effects = GetComponentsInChildren<ParticleSystem>();
@@ -49,8 +53,9 @@ public class Hovl_Laser : MonoBehaviour
             Laser.SetPosition(0, transform.position);
             RaycastHit hit; //DELETE THIS IF YOU WANT USE LASERS IN 2D
             //ADD THIS IF YOU WANNT TO USE LASERS IN 2D: RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.forward, MaxLength);       
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, MaxLength))//CHANGE THIS IF YOU WANT TO USE LASERRS IN 2D: if (hit.collider != null)
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, MaxLength, layerMask))//CHANGE THIS IF YOU WANT TO USE LASERRS IN 2D: if (hit.collider != null)
             {
+                Debug.Log(hit.collider.name);
                 //End laser position if collides with object
                 Laser.SetPosition(1, hit.point);
 
