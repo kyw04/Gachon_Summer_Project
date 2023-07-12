@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3271316393856106421, guid: 40dec40e218e8e94a815a5ac38d62150, type: 3}
       propertyPath: m_Name
-      value: Ground shine ex Variant
+      value: ATK2
       objectReference: {fileID: 0}
     - target: {fileID: 3273483243960400559, guid: 40dec40e218e8e94a815a5ac38d62150, type: 3}
       propertyPath: m_RootOrder
@@ -17,15 +17,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3273483243960400559, guid: 40dec40e218e8e94a815a5ac38d62150, type: 3}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3273483243960400559, guid: 40dec40e218e8e94a815a5ac38d62150, type: 3}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3273483243960400559, guid: 40dec40e218e8e94a815a5ac38d62150, type: 3}
       propertyPath: m_LocalScale.z
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3273483243960400559, guid: 40dec40e218e8e94a815a5ac38d62150, type: 3}
       propertyPath: m_LocalPosition.x

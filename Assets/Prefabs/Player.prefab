@@ -87,9 +87,13 @@ MonoBehaviour:
   isJumping: 0
   isControllable: 1
   isJumpable: 1
+<<<<<<< Updated upstream
   clip:
   - {fileID: 8300000, guid: ce54bb7caa7e1dc449d819c23547f4d4, type: 3}
   hook: {fileID: 6896745264348661649, guid: a1f55f43f973802479c3f36c4a7706be, type: 3}
+=======
+  clip: []
+>>>>>>> Stashed changes
   hp_T: {fileID: 0}
   hp_Bar: {fileID: 0}
 --- !u!95 &787976283229579806
