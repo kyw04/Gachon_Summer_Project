@@ -45,10 +45,11 @@ public class Hook : MonoBehaviour
 
     private void Start()
     {
-        firePosition.parent = GameObject.Find("Player").transform;
+        firePosition = GameObject.FindWithTag("Hook").transform;
+        hookHead = firePosition.GetChild(0);
 
-        hookHead.position = firePosition.position;
-
+        firePosition.parent = this.transform;
+        
         mask = ~LayerMask.GetMask("Player");
 
         isBack = false;
@@ -57,7 +58,7 @@ public class Hook : MonoBehaviour
         isHold = false;
     }
 
-    private void Update()
+    public void HookControl()
     {
         if (!isMove)
         {

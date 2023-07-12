@@ -1,6 +1,8 @@
+using System;
 using UnityEngine;
 
-public class Spring : MonoBehaviour
+[Serializable]
+public class Spring
 {
     [SerializeField]
     public float strength;
@@ -12,6 +14,11 @@ public class Spring : MonoBehaviour
     public float velocity;
     [SerializeField]
     public float value;
+
+    public Spring()
+    {
+        Reset();
+    }
 
     public void Reset()
     {
