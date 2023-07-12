@@ -15,6 +15,7 @@ public class Rope : MonoBehaviour
 
     private Hook hook;
     private LineRenderer rope;
+    [SerializeField]
     private Spring spring;
     private Vector3 currentHookPosition;
 
