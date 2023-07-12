@@ -19,7 +19,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     public bool isControllable = true;
     public bool isJumpable = true;
     [SerializeField] AudioClip[] clip;
-    private int AttackStatus = 0
+    private int AttackStatus = 0;
 
     #endregion
     delegate void Act();
