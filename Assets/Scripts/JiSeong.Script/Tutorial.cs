@@ -8,8 +8,8 @@ public class Tutorial : MonoBehaviour
     public float rotationSpeed = 60f; // 회전 속도
     private bool isOpen = false; // 문 열림 여부
     private bool spawn = false;
-    public GameObject objectPrefab; // 소환할 오브젝트 프리팹
     public Transform spawnPoint; // 오브젝트를 소환할 위치
+    public GameObject prisonObject; // 감옥 오브젝트
 
     private void Start()
     {
@@ -23,17 +23,13 @@ public class Tutorial : MonoBehaviour
         if (zombieObjects.Length == 0)
         {
             isOpen = true;
+            Destroy(prisonObject);
         }
         if (isOpen)
         {
             float targetAngle = 0f;
             Quaternion targetRotation = Quaternion.Euler(0f, targetAngle, 0f);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, -rotationSpeed * Time.deltaTime);
-            if (spawn == false)
-            {
-                Instantiate(objectPrefab, spawnPoint.position, spawnPoint.rotation);
-                spawn = true;
-            }
         }
     }
 }
