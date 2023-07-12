@@ -25,10 +25,10 @@ public class FireBallSpawner : MonoBehaviour
         
 
 
-        range_X = Random.Range(-6, 6);
+        range_X = Random.Range(-17, 35);
       
 
-        Vector3 RandomPostion = new Vector3(range_X, 0, -8);
+        Vector3 RandomPostion = new Vector3(range_X, 0, -21);
 
         Vector3 respawnPosition = originPosition + RandomPostion;
         return respawnPosition;
@@ -51,8 +51,6 @@ public class FireBallSpawner : MonoBehaviour
             {
                 Instantiate(enemy, Return_RandomPosition(), Quaternion.identity);
             }
-
-
         }
     }
 }

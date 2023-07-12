@@ -22,12 +22,14 @@ public class SkySpawner : MonoBehaviour
         Vector3 originPosition = rangeObject.transform.position;
         // 콜라이더의 사이즈를 가져오는 bound.size 사용
         float range_X = rangeCollider.bounds.size.x;
+        float range_Y = rangeCollider.bounds.size.y;
         float range_Z = rangeCollider.bounds.size.z;
 
 
-        range_X = Random.Range(-8,6);
-        range_Z = Random.Range(-6,10);
-        Vector3 RandomPostion = new Vector3(range_X, 6, range_Z);
+        range_X = Random.Range(-21,35);
+        range_Y = Random.Range(30, 35);
+        range_Z = Random.Range(-21,35);
+        Vector3 RandomPostion = new Vector3(range_X, range_Y, range_Z);
 
         Vector3 respawnPosition = originPosition + RandomPostion;
         return respawnPosition;
@@ -43,7 +45,7 @@ public class SkySpawner : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.7f);
             // 생성 위치 부분에 위에서 만든 함수 Return_RandomPosition() 함수 대입
             //GameObject instantCapsul = Instantiate(enemy, Return_RandomPosition(), Quaternion.identity);
             for (int i = 0; i < FireballCount; i++)

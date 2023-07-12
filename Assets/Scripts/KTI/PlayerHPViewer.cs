@@ -5,23 +5,24 @@
 //using UnityEngine.SceneManagement;
 
 
-//public class PlayerHPViewer : MonoBehaviour
-//{
-//    [SerializeField]
-//    private Slider P_hpbar;
-//    public Text hp_text;
+public class PlayerHPViewer : MonoBehaviour
+{
+    [SerializeField]
+    public Slider P_hpbar;
+    public Text hp_text;
 
-//    private float P_maxHp = 100f; // ÇÃ·¹ÀÌ¾î ÃÖ´ë Ã¼·Â
-//    private float P_curHp = 100f; // ÇÃ·¹ÀÌ¾î ÇöÀç Ã¼·Â
-
-
+    public float P_maxHp = 100f; // í”Œë ˆì´ì–´ ìµœëŒ€ ì²´ë ¥
+    public float P_curHp = 100f; // í”Œë ˆì´ì–´ í˜„ìž¬ ì²´ë ¥
 
 
-//    void Start()
-//    {
-//        P_hpbar.value = (float)P_curHp / (float)P_maxHp;
-//        P_hpbar.minValue = 0;
-//    }
+
+
+    public void Start()
+    {
+        P_hpbar.value = (float)P_curHp / (float)P_maxHp;
+        P_hpbar.minValue = 0;
+    }
+
 
 //    private void OnCollisionEnter(Collision collision)
 //    {
@@ -43,41 +44,55 @@
 //    }
 
 
+    public void Update()
+    {
+        P_hpbar.maxValue = P_maxHp;
+        P_hpbar.value = P_curHp;
 
+       /* if (Input.GetKeyDown(KeyCode.V))
+        {
+            if (P_curHp > 0)
+            {
+                P_curHp -= 13.0f;
+                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+            }
+        }
+        if (P_hpbar.value <= 0)
+        {
+            P_hpbar.value = 0;
+            hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+          //  SceneManager.LoadScene(4);
+        } */
+    }
+    public void Ground()
+    {
+        if (P_hpbar.value > 0)
+        {
+            P_curHp -= 0.5f;
+            hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+        }
+        if (P_hpbar.value <= 0)
+        {
+            //P_hpbar.value = 0;
+            //hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+            SceneManager.LoadScene(4);
+        }
+    }
 
-//    private void Update()
-//    {
-//        P_hpbar.maxValue = P_maxHp;
-//        P_hpbar.value = P_curHp;
+    void OnTriggerEnter(Collider other)
+    {
+        switch (other.gameObject.tag)
+        {
+            case "Meteor":
+                //        Player.SendMessage("Damaged", 0.2f);
+                break;
+            case "CircleMeteor":
+                //        Player.SendMessage("Damaged", 0.2f);
+                break;
+        }
+    }
+    // ìž„ì‹œë¡œ Ví‚¤ë¥¼ ëˆŒë €ì„ ë•Œ í”¼ê°€ ê¹Žì´ë„í˜¹ í•¨ 
+    // ì ì˜ ê³µê²©ì— ë§žì•˜ì„ ë•Œë¡œ ì½”ë“œ ìˆ˜ì •í•´ì•¼ í•¨
+}
 
-//        if (Input.GetKeyDown(KeyCode.V))
-//        {
-//            if (P_curHp > 0)
-//            {
-//                P_curHp -= 13.0f;
-//                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
-//            }
-//        }
-//        if (P_hpbar.value <= 0)
-//        {
-//            P_hpbar.value = 0;
-//            hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
-//            SceneManager.LoadScene(4);
-//        }
-//    }
-//    void OnTriggerEnter(Collider other)
-//    {
-//        switch (other.gameObject.tag)
-//        {
-//            case "Meteor":
-//                //        Player.SendMessage("Damaged", 0.2f);
-//                break;
-//            case "CircleMeteor":
-//                //        Player.SendMessage("Damaged", 0.2f);
-//                break;
-//        }
-//    }
-//    // ÀÓ½Ã·Î VÅ°¸¦ ´­·¶À» ¶§ ÇÇ°¡ ±ðÀÌµµÈ¤ ÇÔ 
-//    // ÀûÀÇ °ø°Ý¿¡ ¸Â¾ÒÀ» ¶§·Î ÄÚµå ¼öÁ¤ÇØ¾ß ÇÔ
-//}
 

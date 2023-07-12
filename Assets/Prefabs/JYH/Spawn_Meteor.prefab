@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 7898187081208035025}
   m_Layer: 6
   m_Name: Spawn_Meteor
-  m_TagString: Untagged
+  m_TagString: Stage2_Meteor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

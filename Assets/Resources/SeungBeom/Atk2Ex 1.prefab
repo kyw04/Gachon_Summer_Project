@@ -257,6 +257,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 8153492434127615548, guid: 1d3b279637d909e4c8ae6755e87ee02a, type: 3}
+      propertyPath: InitialModule.startSize.scalar
+      value: 1.84
+      objectReference: {fileID: 0}
+    - target: {fileID: 8153492434127615548, guid: 1d3b279637d909e4c8ae6755e87ee02a, type: 3}
+      propertyPath: InitialModule.startSize.minScalar
+      value: 5.2
+      objectReference: {fileID: 0}
     - target: {fileID: 8772152365767094590, guid: 1d3b279637d909e4c8ae6755e87ee02a, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5

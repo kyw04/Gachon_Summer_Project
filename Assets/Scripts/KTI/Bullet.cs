@@ -13,7 +13,7 @@ public class Bullet :MonoBehaviour
     public bool isBall;
 
     BossHPViewer boss;
-
+   
     private void Start()
     {
         boss = GameObject.Find("BossHPSlider").GetComponent<BossHPViewer>();
@@ -29,11 +29,14 @@ public class Bullet :MonoBehaviour
         {
             Destroy(gameObject);
         }
+      
         if (collision.gameObject.tag == "Wall")
         {
             Destroy(gameObject);
             boss.Fire();
         }
+       
+        
     }
 }
 

@@ -16,7 +16,6 @@ public class Boss3 : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("att");
         if(other.tag == "Boss") 
         {
             boss3.Boss3();

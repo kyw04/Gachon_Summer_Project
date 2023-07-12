@@ -17,9 +17,7 @@ public class Meteor_2Stage : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             Player.ModifyHealthPoint(-20);
-            Debug.Log(other.name);
             Player.SendMessage("Damaged", 20f);
-            Destroy(gameObject);
         }
     }
 }

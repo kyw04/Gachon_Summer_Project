@@ -71,6 +71,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Z.Boss Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 896bd643ba02c8a42becdb04257b1c80, type: 3}
+      propertyPath: m_TagString
+      value: Boss
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 896bd643ba02c8a42becdb04257b1c80, type: 3}
       propertyPath: m_Controller
       value: 
@@ -125,6 +129,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 787976283229579778, guid: 35d521e6a30287f4e8f3ba9221b4fc71, type: 3}
   prefab: {fileID: 3429380538757334372, guid: 16877cbb699711d40b8190f0403c7819, type: 3}
+  attackObjectPrefab: {fileID: 2009869833088217596, guid: b20cdd9790801154b8f0d92726face98, type: 3}
+  attackRadius: 5
   moveSpeed: 2
   rotationSpeed: 5
   attackRange: 1
