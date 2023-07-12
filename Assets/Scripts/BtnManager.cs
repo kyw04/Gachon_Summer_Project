@@ -9,11 +9,7 @@ public class BtnManager : MonoBehaviour
     private int sceneNum; // 각 Scene들의 번호를 알려주기 위한 변수
     Animator anim;
 
-    public void OnClick_StartBtn() // Title에서 Start 눌렀을때 실행되는 함수
-    {
-        sceneNum = 1;
-        StartCoroutine(Scene_Move());
-    }
+    
 
     public void OnClick_NextScene() // 보스1 클리어 화면에서 Start 눌렀을때 실행되는 함수
     {
@@ -35,7 +31,13 @@ public class BtnManager : MonoBehaviour
         StartCoroutine(Scene_Move());
 
     }
-    public void OnClick_QuitBtn()
+    public void OnClick_StartBtn() // Title에서 Start 눌렀을때 실행되는 함수
+    {
+        sceneNum = 1;
+        StartCoroutine(Scene_Move());
+    }
+
+    public void OnClick_QuitBtn() // 게임종료 버튼
     {
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;

@@ -12,13 +12,16 @@ using TMPro;
 [RequireComponent(typeof(Rope))]
 public sealed class PlayerComponent : BattleableComponentBase, IControllable
 {
+    [SerializeField] AudioClip[] clip;
+    Stage2_Boss boss;
     #region  Variable
-    
+
     public bool isDodging = false;
     public bool isWiring = false;
     public bool isJumping = false;
     public bool isControllable = true;
     public bool isJumpable = true;
+    private int AttackStatus = 0;
     [SerializeField] AudioClip[] clip;
     [SerializeField] private GameObject hook;
     private Hook _hookController;
@@ -147,7 +150,13 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     {
         SoundManager.instance.Player_Sound(clip[0]);
         base.Attack();
-        animator.SetInteger("AttackType", _attackStatus++ % 2);
+        animator.SetInteger("AttackType", AttackStatus++ % 2);
+        //if (boss.away <= 5)
+        //{
+        //    boss.SendMessage("Damaged", 20f);
+        //    SoundManager.instance.Player_Sound(clip[1]);
+        //}
+
     }
 
     public void Command()
