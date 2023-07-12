@@ -5,6 +5,8 @@ using UnityEngine;
 public class Atk1 : MonoBehaviour
 {
     public GameObject Bullet;
+    public Atk1Pool atk1pool;
+
     public float Firerate;
     GameObject Target;
     // Start is called before the first frame update
@@ -18,7 +20,7 @@ public class Atk1 : MonoBehaviour
         while(true)
         {
             yield return new WaitForSeconds(Firerate);
-            Instantiate(Bullet, transform.position, Quaternion.identity);
+            atk1pool.GetItem();
         }
     }
 }

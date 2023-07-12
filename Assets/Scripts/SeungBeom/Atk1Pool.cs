@@ -4,36 +4,51 @@ using UnityEngine;
 
 public class Atk1Pool : MonoBehaviour
 {
+    public GameObject P1Bullet;
 
-    public GameObject prefab;
-    public int maxCount = 250;
+    private Queue<GameObject> queue = new Queue<GameObject>();
+    public int MaxCount = 125;
 
-    public Queue<GameObject> queue = new Queue<GameObject>();
+    public float FireRate = 0.3f;
+
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < maxCount; i++)
+        for(int i = 0; i < MaxCount; i++)
         {
-            GameObject Poolobjcet = Instantiate(prefab);
-            queue.Enqueue(Poolobjcet);
-            Poolobjcet.SetActive(false);
+            GameObject PoolObject = Instantiate(P1Bullet);
+            queue.Enqueue(PoolObject);
+            P1Bullet.SetActive(false);
+            PoolObject.hideFlags = HideFlags.HideInHierarchy;
+        }
+        
+        StartCoroutine(BulletFire());
+    }
+
+    public void PutQueue(GameObject PoolObject)      //다시 큐에 집어넣는 함수
+    {
+        queue.Enqueue(PoolObject);
+        PoolObject.SetActive(false);
+        
+    }
+
+    public GameObject GetItem()
+    {
+        GameObject PoolObject = queue.Dequeue();
+        PoolObject.SetActive(true);
+
+        queue.Enqueue(PoolObject);
+        return PoolObject;
+    }
+    IEnumerator BulletFire()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(FireRate);
+            GetItem();
+            Debug.Log("총알 발싸!");
         }
     }
-
-    public void ENQUEUE(GameObject poolobjcet)
-    {
-        queue.Enqueue(poolobjcet);
-        poolobjcet.SetActive(false);
-    }
-    public GameObject DEQUEUE()
-    {
-        GameObject poolobject = queue.Dequeue();
-        poolobject.SetActive(true);
-
-        queue.Enqueue(poolobject);
-        return poolobject;
-    }
-
     // Update is called once per frame
     void Update()
     {

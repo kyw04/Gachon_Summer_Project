@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
+//using UnityEngine.UI;
+//using UnityEngine.SceneManagement;
 
 
 public class PlayerHPViewer : MonoBehaviour
@@ -11,8 +11,8 @@ public class PlayerHPViewer : MonoBehaviour
     public Slider P_hpbar;
     public Text hp_text;
 
-    public float P_maxHp = 100f; // ÇÃ·¹ÀÌ¾î ÃÖ´ë Ã¼·Â
-    public float P_curHp = 100f; // ÇÃ·¹ÀÌ¾î ÇöÀç Ã¼·Â
+    public float P_maxHp = 100f; // í”Œë ˆì´ì–´ ìµœëŒ€ ì²´ë ¥
+    public float P_curHp = 100f; // í”Œë ˆì´ì–´ í˜„ìž¬ ì²´ë ¥
 
 
 
@@ -23,26 +23,25 @@ public class PlayerHPViewer : MonoBehaviour
         P_hpbar.minValue = 0;
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
 
-        if (collision.gameObject.tag == "Enemy")
-        {
-            if (P_curHp > 0)
-            {
-                P_curHp -= 10f;
-                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());   
-            }
-        }
-            if (P_hpbar.value <= 0)
-            {
-                //P_hpbar.value = 0;
-                //hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
-                SceneManager.LoadScene(4);
-            }
-    }
-    
+//    private void OnCollisionEnter(Collision collision)
+//    {
 
+//        if (collision.gameObject.tag == "Enemy")
+//        {
+//            if (P_curHp > 0)
+//            {
+//                P_curHp -= 10f;
+//                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+//            }
+//        }
+//        if (P_hpbar.value <= 0)
+//        {
+//            //P_hpbar.value = 0;
+//            //hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+//            SceneManager.LoadScene(4);
+//        }
+//    }
 
 
     public void Update()
@@ -92,7 +91,8 @@ public class PlayerHPViewer : MonoBehaviour
                 break;
         }
     }
-    // ÀÓ½Ã·Î VÅ°¸¦ ´­·¶À» ¶§ ÇÇ°¡ ±ðÀÌµµÈ¤ ÇÔ 
-    // ÀûÀÇ °ø°Ý¿¡ ¸Â¾ÒÀ» ¶§·Î ÄÚµå ¼öÁ¤ÇØ¾ß ÇÔ
+    // ìž„ì‹œë¡œ Ví‚¤ë¥¼ ëˆŒë €ì„ ë•Œ í”¼ê°€ ê¹Žì´ë„í˜¹ í•¨ 
+    // ì ì˜ ê³µê²©ì— ë§žì•˜ì„ ë•Œë¡œ ì½”ë“œ ìˆ˜ì •í•´ì•¼ í•¨
 }
+
 

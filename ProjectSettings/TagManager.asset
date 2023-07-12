@@ -20,6 +20,7 @@ TagManager:
   - Ball
   - Bottom
   - Boss
+  - Hook
   layers:
   - Default
   - TransparentFX
@@ -28,10 +29,10 @@ TagManager:
   - Water
   - UI
   - EnemyMetoer
-  - 
-  - 
-  - 
-  - 
+  - Pattern1Bullet
+  - Sword
+  - Hook
+  - Enemy
   - 
   - 
   - 
