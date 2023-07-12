@@ -55,11 +55,12 @@ public class ExperiBullet : MonoBehaviour
                 {
                     if(Spread == 0) Reposition = new Vector3(0, Luck, 0);
                     else Reposition = new Vector3(0, -Luck, 0);
+
                 }
                 else                                    //두 번째 반복 , Z 축으로 랜덤하게 탄이 튀도록 함.
                 {
-                    if(Spread == 0) Reposition = new Vector3(0, Reposition.y, Luck);
-                    else Reposition = new Vector3(0, Reposition.y, -Luck);
+                    if(Spread == 0) Reposition = new Vector3(0, Reposition.y, Luck * 2);
+                    else Reposition = new Vector3(0, Reposition.y, -Luck * 2);
                     
                 }
             }
@@ -111,7 +112,7 @@ public class ExperiBullet : MonoBehaviour
     {
 
         Projectile.SetActive(true);
-        transform.position = new Vector3(0, 19, 0);
+        transform.position = new Vector3(0, 30, 0);
         BoxCol.enabled = true;
     }
 

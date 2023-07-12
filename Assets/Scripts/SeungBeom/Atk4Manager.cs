@@ -25,13 +25,12 @@ public class Atk4Manager : MonoBehaviour
         A45.SetActive(false);
 
     }
-    void Start()
+    void OnEnable()
     {
         StartCoroutine(A4Coroutine());
     }
     IEnumerator A4Coroutine()                                   //약 10초간 Active 상태여야 함.     
     {
-        yield return new WaitForSeconds(0.5f);
         A41.SetActive(true);
         yield return new WaitForSeconds(0.5f);
         A42.SetActive(true);

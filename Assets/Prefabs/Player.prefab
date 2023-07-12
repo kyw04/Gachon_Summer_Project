@@ -71,7 +71,7 @@ MonoBehaviour:
     maxStaminaPoint: 0
     attackPoint: 0
     defencePoint: 0
-    spd: 1000
+    spd: 10
     modelName: Dummy
     position: {x: 0, y: 0, z: 0}
   healthPoint: 0
@@ -83,6 +83,10 @@ MonoBehaviour:
   isWiring: 0
   isJumping: 0
   isControllable: 1
+  isJumpable: 1
+  clip: []
+  hp_T: {fileID: 0}
+  hp_Bar: {fileID: 0}
 --- !u!95 &787976283229579806
 Animator:
   serializedVersion: 4

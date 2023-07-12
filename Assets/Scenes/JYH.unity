@@ -597,6 +597,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   B_hpbar: {fileID: 80163537}
   Text: {fileID: 991942208}
+  B_maxHp: 100
+  B_curHp: 100
 --- !u!114 &80163537
 MonoBehaviour:
   m_ObjectHideFlags: 0
