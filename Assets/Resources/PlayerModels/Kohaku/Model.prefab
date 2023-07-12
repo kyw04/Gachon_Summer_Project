@@ -1380,7 +1380,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 1904683448343621651}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   m_Radius: 0.15
   m_Height: 0.15
   m_Direction: 1
@@ -1459,7 +1459,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3909066741878790591}
   - component: {fileID: 5472265725801350052}
-  - component: {fileID: 1709337790}
   m_Layer: 0
   m_Name: Leg
   m_TagString: Player
@@ -1585,20 +1584,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.25828952, y: -0.030779175, z: 0.0023537427}
     m_Extent: {x: 0.64749, y: 0.13307583, z: 0.13566212}
   m_DirtyAABB: 0
---- !u!64 &1709337790
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2029432632031466784}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300044, guid: 42f317b41e3b54a47b20c44155f7b723, type: 3}
 --- !u!1 &2161379060374123371
 GameObject:
   m_ObjectHideFlags: 0
@@ -3033,7 +3018,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7280825175819798316}
   - component: {fileID: 2980075455117745779}
-  - component: {fileID: 1714543620}
   m_Layer: 0
   m_Name: uwagi
   m_TagString: Player
@@ -3154,20 +3138,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.17065002, y: 0.011032578, z: 0.000091701746}
     m_Extent: {x: 0.22619529, y: 0.12703168, z: 0.14072156}
   m_DirtyAABB: 0
---- !u!64 &1714543620
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3454347131559550480}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300028, guid: 42f317b41e3b54a47b20c44155f7b723, type: 3}
 --- !u!1 &3471652788912862252
 GameObject:
   m_ObjectHideFlags: 0
@@ -3212,7 +3182,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 3471652788912862252}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   m_Radius: 0.1
   m_Height: 0.5
   m_Direction: 1

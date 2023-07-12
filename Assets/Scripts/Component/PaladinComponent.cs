@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
 using UnityEngine.Serialization;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
@@ -15,31 +14,13 @@ public class PaladinComponent : BattleableComponentBase
     public bool isDamageable = true;
     public float coolDown;
 
-    //ÇÁ¸®ÆÕ
-    public Queue<MagicComponent> magicInstances;
+    public List<GameObject> magicInstances;
 
     [SerializeField]
     private PlayerComponent playerInstance;
-    public Slider healthPointSlider;
-    public Text nameTextField;
-    private float _distance = 0;
+    private float distance = 0;
     delegate void Act();
     // Start is called before the first frame update
-    
-    public void Awake()
-    {
-        base.Awake();
-        var magicPrefab = Resources.Load("Magic/Metor/Object") as GameObject;
-        magicInstances = new Queue<MagicComponent>();
-
-        for (var i = 0 ; i < 8; i++)
-        {
-            var item = Instantiate(magicPrefab, this.transform, true).gameObject.GetComponent<MagicComponent>();
-            item.gameObject.SetActive(false);
-            magicInstances.Enqueue(item);
-        }
-    }
-    
     void Start()
     {
         Status = new BattleableVOBase()
@@ -47,20 +28,16 @@ public class PaladinComponent : BattleableComponentBase
             name = Status.name,
             attackPoint = Status.attackPoint,
             maxHealthPoint = Status.maxHealthPoint,
-            spd = 1.5f
+            spd = 2
         };
         playerInstance = GameObject.FindWithTag("Player").GetComponent<PlayerComponent>();
         healthPoint = Status.maxHealthPoint;
-        
-        healthPointSlider.maxValue = Status.maxHealthPoint;
-        healthPointSlider.value = healthPoint;
-        nameTextField.text = Status.name;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        _distance = Vector3.Distance(this.transform.position, playerInstance.transform.position);
+        distance = Vector3.Distance(this.transform.position, playerInstance.transform.position);
         Think();
         Move();
     }
@@ -70,25 +47,29 @@ public class PaladinComponent : BattleableComponentBase
         if (isActing || !isActionable || healthPoint == 0) return;
 
         isActionable = false;
-        Act action = () =>
-        {
-            isActing = true;
-            animator.SetTrigger("Cast");
-            
-            StartCoroutine(Casting());
-        };
+        Act action = Cast;
 
-        if (_distance <= 1.8f)
+        if (distance <= 1.5f)
             action = () =>
             {
                 isActing = true;
                 animator.SetTrigger("Kick");
             };
-        else if (_distance <= 3.2f)
+        else if (distance <= 2.5f)
             action = Attack;
         
         StartCoroutine(CallMethodWaitForSeconds(coolDown, () => { isActionable = true;}));
         action();
+    }
+    
+    public void Cast()
+    {
+        isActing = true;
+        animator.SetTrigger("Cast");
+
+
+        StartCoroutine(Casting());
+        
     }
 
     public override void Attack()
@@ -103,7 +84,7 @@ public class PaladinComponent : BattleableComponentBase
         if (isActing || this.healthPoint <= 0) return;
         this.transform.LookAt(playerInstance.transform);
 
-        if (_distance <= 3f)
+        if (distance <= 3f)
         {
             Rigidbody.velocity = Vector3.zero;
             animator.SetBool("isWalkingForward", false);
@@ -127,8 +108,7 @@ public class PaladinComponent : BattleableComponentBase
         isDamageable = false;
         isActionable = false;
         StopAllCoroutines();
-        StartCoroutine(CallMethodWaitForSeconds(2f, () => { isDamageable = true; }));   
-        healthPointSlider.value = healthPoint;
+        StartCoroutine(CallMethodWaitForSeconds(1.5f, () => { isDamageable = true; }));
         return base.ModifyHealthPoint(amount);
     }
 
@@ -173,20 +153,15 @@ public class PaladinComponent : BattleableComponentBase
 
     private IEnumerator Casting()
     {
-        for (int i = 0; i <= magicInstances.Count; i++)
+        int i = 0;
+        foreach (var _object in magicInstances)
         {
-            var magicInstance = magicInstances.Dequeue();
-            magicInstance.transform.position = Vector3.zero + playerInstance.transform.position +
-                new Vector3()
-                {
-                    x = Random.Range(-10f, 10f),
-                    y = 10f,
-                    z = Random.Range(-10f, 10f)
-                };
-            
-            magicInstance.gameObject.SetActive(true);
-            magicInstance.caster = this;
-            magicInstances.Enqueue(magicInstance);
+            var instance = Instantiate(_object);
+            instance.gameObject.tag = "Enemy";
+            instance.gameObject.GetComponent<MagicComponent>().caster = this;
+            var offset =  i != 0 ? new Vector3(Random.Range(-20f, 20f), 0, Random.Range(-20f, 20f)) : Vector3.zero;
+            instance.transform.position += playerInstance.transform.position + offset;
+            i += 1;
             yield return new WaitForSeconds(0.5f);
         }
     }

@@ -4578,6 +4578,28 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 787976283229579782, guid: 35d521e6a30287f4e8f3ba9221b4fc71, type: 3}
   m_PrefabInstance: {fileID: 55161773}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1509246300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1509246299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74c49c0b95a1cae43a96ffebf1f02ecb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hookHead: {fileID: 1314266114}
+  firePosition: {fileID: 225203259}
+  power: 10
+  speed: 100
+  range: 30
+  playerHeight: 1.8
+  isBack: 0
+  isMove: 0
+  isFixed: 0
+  isHold: 0
 --- !u!120 &1509246301
 LineRenderer:
   m_ObjectHideFlags: 0
