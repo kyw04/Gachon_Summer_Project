@@ -796,11 +796,11 @@ ModelImporter:
       curves: []
       events:
       - time: 0.5335666
-        functionName: ParticleInstantiate
+        functionName: HandAttack
         data: FrontSpikesAttack
         objectReferenceParameter: {fileID: 11500000, guid: 705e7f2154ffc1247a560eec44408009, type: 3}
         floatParameter: 0
-        intParameter: 1
+        intParameter: 0
         messageOptions: 0
       - time: 0.9607843
         functionName: SetIdle

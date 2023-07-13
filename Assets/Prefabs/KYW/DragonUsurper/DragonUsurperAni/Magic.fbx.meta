@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 8d407c572ffcdd64a8093245d978392e
+guid: f6917143d85f37f4290bcfe53ac63d03
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
@@ -191,13 +191,13 @@ ModelImporter:
     second: RowerReg_R
   - first:
       1: 100124
-    second: Spine01
+    second: //RootNode
   - first:
       1: 100126
-    second: Spine02
+    second: Spine01
   - first:
       1: 100128
-    second: //RootNode
+    second: Spine02
   - first:
       1: 100130
     second: Thumb01_L
@@ -554,13 +554,13 @@ ModelImporter:
     second: RowerReg_R
   - first:
       4: 400124
-    second: Spine01
+    second: //RootNode
   - first:
       4: 400126
-    second: Spine02
+    second: Spine01
   - first:
       4: 400128
-    second: //RootNode
+    second: Spine02
   - first:
       4: 400130
     second: Thumb01_L
@@ -734,7 +734,7 @@ ModelImporter:
     second: Dragon
   - first:
       74: 7400000
-    second: Take Off
+    second: Scream
   - first:
       95: 9500000
     second: //RootNode
@@ -771,18 +771,18 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Take Off
+      name: Scream
       takeName: Take 001
       internalID: 0
       firstFrame: 0
-      lastFrame: 120
+      lastFrame: 100
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -795,7 +795,14 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.97252744
+      - time: 0.08988764
+        functionName: ParticlePlay
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.9831461
         functionName: SetIdle
         data: 
         objectReferenceParameter: {instanceID: 0}
