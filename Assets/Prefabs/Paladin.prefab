@@ -2407,7 +2407,7 @@ MonoBehaviour:
   Status:
     id: 0
     name: Paladin
-    maxHealthPoint: 800
+    maxHealthPoint: 300
     maxStaminaPoint: 0
     attackPoint: 20
     defencePoint: 5
