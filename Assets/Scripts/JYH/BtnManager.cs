@@ -94,19 +94,19 @@ public class BtnManager : MonoBehaviour
                 LoadingScene.LoadScene("Tutorial");
                 break;
             case 2:
-                LoadingScene.LoadScene("kti");
+                LoadingScene.LoadScene("Stage1");
                 break;
             case 3:
-                LoadingScene.LoadScene("JYH");
+                LoadingScene.LoadScene("Stage2");
                 break;
             case 4:
                 LoadingScene.LoadScene("±‚»´¿Ã æ¿¿Ã∏ß");
                 break;
             case 5:
-                LoadingScene.LoadScene("SB(Boss)");
+                LoadingScene.LoadScene("Stage4");
                 break;
             case 6:
-                LoadingScene.LoadScene("Dragon");
+                LoadingScene.LoadScene("Stage5");
                 break;
         }
     }
