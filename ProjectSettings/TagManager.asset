@@ -20,6 +20,9 @@ TagManager:
   - Ball
   - Bottom
   - Boss
+  - Fireball
+  - Big
+  - Magic
   layers:
   - Default
   - TransparentFX

@@ -34,7 +34,26 @@ public class PlayerHPViewer : MonoBehaviour
                 hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());   
             }
         }
-            if (P_hpbar.value <= 0)
+
+        if (collision.gameObject.tag == "Fireball")
+        {
+            if (P_curHp > 0)
+            {
+                P_curHp -= 1f;
+                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+            }
+        }
+
+        if (collision.gameObject.tag == "Magic")
+        {
+            if (P_curHp > 0)
+            {
+                P_curHp -= 5f;
+                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+            }
+        }
+
+        if (P_hpbar.value <= 0)
             {
                 //P_hpbar.value = 0;
                 //hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());

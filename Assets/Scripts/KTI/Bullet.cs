@@ -35,8 +35,13 @@ public class Bullet :MonoBehaviour
             Destroy(gameObject);
             boss.Fire();
         }
-       
-        
+
+        if (collision.gameObject.tag == "Big")
+        {
+            Destroy(gameObject);
+        }
+
+
     }
 }
 

@@ -72,6 +72,14 @@ public class BossHPViewer : MonoBehaviour
         }
     }
 
+    public void Magic()
+    {
+        if (B_hpbar.value > 0)
+        {
+            B_curHp -= 0.1f;
+        }
+    }
+
     public void Boss3()
     {
         if (B_hpbar.value > 0)

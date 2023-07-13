@@ -16,5 +16,9 @@ public class FireGround : MonoBehaviour
         {
             playerHP.Ground();
         }
+        if (collision.gameObject.tag == "Big")
+        {
+            Destroy(gameObject);
+        }
     }
 }
