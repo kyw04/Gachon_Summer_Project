@@ -16,9 +16,13 @@ public class Dragon : MonoBehaviour
     public ParticleSystem[] particles;
     public Transform[] hands;
     public Transform mouth;
-    
+
     public float screamDistance = 30;
     public float screamPower = 0.5f;
+
+    [Header("Stats")]
+    public float movementSpeed = 5f;
+    public float damage = 10f;
 
     private State state;
     private Animator animator;
@@ -77,6 +81,10 @@ public class Dragon : MonoBehaviour
             Attack("AttackScream");
         if (Input.GetKeyDown(KeyCode.T))
             Attack("TakeOff");
+        if (Input.GetKeyDown(KeyCode.Y))
+            Attack("AttackWing");
+        if (Input.GetKeyDown(KeyCode.A))
+            Attack("AttackMagic");
     }
 
     private void WakeUp()
@@ -100,7 +108,7 @@ public class Dragon : MonoBehaviour
             animator.SetTrigger("WakeUp");
         }
     }
-    
+
     private void Attack(string aniName)
     {
         if (state != State.Idle)
@@ -113,7 +121,7 @@ public class Dragon : MonoBehaviour
     private void AttackFireBall(string poolNmae)
     {
         Attack("AttackFireBall");
-        objectPools[poolNmae].GetItem(mouth.position);  
+        objectPools[poolNmae].GetItem(mouth.position);
     }
     private void AttackWing()
     {
@@ -132,6 +140,23 @@ public class Dragon : MonoBehaviour
             }
         }
     }
+    private void HandAttack(string poolNmae)
+    {
+        GameObject leftParticle = objectPools[poolNmae].GetItem(hands[0].position + Vector3.up * 0.125f);
+        GameObject rightParticle = objectPools[poolNmae].GetItem(hands[1].position + Vector3.up * 0.125f);
+
+        leftParticle.transform.LookAt(transform.forward * 100);
+        rightParticle.transform.LookAt(transform.forward * 100);
+
+        objectPools[poolNmae].FreeItem(leftParticle, 1.5f);
+        objectPools[poolNmae].FreeItem(rightParticle, 1.5f);
+    }
+    private void MagicAttack(string poolNmae)
+    {
+        GameObject newParticle = objectPools[poolNmae].GetItem(transform);
+
+        objectPools[poolNmae].FreeItem(newParticle, 1.5f);
+    }
     private void OnScream(float time)
     {
         isScreaming = true;
@@ -143,17 +168,6 @@ public class Dragon : MonoBehaviour
     }
     private void SetIdle() { state = State.Idle; Debug.Log(state); }
     private void ParticlePlay(int index) { particles[index].Play(); }
-    private void ParticleInstantiate(string poolNmae)
-    {
-        GameObject leftParticle = objectPools[poolNmae].GetItem(hands[0].position + Vector3.up * 0.125f);
-        GameObject rightParticle = objectPools[poolNmae].GetItem(hands[1].position + Vector3.up * 0.125f);
-
-        leftParticle.transform.LookAt(transform.forward * 100);
-        rightParticle.transform.LookAt(transform.forward * 100);
-
-        objectPools[poolNmae].FreeItem(leftParticle, 1.5f);
-        objectPools[poolNmae].FreeItem(rightParticle, 1.5f);
-    }
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.gray;
