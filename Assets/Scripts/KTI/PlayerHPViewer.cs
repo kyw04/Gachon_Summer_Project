@@ -24,6 +24,41 @@ public class PlayerHPViewer : MonoBehaviour
     }
 
 
+        if (collision.gameObject.tag == "Enemy")
+        {
+            if (P_curHp > 0)
+            {
+                P_curHp -= 10f;
+                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());   
+            }
+        }
+
+        if (collision.gameObject.tag == "Fireball")
+        {
+            if (P_curHp > 0)
+            {
+                P_curHp -= 1f;
+                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+            }
+        }
+
+        if (collision.gameObject.tag == "Magic")
+        {
+            if (P_curHp > 0)
+            {
+                P_curHp -= 5f;
+                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+            }
+        }
+
+        if (P_hpbar.value <= 0)
+            {
+                //P_hpbar.value = 0;
+                //hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+                SceneManager.LoadScene(4);
+            }
+    }
+ 
 //    private void OnCollisionEnter(Collision collision)
 //    {
 

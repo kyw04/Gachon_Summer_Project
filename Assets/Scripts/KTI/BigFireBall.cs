@@ -3,18 +3,11 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 
-public class SkyEvasion : MonoBehaviour
+
+public class BigFireBall : MonoBehaviour
 {
-    BossHPViewer boss1;
-
-    private void Start()
-    {
-        boss1 = GameObject.Find("BossHPSlider").GetComponent<BossHPViewer>();
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Player")
@@ -23,27 +16,17 @@ public class SkyEvasion : MonoBehaviour
         }
         if (collision.gameObject.tag == "Bottom")
         {
-            Destroy(gameObject);
-            boss1.Sky();
-        }
- 
-        if (collision.gameObject.tag == "Wall")
-        {
-            Destroy(gameObject);
-            boss1.Sky();
+            Destroy(gameObject);;
         }
         if (collision.gameObject.tag == "Fire")
         {
             Destroy(gameObject);
-            boss1.Sky();
         }
-        if (collision.gameObject.tag == "Big")
+
+        if (collision.gameObject.tag == "Wall")
         {
             Destroy(gameObject);
         }
+       
     }
 }
-
-
-
-
