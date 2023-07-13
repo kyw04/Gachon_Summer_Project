@@ -212,6 +212,11 @@ public class Stage2_Boss : MonoBehaviour
         anim.SetTrigger("dark");
     }
 
+    void SpawnMeteor_Attack() // 위에서 메테오 생성
+    {
+        anim.SetTrigger("spawn_Meteor");
+        //Debug.Log("sky메테오");
+    }
 
     void Real_dark_attack()
     {
@@ -224,12 +229,10 @@ public class Stage2_Boss : MonoBehaviour
     IEnumerator Recover_dark_attack()
     {
         yield return new WaitForSeconds(3.5f);
-        Debug.Log("헤위");
         directional_light.transform.Rotate(new Vector3(30f, transform.rotation.y, transform.rotation.z));
         boss_torch.SetActive(true);
         lamp.SetActive(true);
     }
-
 
     void Real_CircleMeteor_Attack()
     {
@@ -254,13 +257,6 @@ public class Stage2_Boss : MonoBehaviour
         agent.destination = Player.position;     // 계속해서 플레이어를 향해 이동하도록 목적지 설정 (destination)
         agent.isStopped = false;
         agent.speed = 3.5f;
-    }
-
-
-    void SpawnMeteor_Attack() // 위에서 메테오 생성
-    {
-        anim.SetTrigger("spawn_Meteor");
-        //Debug.Log("sky메테오");
     }
 
     void Real_SpawnMeteor_Attack()
