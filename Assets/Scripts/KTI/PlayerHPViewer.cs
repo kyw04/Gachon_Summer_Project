@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 
 public class PlayerHPViewer : MonoBehaviour
@@ -30,7 +31,7 @@ public class PlayerHPViewer : MonoBehaviour
             if (P_curHp > 0)
             {
                 P_curHp -= 10f;
-                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());   
+                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
             }
         }
 
@@ -47,19 +48,19 @@ public class PlayerHPViewer : MonoBehaviour
         {
             if (P_curHp > 0)
             {
-                P_curHp -= 5f;
+                P_curHp -= 2f;
                 hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
             }
         }
 
         if (P_hpbar.value <= 0)
-            {
-                //P_hpbar.value = 0;
-                //hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
-                SceneManager.LoadScene(4);
-            }
+        {
+            //P_hpbar.value = 0;
+            //hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+            SceneManager.LoadScene(4);
+        }
     }
- 
+
 
 
     //        if (collision.gameObject.tag == "Enemy")
@@ -84,20 +85,20 @@ public class PlayerHPViewer : MonoBehaviour
         P_hpbar.maxValue = P_maxHp;
         P_hpbar.value = P_curHp;
 
-       /* if (Input.GetKeyDown(KeyCode.V))
-        {
-            if (P_curHp > 0)
-            {
-                P_curHp -= 13.0f;
-                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
-            }
-        }
-        if (P_hpbar.value <= 0)
-        {
-            P_hpbar.value = 0;
-            hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
-          //  SceneManager.LoadScene(4);
-        } */
+        /* if (Input.GetKeyDown(KeyCode.V))
+         {
+             if (P_curHp > 0)
+             {
+                 P_curHp -= 13.0f;
+                 hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+             }
+         }
+         if (P_hpbar.value <= 0)
+         {
+             P_hpbar.value = 0;
+             hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+           //  SceneManager.LoadScene(4);
+         } */
     }
     public void Ground()
     {
@@ -110,24 +111,34 @@ public class PlayerHPViewer : MonoBehaviour
         {
             //P_hpbar.value = 0;
             //hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
-            SceneManager.LoadScene(4);
+            // SceneManager.LoadScene(4);
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    public void Fireball()
     {
-        switch (other.gameObject.tag)
+        if (P_hpbar.value > 0)
         {
-            case "Meteor":
-                //        Player.SendMessage("Damaged", 0.2f);
-                break;
-            case "CircleMeteor":
-                //        Player.SendMessage("Damaged", 0.2f);
-                break;
+            P_curHp -= 10f;
+            hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
         }
     }
-    // 임시로 V키를 눌렀을 때 피가 깎이도혹 함 
-    // 적의 공격에 맞았을 때로 코드 수정해야 함
-}
+
+        void OnTriggerEnter(Collider other)
+        {
+            switch (other.gameObject.tag)
+            {
+                case "Meteor":
+                    //        Player.SendMessage("Damaged", 0.2f);
+                    break;
+                case "CircleMeteor":
+                    //        Player.SendMessage("Damaged", 0.2f);
+                    break;
+            }
+        }
+        // 임시로 V키를 눌렀을 때 피가 깎이도혹 함 
+        // 적의 공격에 맞았을 때로 코드 수정해야 함
+ }
+
 
 

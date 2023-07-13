@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 976192511548150783}
   - component: {fileID: 976192511548150782}
   - component: {fileID: 101579504781552925}
+  - component: {fileID: 2486885151715104384}
   m_Layer: 0
   m_Name: FireBall
   m_TagString: Enemy
@@ -141,10 +142,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48cb7fdb1dcb65642b58b581f7521f83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  B_hpbar: {fileID: 0}
-  Text: {fileID: 0}
-  B_maxHp: 100
-  B_curHp: 100
   damdge: 10
-  isMelee: 0
   isBall: 1
+--- !u!114 &2486885151715104384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 976192511548150776}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2456f7a04d17f6c46a99f49b148954f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Count: 7

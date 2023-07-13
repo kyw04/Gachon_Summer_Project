@@ -60,7 +60,7 @@ public class BossHPViewer : MonoBehaviour
     {
         if (B_hpbar.value > 0)
         {
-            B_curHp -= 0.05f;
+            B_curHp -= 0.1f;
         }
     }
 
@@ -68,7 +68,7 @@ public class BossHPViewer : MonoBehaviour
     {
         if (B_hpbar.value > 0)
         {
-            B_curHp -= 0.008f;
+            B_curHp -= 0.03f;
         }
     }
 
@@ -76,7 +76,7 @@ public class BossHPViewer : MonoBehaviour
     {
         if (B_hpbar.value > 0)
         {
-            B_curHp -= 0.1f;
+            B_curHp -= 1.2f;
         }
     }
 
@@ -91,10 +91,7 @@ public class BossHPViewer : MonoBehaviour
         {
             B_hpbar.value = 0;
             Text.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.N))
-            {
-                SceneManager.LoadScene(3);
-            }
+            // SceneManager.LoadScene();
         }
     }
     IEnumerator HideText()

@@ -19,6 +19,7 @@ public class Nav : MonoBehaviour
     private void Start()
     {
         pl = GameObject.Find("Player");
+        player = pl.transform;
     }
 
     private void Update()
