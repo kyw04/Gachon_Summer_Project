@@ -17,6 +17,8 @@ public class ExperiBullet : MonoBehaviour
     public int Sentinel;
 
     Vector3 Reposition;
+    Vector3 Reposition1;
+    Vector3 Reposition2;
 
     void OnEnable()
     {
@@ -46,23 +48,23 @@ public class ExperiBullet : MonoBehaviour
         {
             Accuracy = 1 - (Accuracy / 100);            // 명중률은 0.~ 혹은 1로 표현된다.
 
-            for(int i = 0; i <2; i++)
+            for(int i = 0; i <3; i++)
             {
                 float Luck = Random.Range(-Accuracy, Accuracy);
                 float Spread = Random.Range(0, 2); // 0 혹은 1
 
                 if(i == 0)                              // 첫 번째 반복 , Y축으로 랜덤하게 탄이 튀도록 함.
                 {
-                    if(Spread == 0) Reposition = new Vector3(0, Luck, 0);
-                    else Reposition = new Vector3(0, -Luck, 0);
+                    if(Spread == 0) Reposition1 = new Vector3(0, Luck, 0);
+                    else Reposition1 = new Vector3(0, -Luck, 0);
 
                 }
-                else                                    //두 번째 반복 , Z 축으로 랜덤하게 탄이 튀도록 함.
+                if (i == 1)                                     //두 번째 반복 , Z 축으로 랜덤하게 탄이 튀도록 함.
                 {
-                    if(Spread == 0) Reposition = new Vector3(0, Reposition.y, Luck * 2);
-                    else Reposition = new Vector3(0, Reposition.y, -Luck * 2);
-                    
+                    if(Spread == 0) Reposition2 = new Vector3(0, 0, Luck);
+                    else Reposition2 = new Vector3(0, 0, -Luck); 
                 }
+                if (i == 2) Reposition = new Vector3(0, Reposition1.y, Reposition2.z);
             }
         }
         
