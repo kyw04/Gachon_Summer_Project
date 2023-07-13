@@ -11,9 +11,8 @@ public class DestroyLine : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Stage2_Meteor"))
         {
-            Debug.Log("∂•ø° ¥Í¿Ω!!!!!!!!!!!!");
             Vector3 pos = other.transform.position;
-            pos.y = other.transform.localScale.y * 0.5f + 0.5f;
+            pos.y = other.transform.localScale.y * 0.4f;
 
             GameObject Destory_partical = pool.GetItem(pos);
             pool.FreeItem(Destory_partical, 2f);
