@@ -46,6 +46,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
 
     private void Start()
     {
+        BtnManager.instance.sceneNum = 3;
         SetUpPlayer();
         hp_Bar.maxValue = Status.maxHealthPoint;
         hp_Bar.value = healthPoint;
@@ -210,6 +211,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     public override void Move()
     {
         int snum = BtnManager.instance.sceneNum;
+        Debug.Log(snum);
         if ((snum == 3 && bossline.isPlayerMove) || snum != 3)
         {
             if (!isControllable) return;
