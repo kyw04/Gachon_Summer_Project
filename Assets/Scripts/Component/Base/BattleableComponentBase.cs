@@ -60,7 +60,6 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
     {
         if (amount < 0)
         {
-            Debug.Log(amount);
             if ((healthPoint += amount) <= 0)
             {
                 healthPoint = 0;
