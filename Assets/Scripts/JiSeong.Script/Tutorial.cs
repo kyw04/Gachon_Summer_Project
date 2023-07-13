@@ -9,7 +9,6 @@ public class Tutorial : MonoBehaviour
     private bool isOpen = false; // 문 열림 여부
     private bool spawn = false;
     public Transform spawnPoint; // 오브젝트를 소환할 위치
-    public GameObject prisonObject; // 감옥 오브젝트
 
     private void Start()
     {
@@ -23,7 +22,6 @@ public class Tutorial : MonoBehaviour
         if (zombieObjects.Length == 0)
         {
             isOpen = true;
-            Destroy(prisonObject);
         }
         if (isOpen)
         {

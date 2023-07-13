@@ -7,8 +7,6 @@ using UnityEngine.UI;
 public class BossLine : MonoBehaviour
 {
     public ZBoss boss;
-    public GameObject boss_Torch;
-    public GameObject boss_Wall;
     public bool isArrive_Boss;
     public bool endProduction;
 
@@ -24,6 +22,7 @@ public class BossLine : MonoBehaviour
     [Header("보스 등장 연출을 위한 카메라")]
     public GameObject player_Camera;
     public GameObject boss_Camera;
+    public GameObject prisonObject;
 
     private IEnumerator on;
 
@@ -34,10 +33,9 @@ public class BossLine : MonoBehaviour
             Time.timeScale = 0.8f;
             SoundManager.instance.Boss_PlaySound(clip[0]);
             on = PlayerCamera_OnOff();
-            ShowBossNameEffect("Death Bringer");
+            Destroy(prisonObject);
+            ShowBossNameEffect("Abyssal Administrator");
             StartCoroutine(on);
-            boss_Torch.SetActive(true);
-            boss_Wall.SetActive(true);
             isArrive_Boss = true;
             Destroy(gameObject, 4f);
         }
@@ -72,7 +70,6 @@ public class BossLine : MonoBehaviour
         boss_name_obj.SetActive(false);
         boss_Camera.SetActive(false);
         player_Camera.SetActive(true);
-        boss.SendMessage("Health_Bar");
         endProduction = true;
     }
 }
