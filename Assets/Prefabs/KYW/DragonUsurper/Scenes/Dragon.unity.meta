@@ -1,6 +1,11 @@
 fileFormatVersion: 2
-guid: b5a502c3d0790504baa0e46df0acac99
+<<<<<<<< Updated upstream:Assets/Prefabs/KYW/DragonUsurper/Scenes/Dragon.unity.meta
+guid: 59a34b22c18d39646ac31cb7bc216ab6
 DefaultImporter:
+========
+guid: baf40de26d600cb4187b3d5ef08cdde4
+PrefabImporter:
+>>>>>>>> Stashed changes:Assets/Scripts/JiSeong.Script/Z.Boss/ATK1.prefab.meta
   externalObjects: {}
   userData: 
   assetBundleName: 

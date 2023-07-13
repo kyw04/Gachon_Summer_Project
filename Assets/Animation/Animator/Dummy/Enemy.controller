@@ -1052,7 +1052,7 @@ AnimatorStateMachine:
     m_Position: {x: 40, y: 10, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2469465760757079356}
-    m_Position: {x: 550, y: 440, z: 0}
+    m_Position: {x: 540, y: 700, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3899583205694879143}
     m_Position: {x: 750, y: 440, z: 0}
@@ -1061,13 +1061,10 @@ AnimatorStateMachine:
     m_Position: {x: -300, y: 440, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4079701946938210697}
-    m_Position: {x: 330, y: 440, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: 3493180946002291188}
-    m_Position: {x: -90, y: 440, z: 0}
+    m_Position: {x: 310, y: 700, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3753451962223197230}
-    m_Position: {x: 130, y: 440, z: 0}
+    m_Position: {x: 80, y: 440, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 541117181426386490}
     m_Position: {x: 950, y: 440, z: 0}
@@ -1084,7 +1081,7 @@ AnimatorStateMachine:
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 330, y: 580, z: 0}
   m_EntryPosition: {x: -130, y: 20, z: 0}
-  m_ExitPosition: {x: 340, y: 350, z: 0}
+  m_ExitPosition: {x: 330, y: 350, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -7652604296077426416}
 --- !u!1101 &450532072066416687
@@ -1315,32 +1312,6 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
---- !u!1102 &3493180946002291188
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Great Sword Jump Attack
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: d6a6bba5f7f841f42ab21b25fa45fcb5, type: 2}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1102 &3753451962223197230
 AnimatorState:
   serializedVersion: 6
@@ -1483,7 +1454,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Forward
-  m_Speed: 0.6
+  m_Speed: 0.75
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -1071396750218736692}

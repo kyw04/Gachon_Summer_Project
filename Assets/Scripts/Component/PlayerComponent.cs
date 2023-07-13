@@ -12,13 +12,16 @@ using TMPro;
 [RequireComponent(typeof(Rope))]
 public sealed class PlayerComponent : BattleableComponentBase, IControllable
 {
+    Stage2_Boss boss;
+    public Boss_Line bossline;
     #region  Variable
-    
+
     public bool isDodging = false;
     public bool isWiring = false;
     public bool isJumping = false;
     public bool isControllable = true;
     public bool isJumpable = true;
+    private int AttackStatus = 0;
     [SerializeField] AudioClip[] clip;
     [SerializeField] private GameObject hook;
     private Hook _hookController;
@@ -40,7 +43,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         _hookController = GetComponent<Hook>();
         Instantiate(hook);
     }
-    
+
     private void Start()
     {
         SetUpPlayer();
@@ -64,7 +67,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         if (curHp > 0)
         {
             curHp -= damage;
-        hp_Bar.value = healthPoint;
+            hp_Bar.value = healthPoint;
             hp_T.text = curHp.ToString() + "/" + maxHp.ToString();
         }
         else
@@ -147,13 +150,21 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     {
         SoundManager.instance.Player_Sound(clip[0]);
         base.Attack();
-        animator.SetInteger("AttackType", _attackStatus++ % 2);
+        animator.SetInteger("AttackType", AttackStatus++ % 2);
+        //if (boss.away <= 5)
+        //{
+        //    boss.SendMessage("Damaged", 20f);
+        //    SoundManager.instance.Player_Sound(clip[1]);
+        //}
+
     }
 
     public void Command()
     {
         //기본적으로 MOVE함수를 실행시키며 특정한 INPUT이 있으면 그에 맞는 메소드를 실행
+
         Act action = Move;
+
 
         //조작키들은 임의로 정해진 키로 작동하므로 나중에 정해지면 수정 바람 (2023. 06. 29)
         if (Input.GetButton("Attack"))
@@ -187,7 +198,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
             action = () =>
             {
                 if (healthPoint <= 0) return;
-                else isJumping = !isJumping;    
+                else isJumping = !isJumping;
                 isControllable = false;
                 //점프 구현
                 animator.SetTrigger("Jump");
@@ -198,48 +209,54 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     }
     public override void Move()
     {
-        if (!isControllable) return;
-        var dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-
-        //에니메이터에 있는 bool 타입의 파라미터들을 한 번에 false로
-        var boolParamName =
-            from param in animator.parameters
-            where param.type == AnimatorControllerParameterType.Bool
-            select param.name;
-        foreach (var paramName in boolParamName)
-            animator.SetBool(paramName, false);
-
-
-        //플레이어가 이동 중 일 경우
-        if (dir.magnitude != 0)
+        int snum = BtnManager.instance.sceneNum;
+        if ((snum == 3 && bossline.isPlayerMove) || snum != 3)
         {
-            this.transform.forward = lookFoward;
-            var moveDir = lookFoward * dir.y + lookRight * dir.x;
-            if (dir.x == 0)
-            {
-                animator.SetBool(dir.y > 0 ? "isWalkingForward" : "isWalkingBackward", true);
-            }
-            else
-            {
-                if (dir.y == 0)
-                {
+            if (!isControllable) return;
 
-                    animator.SetBool(dir.x < 0 ? "isWalkingLeft" : "isWalkingRight", true);
+            var dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+
+            //에니메이터에 있는 bool 타입의 파라미터들을 한 번에 false로
+            var boolParamName =
+                from param in animator.parameters
+                where param.type == AnimatorControllerParameterType.Bool
+                select param.name;
+            foreach (var paramName in boolParamName)
+                animator.SetBool(paramName, false);
+
+
+            //플레이어가 이동 중 일 경우
+            if (dir.magnitude != 0)
+            {
+                this.transform.forward = lookFoward;
+                var moveDir = lookFoward * dir.y + lookRight * dir.x;
+                if (dir.x == 0)
+                {
+                    animator.SetBool(dir.y > 0 ? "isWalkingForward" : "isWalkingBackward", true);
                 }
                 else
                 {
-                    //오른쪽 앞 & 뒤
-                    animator.SetBool(dir.y > 0 ? "isWalkingForward" : "isWalkingBackward", true);
-                    animator.SetBool(dir.x < 0 ? "isWalkingLeft" : "isWalkingRight", true);
-                    moveDir /= Mathf.Sqrt(2);
+                    if (dir.y == 0)
+                    {
+
+                        animator.SetBool(dir.x < 0 ? "isWalkingLeft" : "isWalkingRight", true);
+                    }
+                    else
+                    {
+                        //오른쪽 앞 & 뒤
+                        animator.SetBool(dir.y > 0 ? "isWalkingForward" : "isWalkingBackward", true);
+                        animator.SetBool(dir.x < 0 ? "isWalkingLeft" : "isWalkingRight", true);
+                        moveDir /= Mathf.Sqrt(2);
+                    }
                 }
+
+                transform.position += moveDir * Time.deltaTime * Status.spd;
+            }
+            else
+            {
+                animator.SetBool("isIdle", true);
             }
 
-            transform.position += moveDir * Time.deltaTime * Status.spd;
-        }
-        else
-        {
-            animator.SetBool("isIdle", true);
         }
     }
     #endregion

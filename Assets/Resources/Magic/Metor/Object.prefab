@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2364139866054217159}
   - component: {fileID: 2364139866054217154}
   - component: {fileID: 2881997646219668441}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Object
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -149,3 +149,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   caster: {fileID: 0}
   spawnOffset: {x: 0, y: 10, z: 0}
+  explodePrefab: {fileID: 1750002794041519865, guid: 48d12a9128b063a46bce5e0fb7429f71, type: 3}

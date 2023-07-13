@@ -755,7 +755,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2138699063}
         m_TargetAssemblyTypeName: BtnManager, Assembly-CSharp
-        m_MethodName: OnClick_StartBtn
+        m_MethodName: Tutorial_SceneMove
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1085,6 +1085,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04716ae78d0bea846bcea59ada527297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneNum: 0
 --- !u!4 &2138699064
 Transform:
   m_ObjectHideFlags: 0

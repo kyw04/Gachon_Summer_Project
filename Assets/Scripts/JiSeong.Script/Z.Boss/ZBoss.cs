@@ -4,7 +4,8 @@ using System.Collections;
 public class ZBoss : MonoBehaviour
 {
     public Transform target; // 플레이어의 Transform 컴포넌트
-    public GameObject prefab;
+    public GameObject prefab1;
+    public GameObject prefab2;
     public GameObject attackObjectPrefab; // 발사할 공격 오브젝트 프리팹
     public float attackRadius = 5f; // 공격 반경
 
@@ -138,8 +139,11 @@ public class ZBoss : MonoBehaviour
         canAttack = false;
         isAttacking = true;
         Invoke("ResetAttack", attackCooldown);
+        yield return new WaitForSeconds(1.5f);
 
-        yield return new WaitForSeconds(2f); // 공격 지속 시간
+        SpawnPrefab1();
+
+        yield return new WaitForSeconds(0.5f); // 공격 지속 시간
 
         ritationColldown = false;
     }
@@ -161,7 +165,7 @@ public class ZBoss : MonoBehaviour
 
         yield return new WaitForSeconds(1.8f); // 공격 지속 시간
 
-        SpawnPrefab();
+        SpawnPrefab2();
         for (int i = 0; i < 8; i++)
         {
             float angle = i * 45f;
@@ -177,13 +181,21 @@ public class ZBoss : MonoBehaviour
 
         ritationColldown = false;
     }
-    private void SpawnPrefab()
+    private void SpawnPrefab2()
     {
         // 프리팹을 생성하여 인스턴스화합니다.
-        GameObject spawnedPrefab = Instantiate(prefab, transform.position, Quaternion.identity);
+        GameObject spawnedPrefab = Instantiate(prefab2, transform.position, Quaternion.identity);
 
         // 2초 후에 프리팹을 삭제하는 함수 호출을 예약합니다.
         Destroy(spawnedPrefab, 2f);
+    }
+    private void SpawnPrefab1()
+    {
+        // 프리팹을 생성하여 인스턴스화합니다.
+        GameObject spawnedPrefab = Instantiate(prefab1, transform.position, transform.rotation);
+
+        // 2초 후에 프리팹을 삭제하는 함수 호출을 예약합니다.
+        Destroy(spawnedPrefab, 1.5f);
     }
 
     public void StopChasing()
@@ -218,8 +230,11 @@ public class ZBoss : MonoBehaviour
         // 충돌이 발생한 경우
         if (collision.gameObject.CompareTag("Player"))
         {
-            ignoreCollisionTimer = ignoreCollisionDuration;
-            StartCoroutine(ResetIgnoreCollisionTimer());
+            if (isAttacking == false)
+            {
+                ignoreCollisionTimer = ignoreCollisionDuration;
+                StartCoroutine(ResetIgnoreCollisionTimer());
+            }
         }
     }
     private System.Collections.IEnumerator ResetIgnoreCollisionTimer()

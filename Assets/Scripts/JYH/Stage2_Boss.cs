@@ -29,15 +29,20 @@ public class Stage2_Boss : MonoBehaviour
     public ObjectPoolComponent[] boss_Attack;
     public ObjectPoolComponent[] boss_Partical;
     public GameObject die_Effect;
-    public GameObject cast_Effect;
+    public GameObject[] cast_Effect;
 
+
+    [Header("안개로 공격패턴 관련 변수들")]
+    [SerializeField] GameObject lamp;
+    [SerializeField] GameObject directional_light;
+    [SerializeField] GameObject boss_torch;
 
     [Header("보스 사운드")]
     [SerializeField] private AudioClip[] _clip;
-    [SerializeField] private AudioClip[] _bgmClip; 
+    [SerializeField] private AudioClip[] _bgmClip;
 
 
-    float away;
+    public float away;
     public Transform Player;
     public Boss_Line boss_Line;
 
@@ -72,8 +77,11 @@ public class Stage2_Boss : MonoBehaviour
 
         SoundManager.instance.BGM_Sound(0);
 
-      //  SoundManager.instance.BGM_PlaySound(_bgmClip[0]);
+        //  SoundManager.instance.BGM_PlaySound(_bgmClip[0]);
     }
+
+
+
 
     void Update()
     {
@@ -83,12 +91,15 @@ public class Stage2_Boss : MonoBehaviour
 
         //  Debug.Log(away);
 
-        if (Input.GetKeyDown(KeyCode.Z))
-            Damaged(0.2f);
+        //if (Input.GetKeyDown(KeyCode.Z))
+        //    Damaged(0.2f);
 
-        if (boss_Line.isArrive_Boss)
+        if (boss_Line.isArrive_Boss && boss_Line.endProduction)
+        {
             ChangeEnemyState();
+        }
     }
+
     void Damaged(float damage) // 플레이어가 공격했을때 이 함수 호출 
     {
         hp_Bar.value -= damage;
@@ -114,32 +125,19 @@ public class Stage2_Boss : MonoBehaviour
         hp_Bar_gameobj.SetActive(true);
         hp_Name_gameobj.SetActive(true);
     }
-
-    /*void RealAttack() // 플레이어가 공격했을때: 플레이어 스크립트에 넣을 예정인 코드
-    {
-        if (away<=2.5)
-        {
-             Enemy.SendMessage("Damaged", 입힐 데미지);
-        }
-    } 
-    */
     void ChangeEnemyState()
     {
-        Debug.Log("123");
         switch (eState)
         {
             case EnemyState.Idle:
                 Idle();
                 break;
-
             case EnemyState.Walk:
                 Walk();
                 break;
-
             case EnemyState.Attack:
                 Attack();
                 break;
-
             case EnemyState.Dead:
                 Dead();
                 break;
@@ -158,7 +156,6 @@ public class Stage2_Boss : MonoBehaviour
     }
     public void Walk()
     {
-
         agent.destination = Player.position;     // 계속해서 플레이어를 향해 이동하도록 목적지 설정 (destination)
         agent.isStopped = false; // 길찾기 시작
         // dir = Vector3.Lerp(dir, new Vector3(0, 0, dirZ), Time.deltaTime * 5);
@@ -178,7 +175,7 @@ public class Stage2_Boss : MonoBehaviour
         {
             delay_Time = Time.time + 3f;
 
-            int attackNum = Random.Range(1, 4);
+            int attackNum = Random.Range(1, 5);
             switch (attackNum)
             {
                 case 1:
@@ -190,6 +187,10 @@ public class Stage2_Boss : MonoBehaviour
                 case 3:
                     SpawnMeteor_Attack();
                     break;
+                case 4:
+                    Dark();
+                    break;
+                    
             }
         }
     }
@@ -200,14 +201,39 @@ public class Stage2_Boss : MonoBehaviour
         {
             anim.SetTrigger("slash");
         }
-    }
+    }   
     public void CircleMeteorAttack() // 원형으로 메테오 생성
     {
         anim.SetTrigger("shootMeteor");
-        //Debug.Log("원형 메테오");
     }
 
-    
+    public void Dark() // 안개 뿌리기
+    {
+        anim.SetTrigger("dark");
+    }
+
+    void SpawnMeteor_Attack() // 위에서 메테오 생성
+    {
+        anim.SetTrigger("spawn_Meteor");
+        //Debug.Log("sky메테오");
+    }
+
+    void Real_dark_attack()
+    {
+        directional_light.transform.Rotate(new Vector3(-30f, transform.rotation.y, transform.rotation.z));
+        boss_torch.SetActive(false);
+        lamp.SetActive(false);
+        StartCoroutine(Recover_dark_attack());
+    }
+
+    IEnumerator Recover_dark_attack()
+    {
+        yield return new WaitForSeconds(3.5f);
+        directional_light.transform.Rotate(new Vector3(30f, transform.rotation.y, transform.rotation.z));
+        boss_torch.SetActive(true);
+        lamp.SetActive(true);
+    }
+
     void Real_CircleMeteor_Attack()
     {
         for (int i = 0; i < spawnPoint.Length; i++)
@@ -228,20 +254,15 @@ public class Stage2_Boss : MonoBehaviour
 
     void On_Speed()
     {
+        agent.destination = Player.position;     // 계속해서 플레이어를 향해 이동하도록 목적지 설정 (destination)
+        agent.isStopped = false;
         agent.speed = 3.5f;
-    }
-
-
-    void SpawnMeteor_Attack() // 위에서 메테오 생성
-    {
-        anim.SetTrigger("spawn_Meteor");
-        //Debug.Log("sky메테오");
     }
 
     void Real_SpawnMeteor_Attack()
     {
-        //    Debug.Log("Real_SpawnMeteor_Attack 들어옴");
-        Vector3 meteorPosition = new Vector3(Player.position.x, Player.position.y + 10f, Player.position.z);
+        Vector3 meteorPosition = new Vector3(Player.position.x, 
+            Player.position.y + 10f, Player.position.z);
         // 메테오를 플레이어의 현재 위치에 생성
         GameObject meteor = boss_Attack[0].GetItem(meteorPosition);
         GameObject partical1 = boss_Partical[0].GetItem(meteorPosition);
@@ -295,13 +316,24 @@ public class Stage2_Boss : MonoBehaviour
 
     void Cast_CircleMeteor_Attack()
     {
-        cast_Effect.SetActive(true);
+        cast_Effect[0].SetActive(true);
+        SoundManager.instance.Boss_PlaySound(_clip[3]);
+    }
+    void CircleMeteor_Sound()
+    {
+        cast_Effect[0].SetActive(false);
+        SoundManager.instance.Boss_PlaySound(_clip[4]);
+    }
+
+    void Cast_Dark_Attack()
+    {
+        cast_Effect[1].SetActive(true);
         SoundManager.instance.Boss_PlaySound(_clip[3]);
     }
 
-    void CircleMeteor_Sound()
+    void Cast_Dark_Sound()
     {
-        cast_Effect.SetActive(false);
-        SoundManager.instance.Boss_PlaySound(_clip[4]);
+        cast_Effect[1].SetActive(false);
+        SoundManager.instance.Boss_PlaySound(_clip[5]);
     }
 }
