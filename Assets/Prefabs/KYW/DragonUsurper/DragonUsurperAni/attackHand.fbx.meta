@@ -802,7 +802,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.9607843
+      - time: 0.83715796
         functionName: SetIdle
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 705e7f2154ffc1247a560eec44408009, type: 3}

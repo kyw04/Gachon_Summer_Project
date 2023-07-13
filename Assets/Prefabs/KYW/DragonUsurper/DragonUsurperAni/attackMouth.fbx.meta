@@ -795,7 +795,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.97759104
+      - time: 0.6698987
         functionName: SetIdle
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 705e7f2154ffc1247a560eec44408009, type: 3}
