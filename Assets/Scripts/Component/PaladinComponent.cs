@@ -15,14 +15,13 @@ public class PaladinComponent : BattleableComponentBase
     public bool isActionable;
     public bool isDamageable = true;
     public float coolDown;
+    public sbyte phase = 1;
 
-    //ÇÁ¸®ÆÕ
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public Queue<MagicComponent> magicInstances;
 
     [SerializeField]
     private PlayerComponent playerInstance;
-    [FormerlySerializedAs("coroutineInstance")] [SerializeField]
-    private Coroutine turnCoroutineInstance;
     public Slider healthPointSlider;
     public Text nameTextField;
     private float _distance = 0;
@@ -74,33 +73,48 @@ public class PaladinComponent : BattleableComponentBase
     private void Think()
     {
         if (isActing || !isActionable || healthPoint == 0) return;
-
+        
         isActionable = false;
-        Act action = () =>
-        {
-            isActing = true;
-            animator.SetTrigger("Cast");
-            
-            StartCoroutine(Casting());
-        };
 
-        if (_distance <= 1.8f)
-            action = () =>
+        Act action = () => { isActing = true;};
+
+        if (phase == 1 && (float)healthPoint / this.Status.maxHealthPoint <= 0.5f)
+            action += () =>
             {
-                isActing = true;
+                isActionable = false;
+                phase = 2;
+                healthPointSlider.value = healthPoint;
+                animator.SetTrigger("Rage");
+            };
+        
+        if (_distance <= 1.5f)
+            action += () =>
+            {
                 animator.SetTrigger("Kick");
             };
-        else if (_distance <= 3.2f)
-            action = Attack;
+        else if (_distance <= 3.1f)
+            action += Attack;
+        else
+            action += () =>
+            {
+                animator.SetTrigger("Cast");
+                StartCoroutine(Casting());
+            };
         
-        StartCoroutine(CallMethodWaitForSeconds(coolDown, () => { isActionable = true;}));
+        action += () =>
+        {
+            Debug.Log(true);
+            StartCoroutine(CallMethodWaitForSeconds(coolDown, () => { isActionable = true; }));
+        };
+        
+       
+        
         action();
     }
 
     public override void Attack()
     {
         base.Attack();
-        isActing = true;
         animator.SetBool("isWalkingForward", false);
     }
 
@@ -173,14 +187,13 @@ public class PaladinComponent : BattleableComponentBase
                 StartCoroutine(playerInstance.HitBack(playerInstance.lookFoward * -1, 0.1f, 3f));
                 break;
             case "KickEnd":
+                StartCoroutine(CallMethodWaitForSeconds(1f, () => { isActionable = true;}));
+                break;
+            case "RageEnd":
                 isActionable = true;
                 break;
         }
-
-        if (cmd != "TurnEnd" && turnCoroutineInstance is null)
-        {
-            turnCoroutineInstance = StartCoroutine(LookTo(playerInstance.transform));
-        }
+        StartCoroutine(LookTo(playerInstance.transform));
     }
 
     private IEnumerator Casting()
@@ -211,12 +224,11 @@ public class PaladinComponent : BattleableComponentBase
             Vector3 dir = target.position - this.transform.position;
 
             this.transform.rotation = Quaternion.Lerp(this.transform.rotation, Quaternion.LookRotation(dir), f);
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.02f);
         }
 
         isActing = false;
         transform.LookAt(target.position);
-        turnCoroutineInstance = null;
         yield break;
     }
 
