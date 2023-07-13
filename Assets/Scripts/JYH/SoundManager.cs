@@ -7,9 +7,9 @@ public class SoundManager : MonoBehaviour
 {
     static public SoundManager instance;
 
-    [SerializeField] AudioSource _boss_EffectSource;
-    [SerializeField] AudioSource _player_EffectSource;
-    public AudioSource Bgm;
+    [SerializeField] public AudioSource _boss_EffectSource;
+    [SerializeField] public AudioSource _player_EffectSource;
+    [SerializeField] public AudioSource Bgm;
     public AudioClip[] Bgm_clips; // 0: ³· 1: ¹ã
 
 
@@ -29,7 +29,6 @@ public class SoundManager : MonoBehaviour
     {
         _boss_EffectSource.PlayOneShot(clip);
     }
-
     public void BGM_Sound(int clipNum)
     {
         Bgm.clip = Bgm_clips[clipNum];
