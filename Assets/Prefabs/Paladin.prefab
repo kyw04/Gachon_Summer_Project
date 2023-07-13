@@ -2423,16 +2423,9 @@ MonoBehaviour:
   isActionable: 1
   isDamageable: 1
   coolDown: 8
-  magicInstances:
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
-  - {fileID: 2364139866054217156, guid: 0740777bc54466a4b9208a0b57387358, type: 3}
   playerInstance: {fileID: 0}
+  healthPointSlider: {fileID: 0}
+  nameTextField: {fileID: 0}
 --- !u!65 &1699249495
 BoxCollider:
   m_ObjectHideFlags: 0
