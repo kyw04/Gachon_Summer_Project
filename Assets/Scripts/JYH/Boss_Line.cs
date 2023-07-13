@@ -20,6 +20,7 @@ public class Boss_Line : MonoBehaviour
     public float delayBetweenCharacters = 0.1f;
     string bossName;
     int currentIndex;
+    public bool isPlayerMove;
 
     [Header("보스 등장 연출을 위한 카메라")]
     public GameObject player_Camera;
@@ -27,11 +28,17 @@ public class Boss_Line : MonoBehaviour
 
     private IEnumerator on;
 
+    void Start()
+    {
+        isPlayerMove = true;
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player") && on == null)
         {
             Time.timeScale = 0.8f;
+
             SoundManager.instance.Boss_PlaySound(clip[0]);
             on = PlayerCamera_OnOff();
             ShowBossNameEffect("Death Bringer");
@@ -66,9 +73,11 @@ public class Boss_Line : MonoBehaviour
     IEnumerator PlayerCamera_OnOff()
     {
         Time.timeScale = 1;
+        isPlayerMove = false;
         boss_Camera.SetActive(true);
         player_Camera.SetActive(false);
         yield return new WaitForSeconds(3f);
+        isPlayerMove = true;
         boss_name_obj.SetActive(false);
         boss_Camera.SetActive(false);
         player_Camera.SetActive(true);
