@@ -5,26 +5,48 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Serialization;
+using TMPro;
 
+[RequireComponent(typeof(Rope))]
 public sealed class PlayerComponent : BattleableComponentBase, IControllable
 {
     #region  Variable
+    
+    public bool isDodging = false;
+    public bool isWiring = false;
+    public bool isJumping = false;
+    public bool isControllable = true;
+    public bool isJumpable = true;
+    [SerializeField] AudioClip[] clip;
+    [SerializeField] private GameObject hook;
+    private Hook _hookController;
+    private int _attackStatus = 0;
 
-        public bool isDodging = false;
-        public bool isWiring = false;
-        public bool isJumping = false;
-        public bool isControllable = true;
-
-        private int AttackStatus = 0;
-
-        #endregion
+    #endregion
     delegate void Act();
 
+    [Header("HP관련")]
+    private float maxHp = 100f; // 플레이어 최대 체력
+    private float curHp = 100f; // 플레이어 현재 체력
+    [SerializeField] public Text hp_T;
+    [SerializeField] public Slider hp_Bar;
+
     //Awake는 base에 사용 중이므로 기본 설정은 Start를 통해 해주세요
+    private void Awake()
+    {
+        base.Awake();
+        _hookController = GetComponent<Hook>();
+        Instantiate(hook);
+    }
+    
     private void Start()
     {
         SetUpPlayer();
+        hp_Bar.maxValue = Status.maxHealthPoint;
+        hp_Bar.value = healthPoint;
+        hp_T.text = curHp + "/" + maxHp;
     }
 
     private void FixedUpdate()
@@ -32,30 +54,40 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         Command();
         Status.position = this.transform.position;
         dataController.UseUpdate(Status.id, Status.position);
+        isJumpable = Rigidbody.velocity.y > 0;
     }
 
     #region 기능적인 메소드
-    
-    public override void ModifyHealthPoint(int amount)
+
+    void Damaged(float damage)
     {
-        if (amount < 0)
+        if (curHp > 0)
         {
-            if ((healthPoint -= amount) < 0)
-            {
-                healthPoint = 0;
-                Die();
-            }
+            curHp -= damage;
+        hp_Bar.value = healthPoint;
+            hp_T.text = curHp.ToString() + "/" + maxHp.ToString();
         }
         else
         {
-            //체력이 회복 되었을 경우 일어날 동작을 구현
+            Debug.Log("게임 오버");
         }
+    }
 
-    } 
+    public override int ModifyHealthPoint(int amount)
+    {
+        isControllable = false;
+        StopAllCoroutines();
+        var result = base.ModifyHealthPoint(amount);
+        hp_Bar.value = healthPoint;
+        hp_T.text = $" {healthPoint} / {Status.maxHealthPoint}";
+        return result;
+    }
+
     public override void Die()
     {
         base.Die();
         //플레이어의 사망시 발생할 상황을 구현
+        isControllable = false;
     }
 
     private void SetUpPlayer()
@@ -94,9 +126,9 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
             modelInstance.transform.position = Vector3.zero;
             modelInstance.transform.parent = this.transform;
         }
-        
+
         GC.SuppressFinalize(playerModel);
-        
+
         this.transform.position = Status.position;
         healthPoint = Status.maxHealthPoint;
         StaminaPoint = Status.maxStaminaPoint;
@@ -113,15 +145,16 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
 
     public override void Attack()
     {
+        SoundManager.instance.Player_Sound(clip[0]);
         base.Attack();
-        animator.SetInteger("AttackType", AttackStatus++ % 2 );
+        animator.SetInteger("AttackType", _attackStatus++ % 2);
     }
 
     public void Command()
     {
         //기본적으로 MOVE함수를 실행시키며 특정한 INPUT이 있으면 그에 맞는 메소드를 실행
         Act action = Move;
-        
+
         //조작키들은 임의로 정해진 키로 작동하므로 나중에 정해지면 수정 바람 (2023. 06. 29)
         if (Input.GetButton("Attack"))
         {
@@ -135,32 +168,26 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
                 if (isDodging || !isControllable) return;
                 else isDodging = !isDodging;
                 isControllable = false;
+
+                //this.transform.forward = lookFoward * (Input.GetAxisRaw("Vertical") == -1 ? -1 : 1);
                 animator.SetTrigger("Rolling");
-
-                this.transform.forward = lookFoward * (Input.GetAxisRaw("Vertical") == -1 ? -1 : 1);
-
-                StartCoroutine(Roll());
+                var status = Input.GetAxisRaw("Vertical");
+                StopCoroutine(Roll(status));
+                StartCoroutine(Roll(status));
 
 
             };
         }
-        else if (Input.GetButton("Wiring"))
+        else if (Input.GetButton("Fire1") || Input.GetButton("Fire2"))
         {
-            action = () =>
-            {
-                if (isWiring || !isControllable) return;
-                else isWiring = !isWiring;
-                isControllable = false;
-                //갈고리 이동 기능 구현
-
-            };
+            action = _hookController.HookControl;
         }
         else if (Input.GetButton("Jump"))
         {
             action = () =>
             {
-                if (isJumping || !isControllable) return;
-                else isJumping = !isJumping;
+                if (healthPoint <= 0) return;
+                else isJumping = !isJumping;    
                 isControllable = false;
                 //점프 구현
                 animator.SetTrigger("Jump");
@@ -173,16 +200,16 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     {
         if (!isControllable) return;
         var dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        
+
         //에니메이터에 있는 bool 타입의 파라미터들을 한 번에 false로
         var boolParamName =
             from param in animator.parameters
             where param.type == AnimatorControllerParameterType.Bool
             select param.name;
-        foreach (var paramName in  boolParamName)
+        foreach (var paramName in boolParamName)
             animator.SetBool(paramName, false);
-        
-        
+
+
         //플레이어가 이동 중 일 경우
         if (dir.magnitude != 0)
         {
@@ -196,7 +223,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
             {
                 if (dir.y == 0)
                 {
-                    
+
                     animator.SetBool(dir.x < 0 ? "isWalkingLeft" : "isWalkingRight", true);
                 }
                 else
@@ -215,25 +242,22 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
             animator.SetBool("isIdle", true);
         }
     }
-
-
-
     #endregion
-    
+
     #region Collision Func
 
     protected override void OnCollisionEnter(Collision other)
     {
-        
+
     }
 
     protected override void OnCollisionStay(Collision other)
     {
-        
+
     }
 
     #endregion
-    
+
     public override void AnimEvt(string cmd)
     {
         isControllable = true;
@@ -251,17 +275,25 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
             case "JumpEnd":
                 isJumping = false;
                 break;
+            case "Damaged":
+                isAttacking = false;
+                isJumping = false;
+                isDodging = false;
+                break;
         }
     }
 
     #region IEnumerator
 
-    IEnumerator Roll()
+    IEnumerator Roll(float status)
     {
+        var dir = lookFoward;
+        var coefficient = (Mathf.Abs(status) > 0.5f ? status : 1);
+        this.transform.forward = dir * coefficient;
         while (isDodging)
         {
-            this.transform.position += lookFoward.normalized * 0.2f;
-            yield return new WaitForSeconds(0.02f);
+            this.transform.position += dir.normalized * 0.1f * coefficient;
+            yield return new WaitForSeconds(0.01f);
         }
         yield break;
     }
@@ -270,11 +302,23 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         while (isJumping)
         {
             this.transform.position += Vector3.up * 0.15f;
-            yield return new WaitForSeconds(0.02f);
+            yield return new WaitForSeconds(0.01f);
         }
         yield break;
     }
-    
+
+    public IEnumerator HitBack(Vector3 dir, float duration, float power)
+    {
+        var time = 0f;
+        while (true)
+        {
+            this.transform.position += dir.normalized * 0.05f * power;
+            time += 0.02f;
+            if (time >= duration) yield break;
+            yield return new WaitForSeconds(0.01f);
+        }
+        yield break;
+    }
 
     #endregion
 

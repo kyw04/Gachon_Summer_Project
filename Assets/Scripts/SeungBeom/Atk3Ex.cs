@@ -25,11 +25,11 @@ public class Atk3Ex : MonoBehaviour
     {
         if (Grow)
         {
-            Circle.transform.localScale += new Vector3(100 * Time.deltaTime, 100 * Time.deltaTime, 100 * Time.deltaTime);
+            Circle.transform.localScale += new Vector3(25 * Time.deltaTime, 25 * Time.deltaTime, 25 * Time.deltaTime);
         }
         if (Shrink)
         {
-            Circle.transform.localScale -= new Vector3(100 * Time.deltaTime, 100 * Time.deltaTime, 100 * Time.deltaTime);
+            Circle.transform.localScale -= new Vector3(25 * Time.deltaTime, 25 * Time.deltaTime, 25 * Time.deltaTime);
         }
     }
     IEnumerator Growing()

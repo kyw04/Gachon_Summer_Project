@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using JYH;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -13,12 +12,13 @@ public class Stage2_Boss : MonoBehaviour
     NavMeshAgent agent;
 
     [Header("보스체력 관련 UI")]
+    public GameObject hp_Bar_gameobj;
+    public GameObject hp_Name_gameobj;
     public Slider hp_Bar;
     public int hp;
     [SerializeField] Text hp_T;
     Image fillImage;
     [SerializeField] Color32[] hp_Bar_Change_Color;
-
 
     Rigidbody rb;
 
@@ -26,13 +26,21 @@ public class Stage2_Boss : MonoBehaviour
     public float meteorSpeed;
     [SerializeField] Transform[] spawnPoint;
 
-
     public ObjectPoolComponent[] boss_Attack;
     public ObjectPoolComponent[] boss_Partical;
     public GameObject die_Effect;
+    public GameObject cast_Effect;
+
+
+    [Header("보스 사운드")]
+    [SerializeField] private AudioClip[] _clip;
+    [SerializeField] private AudioClip[] _bgmClip; 
+
 
     float away;
     public Transform Player;
+    public Boss_Line boss_Line;
+
     Vector3 dir;
 
     float delay_Time;
@@ -60,11 +68,16 @@ public class Stage2_Boss : MonoBehaviour
         fillImage = hp_Bar.fillRect.GetComponentInChildren<Image>();
         Player = FindObjectOfType<PlayerComponent>().transform;
         eState = EnemyState.Idle;
-        StartCoroutine(Destroy_Partical());
+        boss_Line.isArrive_Boss = false;
+
+        SoundManager.instance.BGM_Sound(0);
+
+      //  SoundManager.instance.BGM_PlaySound(_bgmClip[0]);
     }
 
     void Update()
     {
+        //Debug.Log(boss_Line.isArrive_Boss);
         away = Vector3.Distance(transform.position, Player.position); // 적과 플레이어의 거리
         Vector3 playerPosition = Player.position; // 플레이어의 위치
 
@@ -73,7 +86,8 @@ public class Stage2_Boss : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z))
             Damaged(0.2f);
 
-        ChangeEnemyState();
+        if (boss_Line.isArrive_Boss)
+            ChangeEnemyState();
     }
     void Damaged(float damage) // 플레이어가 공격했을때 이 함수 호출 
     {
@@ -83,7 +97,8 @@ public class Stage2_Boss : MonoBehaviour
             hp -= 1;
             hp_T.text = "X" + hp.ToString();
             hp_Bar.value = 1f;
-            fillImage.color = hp_Bar_Change_Color[hp / hp_Bar_Change_Color.Length];
+            // 9-1/3 = 3 
+            fillImage.color = hp_Bar_Change_Color[(hp - 1) / hp_Bar_Change_Color.Length];
             if (hp <= 0)
             {
                 hp = 0;
@@ -93,8 +108,24 @@ public class Stage2_Boss : MonoBehaviour
             }
         }
     }
+    // 보스 입장 Coll에 닿았을시, 활성화되는 함수 Boss_Line에서 SendMassage함
+    void Health_Bar()
+    {
+        hp_Bar_gameobj.SetActive(true);
+        hp_Name_gameobj.SetActive(true);
+    }
+
+    /*void RealAttack() // 플레이어가 공격했을때: 플레이어 스크립트에 넣을 예정인 코드
+    {
+        if (away<=2.5)
+        {
+             Enemy.SendMessage("Damaged", 입힐 데미지);
+        }
+    } 
+    */
     void ChangeEnemyState()
     {
+        Debug.Log("123");
         switch (eState)
         {
             case EnemyState.Idle:
@@ -127,6 +158,7 @@ public class Stage2_Boss : MonoBehaviour
     }
     public void Walk()
     {
+
         agent.destination = Player.position;     // 계속해서 플레이어를 향해 이동하도록 목적지 설정 (destination)
         agent.isStopped = false; // 길찾기 시작
         // dir = Vector3.Lerp(dir, new Vector3(0, 0, dirZ), Time.deltaTime * 5);
@@ -147,7 +179,6 @@ public class Stage2_Boss : MonoBehaviour
             delay_Time = Time.time + 3f;
 
             int attackNum = Random.Range(1, 4);
-            Debug.Log(attackNum);
             switch (attackNum)
             {
                 case 1:
@@ -166,21 +197,25 @@ public class Stage2_Boss : MonoBehaviour
     public void Slash()
     {
         if (away <= 5)
-            anim.SetTrigger("Slash");
+        {
+            anim.SetTrigger("slash");
+        }
     }
     public void CircleMeteorAttack() // 원형으로 메테오 생성
     {
         anim.SetTrigger("shootMeteor");
-        Debug.Log("원형 메테오");
+        //Debug.Log("원형 메테오");
     }
 
+    
     void Real_CircleMeteor_Attack()
     {
         for (int i = 0; i < spawnPoint.Length; i++)
         {
-            Debug.Log("Real_CircleMeteor_Attack 들어옴");
+            //Debug.Log("Real_CircleMeteor_Attack 들어옴");
             GameObject meteor0 = boss_Attack[1].GetItem(spawnPoint[i].position);
             Vector3 direction = spawnPoint[i].position - transform.position; // 현재 위치에서 spawnPoint 위치로 향하는 벡터
+            direction.y = 0f;
             meteor0.GetComponent<Rigidbody>().velocity = direction.normalized * meteorSpeed;
         }
     }
@@ -200,26 +235,24 @@ public class Stage2_Boss : MonoBehaviour
     void SpawnMeteor_Attack() // 위에서 메테오 생성
     {
         anim.SetTrigger("spawn_Meteor");
-        Debug.Log("sky메테오");
+        //Debug.Log("sky메테오");
     }
 
     void Real_SpawnMeteor_Attack()
     {
         //    Debug.Log("Real_SpawnMeteor_Attack 들어옴");
+        Vector3 meteorPosition = new Vector3(Player.position.x, Player.position.y + 10f, Player.position.z);
         // 메테오를 플레이어의 현재 위치에 생성
-        Vector3 meteorPosition = new Vector3(Player.position.x, Player.position.y + 3f, Player.position.z);
         GameObject meteor = boss_Attack[0].GetItem(meteorPosition);
         GameObject partical1 = boss_Partical[0].GetItem(meteorPosition);
 
         boss_Attack[0].FreeItem(meteor, 2f);
         boss_Partical[0].FreeItem(partical1, 2f);
-
-
         eState = EnemyState.Idle;
-
     }
 
-    IEnumerator Destroy_Partical() 
+    // 메테오 생성후 닿으면 사라지도록 구현
+    IEnumerator Destroy_Partical()
     {
         yield return new WaitForSeconds(3f);
         Vector3 PlayerPosition = new Vector3(Player.position.x, Player.position.y - 5f, Player.position.z);
@@ -231,8 +264,10 @@ public class Stage2_Boss : MonoBehaviour
     void Boss_Dead()
     {
         if (hp <= 0)
+        {
             eState = EnemyState.Dead;
-
+            SoundManager.instance.Boss_PlaySound(_clip[1]);
+        }
     }
     void RealDead()
     {
@@ -243,8 +278,30 @@ public class Stage2_Boss : MonoBehaviour
     {
         if (away <= 3)
         {
-            Player.SendMessage("Damaged", 0.2f);
+            Player.SendMessage("Damaged", 20f);
         }
         eState = EnemyState.Idle;
+    }
+
+    void Slash_Sound()
+    {
+        SoundManager.instance.Boss_PlaySound(_clip[0]);
+    }
+
+    void Spawn_Meteor_Sound()
+    {
+        SoundManager.instance.Boss_PlaySound(_clip[2]);
+    }
+
+    void Cast_CircleMeteor_Attack()
+    {
+        cast_Effect.SetActive(true);
+        SoundManager.instance.Boss_PlaySound(_clip[3]);
+    }
+
+    void CircleMeteor_Sound()
+    {
+        cast_Effect.SetActive(false);
+        SoundManager.instance.Boss_PlaySound(_clip[4]);
     }
 }
