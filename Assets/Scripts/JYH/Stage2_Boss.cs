@@ -233,7 +233,6 @@ public class Stage2_Boss : MonoBehaviour
         boss_torch.SetActive(true);
         lamp.SetActive(true);
     }
-
     void Real_CircleMeteor_Attack()
     {
         for (int i = 0; i < spawnPoint.Length; i++)
