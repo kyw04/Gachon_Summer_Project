@@ -39,7 +39,7 @@ public class MagicSpawner : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(20f);
             for (int i = 0; i < 1; i++)
             {
                 Instantiate(enemy, Return_RandomPosition(), Quaternion.identity);

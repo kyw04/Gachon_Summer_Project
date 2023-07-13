@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class FireBall : Bullet
 {
+    PlayerHPViewer playerHP;
+    BossHPViewer bossHP;
+
     Rigidbody rigid;
     float angularPower = 2;
     float scaleValue = 0.1f;
@@ -11,6 +14,8 @@ public class FireBall : Bullet
 
     private void Awake()
     {
+        playerHP = GameObject.Find("Player").GetComponent<PlayerHPViewer>();
+        bossHP = GameObject.Find("BossHPSlider").GetComponent<BossHPViewer>();
         rigid = GetComponent<Rigidbody>();  
         StartCoroutine(GainPowerTimer());
         StartCoroutine(GainPower());
@@ -34,6 +39,19 @@ public class FireBall : Bullet
         }
 
     }
-   
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Player")
+        {
+            Destroy(gameObject);
+            playerHP.Fireball();
+        }
+
+        if (collision.gameObject.tag == "Wall")
+        {
+            Destroy(gameObject);
+            bossHP.Fire();
+        }
+    }
 }
 
