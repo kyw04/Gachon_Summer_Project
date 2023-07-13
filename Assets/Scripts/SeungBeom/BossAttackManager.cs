@@ -37,6 +37,9 @@ public class BossAttackManager : MonoBehaviour
     GameObject P4_Atk;
     GameObject P5_Atk;
     GameObject Shield;
+
+    GameObject P1Shield;
+
     int Selection;
 
 
@@ -68,6 +71,7 @@ public class BossAttackManager : MonoBehaviour
         P5_Atk = Resources.Load<GameObject>("SeungBeom/Atk5");
         Shield = transform.GetChild(5).gameObject;
 
+        P1Shield = transform.GetChild(7).gameObject;
     }
 
     void Start()
@@ -105,7 +109,7 @@ public class BossAttackManager : MonoBehaviour
         StartCoroutine(FIrstPattern());
         StartCoroutine(BulletShoot());
         StartCoroutine(Select());
-        StartCoroutine(Barrier());
+        //StartCoroutine(Barrier());
     }
 
     public GameObject P1_GetItem()
@@ -123,15 +127,19 @@ public class BossAttackManager : MonoBehaviour
             if (P1)
             {
                 P1_GetItem();
+                P1Shield.transform.rotation = Quaternion.Slerp(P1Shield.transform.rotation, Quaternion.LookRotation(player.transform.position - P1Shield.transform.position), Time.deltaTime * 8f);
             }
         }
     }
     IEnumerator FIrstPattern()  //완료
     {
         P1 = true;
+        //P1Shield.SetActive(true);
         yield return new WaitForSeconds(7);  //몇초동안 발사할것인지? 7초로 하자.
         P1 = false;
-        yield return new WaitForSeconds(WaitTime);
+        yield return new WaitForSeconds(2);
+        P1Shield.SetActive(false);
+        yield return new WaitForSeconds(WaitTime - 2);
         NextPattern();
     }
     IEnumerator SecondPattern() //완료
@@ -169,7 +177,7 @@ public class BossAttackManager : MonoBehaviour
     }
     IEnumerator ThirdPattern()  //완료
     {
-        P3_Atk.transform.position = player.transform.position;
+        P3_Atk.transform.position = new Vector3(player.transform.position.x,0,player.transform.position.z);
         yield return new WaitForSeconds(0.1f);
         P3_Atk.SetActive(true);
         yield return new WaitForSeconds(10f);
@@ -259,14 +267,14 @@ public class BossAttackManager : MonoBehaviour
 
                 if (i == 0)                              
                 {
-                    if (Spread == 0) P2Reposition1 = new Vector3(Luck * 35,0, 0);
-                    else P2Reposition1 = new Vector3(-Luck * 35,0, 0);
+                    if (Spread == 0) P2Reposition1 = new Vector3(Luck * 15,0, 0);
+                    else P2Reposition1 = new Vector3(-Luck * 15,0, 0);
                     Debug.Log("P2Reposition1 값 : " + P2Reposition1);
                 }
                 if(i == 1)                                   
                 {
-                    if (Spread == 0) P2Reposition2 = new Vector3(0, 0, Luck * 35);
-                    else P2Reposition2 = new Vector3(0, 0, -Luck * 35);
+                    if (Spread == 0) P2Reposition2 = new Vector3(0, 0, Luck * 15);
+                    else P2Reposition2 = new Vector3(0, 0, -Luck * 15);
                     Debug.Log("P2Reposition2 값 : " + P2Reposition2);
                 }
                 if(i == 2)
@@ -306,7 +314,7 @@ public class BossAttackManager : MonoBehaviour
         while(true)
         {
             yield return new WaitForSeconds(8f);
-            Selection = 3;
+            Selection = 1;
             //Selection = Random.Range(1, 5); // 패턴이 5개이기 때문, (1~5 까지)
             Debug.Log(Selection);
         }

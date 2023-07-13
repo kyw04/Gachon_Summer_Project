@@ -53,7 +53,7 @@ public class ExperiBullet : MonoBehaviour
                 float Luck = Random.Range(-Accuracy, Accuracy);
                 float Spread = Random.Range(0, 2); // 0 혹은 1
 
-                if(i == 0)                              // 첫 번째 반복 , Y축으로 랜덤하게 탄이 튀도록 함.
+                if(i == 0)                              // 첫 번째 , Y축으로 랜덤하게 탄이 튀도록 함.
                 {
                     if(Spread == 0) Reposition1 = new Vector3(0, Luck, 0);
                     else Reposition1 = new Vector3(0, -Luck, 0);
@@ -64,7 +64,7 @@ public class ExperiBullet : MonoBehaviour
                     if(Spread == 0) Reposition2 = new Vector3(0, 0, Luck);
                     else Reposition2 = new Vector3(0, 0, -Luck); 
                 }
-                if (i == 2) Reposition = new Vector3(0, Reposition1.y, Reposition2.z);
+                if (i == 2) Reposition = new Vector3(0, Reposition1.y, Reposition2.z);  //마지막 반복 , 앞선 반복에서 변화된 각 축의 position을 모두 받음.
             }
         }
         
