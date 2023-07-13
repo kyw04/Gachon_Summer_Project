@@ -46,7 +46,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
 
     private void Start()
     {
-        BtnManager.instance.sceneNum = 3;
+        // BtnManager.instance.sceneNum = 3;
         SetUpPlayer();
         hp_Bar.maxValue = Status.maxHealthPoint;
         hp_Bar.value = healthPoint;

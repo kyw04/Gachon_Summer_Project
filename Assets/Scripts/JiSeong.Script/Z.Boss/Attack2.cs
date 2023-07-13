@@ -18,4 +18,9 @@ public class Attack2 : MonoBehaviour
         Vector3 movement = transform.forward * speed * Time.deltaTime;
         rb.MovePosition(rb.position + movement);
     }
+    void OnCollisionEnter(Collision collision)
+    {
+        // 충돌이 발생하면 오브젝트 삭제
+        Destroy(gameObject);
+    }
 }
