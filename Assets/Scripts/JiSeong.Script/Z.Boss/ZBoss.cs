@@ -230,8 +230,11 @@ public class ZBoss : MonoBehaviour
         // 충돌이 발생한 경우
         if (collision.gameObject.CompareTag("Player"))
         {
-            ignoreCollisionTimer = ignoreCollisionDuration;
-            StartCoroutine(ResetIgnoreCollisionTimer());
+            if (isAttacking == false)
+            {
+                ignoreCollisionTimer = ignoreCollisionDuration;
+                StartCoroutine(ResetIgnoreCollisionTimer());
+            }
         }
     }
     private System.Collections.IEnumerator ResetIgnoreCollisionTimer()
