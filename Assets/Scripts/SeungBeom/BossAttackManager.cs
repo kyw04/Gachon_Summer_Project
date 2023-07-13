@@ -16,17 +16,19 @@ public class BossAttackManager : MonoBehaviour
     //----------------------------------- 2번 패턴 오브젝트 풀 ------------------------------------
     GameObject P2_Atk;
     private List<GameObject> P2list = new List<GameObject>();
-    [Header("[패턴 2] 오브젝트 수")]
-    public int P2MaxCount = 10;
-    public int ListSentinel = 0;
-
+    [Header("[패턴 2] 명중률 관리")]
     public float Accuracy;
-    Vector3 Reposition;
+
+    Vector3 P2Reposition;
+    Vector3 P2Reposition1;
+    Vector3 P2Reposition2;
+
+
+    private List<GameObject> P5List = new List<GameObject>();
+    int ListSentinel = 0;
 
 
 
-
-    
 
 
 
@@ -48,7 +50,11 @@ public class BossAttackManager : MonoBehaviour
     GameObject P2_ListObject;
     GameObject P3_ListObject;
 
+    GameObject P5_ListObject;
 
+    Vector3 P5Reposition;
+    Vector3 P5Reposition1;
+    Vector3 P5Reposition2;
 
     private void Awake()
     {
@@ -59,6 +65,7 @@ public class BossAttackManager : MonoBehaviour
         P2_Atk = Resources.Load<GameObject>("SeungBeom/Atk2Ex 1");
         P3_Atk = transform.GetChild(6).gameObject;
         P4_Atk = transform.GetChild(4).gameObject;
+        P5_Atk = Resources.Load<GameObject>("SeungBeom/Atk5");
         Shield = transform.GetChild(5).gameObject;
 
     }
@@ -81,6 +88,15 @@ public class BossAttackManager : MonoBehaviour
             P2list.Insert(i, P2_ListObject);         //리스트 0,1,2 에 2번패턴 생성
             P2_ListObject.SetActive(false);
         }
+        for(int i = 0; i < 5; i++)
+        {
+            P5_ListObject = Instantiate(P5_Atk);
+            P5List.Insert(i, P5_ListObject);
+            P5_ListObject.SetActive(false);
+        }
+
+
+
 
         P3_Atk.SetActive(false);
         P4_Atk.SetActive(false);
@@ -120,18 +136,19 @@ public class BossAttackManager : MonoBehaviour
     }
     IEnumerator SecondPattern() //완료
     {
-        Accura();
-        P2list[0].transform.position = new Vector3(player.transform.position.x + Reposition.x, 0, player.transform.position.z + Reposition.z);
+        P2Accuracy();
+        P2list[0].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.y);
+        Debug.Log("메테오 생성 위치 : " + P2list[0].transform.position);
         yield return new WaitForSeconds(0.1f);
         P2list[0].SetActive(true);
         yield return new WaitForSeconds(4f); //1번
-        Accura();
-        P2list[1].transform.position = new Vector3(player.transform.position.x + Reposition.x, 0, player.transform.position.z + Reposition.z);
+        P2Accuracy();
+        P2list[1].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.y);
         yield return new WaitForSeconds(0.1f);
         P2list[1].SetActive(true);
         yield return new WaitForSeconds(4f); //2번
-        Accura();
-        P2list[2].transform.position = new Vector3(player.transform.position.x + Reposition.x, 0, player.transform.position.z + Reposition.z);
+        P2Accuracy();
+        P2list[2].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.y);
         yield return new WaitForSeconds(0.1f);
         P2list[2].SetActive(true);
         yield return new WaitForSeconds(WaitTime); //3번
@@ -167,6 +184,36 @@ public class BossAttackManager : MonoBehaviour
         yield return new WaitForSeconds(WaitTime);
         NextPattern();
     }
+    IEnumerator FifthPattern()
+    {
+        P5Accuracy();
+        P5List[0].transform.position = P5Reposition;
+        yield return new WaitForSeconds(0.1f);
+        P5List[0].SetActive(true);
+        ListSentinel += 1;
+        yield return new WaitForSeconds(1);
+        P5Accuracy();
+        P5List[1].transform.position = P5Reposition;
+        yield return new WaitForSeconds(0.1f);
+        P5List[1].SetActive(true);
+        yield return new WaitForSeconds(1);
+        P5Accuracy();
+        P5List[2].transform.position = P5Reposition;
+        yield return new WaitForSeconds(0.1f);
+        P5List[2].SetActive(true);
+        yield return new WaitForSeconds(1);
+        P5Accuracy();
+        P5List[3].transform.position = P5Reposition;
+        yield return new WaitForSeconds(0.1f);
+        P5List[3].SetActive(true);
+        yield return new WaitForSeconds(1);
+        P5Accuracy();
+        P5List[4].transform.position = P5Reposition;
+        yield return new WaitForSeconds(0.1f);
+        P5List[4].SetActive(true);
+        yield return new WaitForSeconds(WaitTime);
+        NextPattern();
+    }
     IEnumerator Barrier()
     {
         while(true)
@@ -194,39 +241,72 @@ public class BossAttackManager : MonoBehaviour
             case 4:
                 StartCoroutine(FourthPattern());
                 break;
+            case 5:
+                StartCoroutine(FifthPattern());
+                break;
         }
     }
-    void Accura()
+    void P2Accuracy()
     {
         if (Accuracy != 100)
         {
             Accuracy = 1 - (Accuracy / 100);            
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 3; i++)
             {
                 float Luck = Random.Range(-Accuracy, Accuracy);
                 float Spread = Random.Range(0, 2);
 
                 if (i == 0)                              
                 {
-                    if (Spread == 0) Reposition = new Vector3(0, Luck * 35, 0);
-                    else Reposition = new Vector3(0, -Luck * 35, 0);
+                    if (Spread == 0) P2Reposition1 = new Vector3(Luck * 35,0, 0);
+                    else P2Reposition1 = new Vector3(-Luck * 35,0, 0);
+                    Debug.Log("P2Reposition1 값 : " + P2Reposition1);
                 }
-                else                                    
+                if(i == 1)                                   
                 {
-                    if (Spread == 0) Reposition = new Vector3(0, Reposition.y, Luck * 35);
-                    else Reposition = new Vector3(0, Reposition.y, -Luck * 35);
+                    if (Spread == 0) P2Reposition2 = new Vector3(0, 0, Luck * 35);
+                    else P2Reposition2 = new Vector3(0, 0, -Luck * 35);
+                    Debug.Log("P2Reposition2 값 : " + P2Reposition2);
+                }
+                if(i == 2)
+                {
+                    P2Reposition = new Vector3(P2Reposition1.x, 0, P2Reposition2.z);
+                    Debug.Log("최종값 : " + P2Reposition);
                 }
             }
         }
     }
-
+    void P5Accuracy()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            float Luck = Random.Range(-105, 106);
+            float Spread = Random.Range(0, 2);
+            
+            if (i == 0)
+            {
+                
+                if (Spread == 0) P5Reposition1 = new Vector3(Luck,0, 0);
+                else P5Reposition1 = new Vector3(-Luck,0, 0);
+            }
+            if(i == 1)
+            {
+                if (Spread == 0) P5Reposition2 = new Vector3(0,0, Luck);
+                else P5Reposition2 = new Vector3(0,0, -Luck);
+            }
+            if (i == 2)
+            {
+                P5Reposition = new Vector3(P5Reposition1.x, 0, P5Reposition2.z);
+            }
+        }
+    }
     IEnumerator Select()
     {
         while(true)
         {
             yield return new WaitForSeconds(8f);
-            Selection = 2;
+            Selection = 3;
             //Selection = Random.Range(1, 5); // 패턴이 5개이기 때문, (1~5 까지)
             Debug.Log(Selection);
         }
