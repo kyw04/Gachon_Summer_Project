@@ -44,7 +44,7 @@ public class PaladinComponent : BattleableComponentBase
     }
     
     void Start()
-    {
+    {   
         Status = new BattleableVOBase()
         {
             name = Status.name,
