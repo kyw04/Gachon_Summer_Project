@@ -75,6 +75,8 @@ public class Dragon : MonoBehaviour
             Attack("AttackFlame");
         if (Input.GetKeyDown(KeyCode.R))
             Attack("AttackScream");
+        if (Input.GetKeyDown(KeyCode.T))
+            Attack("TakeOff");
     }
 
     private void WakeUp()
@@ -113,7 +115,10 @@ public class Dragon : MonoBehaviour
         Attack("AttackFireBall");
         objectPools[poolNmae].GetItem(mouth.position);  
     }
+    private void AttackWing()
+    {
 
+    }
     private void Scream()
     {
         Debug.Log("scream");
