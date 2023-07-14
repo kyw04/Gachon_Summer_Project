@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Dragon : MonoBehaviour
 {
@@ -15,31 +16,46 @@ public class Dragon : MonoBehaviour
     public GameObject player;
     public ParticleSystem[] particles;
     public ParticleSystem[] fireParticles;
+    public NavMeshAgent nvAgent;
+
+    #region Position
 
     [Header("Position")]
     public Transform[] hands;
     public Transform mouth;
     public Transform chest;
+    public Transform dash;
 
+    #endregion
+    #region Stats
 
     [Header("Stats")]
     public Vector3 handAttackBox;
     public Vector3 mouthAttackBox;
     public float movementSpeed = 5f;
     public float damage = 10f;
+    public float attackRandMax = 1;
+    public float attackDlay = 5;
+    private float attackTime;
 
     [Space(15)]
-    public float screamDistance = 30;
+    public float screamDistance = 30f;
     public float screamPower = 0.5f;
-
+    public float dashPower = 50f;
+    public float dashTime = 1f;
+    #endregion
+    #region Dictionary
     [Header("Dictionary")]
     public string[] key;
     public ObjectPoolComponent[] value;
     private Dictionary<string, ObjectPoolComponent> objectPools = new Dictionary<string, ObjectPoolComponent>();
 
+    #endregion
+
     private State state;
     private Animator animator;
     private Rigidbody rigi;
+    private Quaternion idleStateRotation;
     private float timeSpeed = 0.5f;
     private float wingSpeed = 1f;
     private bool isSleeping;
@@ -72,6 +88,8 @@ public class Dragon : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         rigi = GetComponent<Rigidbody>();
+        nvAgent = GetComponent<NavMeshAgent>();
+
         state = State.Idle;
         isSleeping = true;
         isScreaming = false;
@@ -85,10 +103,69 @@ public class Dragon : MonoBehaviour
         {
             foreach (ParticleSystem particle in particles) { particle.Stop(); }
             foreach (ParticleSystem particle in fireParticles) { particle.Stop(); }
-
+            idleStateRotation = transform.rotation;
             attackTransform = null;
             attackPos = Vector3.zero;
+
+            if (attackTime + attackDlay <= Time.time)
+            {
+                attackTime = Time.time + Random.Range(0, attackRandMax);
+
+                float dis = Vector3.Distance(player.transform.position, transform.position);
+                int num;
+                if (dis <= 10)
+                {
+                    num = Random.Range(0, 5);
+                    if (num == 1)
+                    {
+                        BackDash();
+                        LaterAttack("AttackFlame", 1f);
+                    }
+                    else if (num == 2)
+                    {
+                        BackDash();
+                        LaterAttack("AttackHand", 1f);
+                    }
+                }
+                else
+                {
+                    num = Random.Range(1, 3);
+                }
+
+                Debug.Log($"{attackTime}\ndis: {dis} {num}");
+                switch (num)
+                {
+                    case 0:
+                        Attack("AttackMouth", false, mouth, mouthAttackBox);
+                        break;
+                    case 1:
+                        Attack("AttackFlame");
+                        break;
+                    case 2:
+                        Attack("AttackHand");
+                        break;
+                    case 3:
+                        Attack("AttackScream");
+                        break;
+                    case 4:
+                        Attack("AttackMagic", true, transform, 15f);
+                        break;
+                    case 5:
+                        Attack("AttackWing", true);
+                        isWingAttacking = true;
+                        foreach (ParticleSystem particle in fireParticles) { particle.Play(); }
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            if (isFly)
+                Land();
+            else
+                Fly();
 
         WakeUp();
         AttackWings();
@@ -105,32 +182,6 @@ public class Dragon : MonoBehaviour
             {
                 Debug.Log(collider.name);
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-            Attack("AttackHand");
-        if (Input.GetKeyDown(KeyCode.W))
-            Attack("AttackMouth", false, mouth, mouthAttackBox);
-        if (Input.GetKeyDown(KeyCode.E))
-            Attack("AttackFlame");
-        if (Input.GetKeyDown(KeyCode.R))
-            Attack("AttackScream");
-        if (Input.GetKeyDown(KeyCode.T))
-            Attack("AttackMagic", true, transform, 15f);
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (isFly)
-                Land();
-            else
-                Fly();
-        }
-
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            Attack("AttackWing", true);
-            isWingAttacking = true;
-            foreach (ParticleSystem particle in fireParticles) { particle.Play(); }
         }
     }
 
@@ -194,6 +245,7 @@ public class Dragon : MonoBehaviour
         attackBoxRotation = transform.rotation;
         attackBoxSize = Vector3.zero;
         attackRadius = 0;
+        animator.ResetTrigger("BackDash");
 
         animator.SetTrigger(aniName);
     }
@@ -216,7 +268,7 @@ public class Dragon : MonoBehaviour
         {
             isWingAttacking = false;
             wingSpeed = 1;
-            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            transform.rotation = idleStateRotation;
             animator.SetFloat("WingAttackTime", 0f);
             rigi.velocity = Vector3.zero;
             return;
@@ -228,6 +280,7 @@ public class Dragon : MonoBehaviour
             {
                 wingTime += 0.05f;
                 animator.SetFloat("WingAttackTime", wingTime);
+                rigi.velocity = Vector3.zero;
                 rigi.AddForce(transform.forward * 50000f, ForceMode.Force);
             }
             else
@@ -321,8 +374,42 @@ public class Dragon : MonoBehaviour
         //rigi.useGravity = true;
         animator.SetTrigger("Land");
     }
+    private void BackDash()
+    {
+        if (state != State.Idle)
+            return;
+
+        StartCoroutine(Dash());
+        animator.SetTrigger("BackDash");
+    }
+
+    private IEnumerator Dash()
+    {
+        Debug.Log("Dash");
+        Vector3 finishPos = dash.position;
+        rigi.useGravity = false;
+
+        float currentTime = Time.time;
+        float currentDashTime = Time.time + dashTime;
+
+        while (currentTime < currentDashTime)
+        {
+            currentTime += Time.deltaTime;
+            transform.position = Vector3.Slerp(transform.position, finishPos, dashPower * Time.deltaTime);
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        rigi.useGravity = true;
+        Debug.Log("Dash Finish");
+    }
+    private IEnumerator LaterAttack(string aniName, float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        Attack(aniName);
+        attackTime += seconds;
+    }
     private void SetIdle() { state = State.Idle; Debug.Log(state); }
     private void ParticlePlay(int index) { particles[index].Play(); }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.gray;
