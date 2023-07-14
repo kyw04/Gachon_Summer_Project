@@ -2411,7 +2411,7 @@ MonoBehaviour:
     maxStaminaPoint: 0
     attackPoint: 20
     defencePoint: 5
-    spd: 2
+    spd: 3.5
     modelName: Paladin
     position: {x: 0, y: 0, z: 0}
   healthPoint: 0
@@ -2423,6 +2423,7 @@ MonoBehaviour:
   isActionable: 1
   isDamageable: 1
   coolDown: 8
+  phase: 1
   playerInstance: {fileID: 0}
   healthPointSlider: {fileID: 0}
   nameTextField: {fileID: 0}
