@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Serialization;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rope))]
 public sealed class PlayerComponent : BattleableComponentBase, IControllable
@@ -64,7 +65,6 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         dataController.UseUpdate(Status.id, Status.position);
         isJumpable = Rigidbody.velocity.y > -0.1f;
     }
-
     #region 기능적인 메소드
 
     void Damaged(float damage)
@@ -77,7 +77,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         }
         else
         {
-            Debug.Log("게임 오버");
+            SceneManager.LoadScene("Gameover");
         }
     }
 
