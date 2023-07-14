@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class Meteor : MonoBehaviour
 {
+    GameObject Target;
+    bool canattacked;
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
-        
+        Target = FindObjectOfType<PlayerComponent>().gameObject;
+        StartCoroutine(collision());
     }
 
     // Update is called once per frame
@@ -17,9 +20,25 @@ public class Meteor : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if(other.CompareTag("Player"))
+
+        if(other.gameObject == Target)
         {
-            Debug.Log("존나처맞는중");
+            canattacked = true;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.gameObject == Target)
+        {
+            canattacked = false;
+        }
+    }
+    IEnumerator collision()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.25f);
+            if (canattacked) Target.SendMessage("Damaged", 2.5f);
         }
     }
 }

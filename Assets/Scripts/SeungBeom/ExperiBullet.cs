@@ -36,7 +36,7 @@ public class ExperiBullet : MonoBehaviour
 
 
 
-        Target = GameObject.FindGameObjectWithTag("Player");
+        Target = FindObjectOfType<PlayerComponent>().gameObject;
         Rb = GetComponent<Rigidbody>();
         BoxCol = GetComponent<BoxCollider>();
 
@@ -75,14 +75,17 @@ public class ExperiBullet : MonoBehaviour
     {
         Rb.velocity += (transform.forward + Reposition) * (Speed * Time.deltaTime);
 
-        Projectile.transform.Rotate(new Vector3(0, 0, 720 * Time.deltaTime));
+        Projectile.transform.Rotate(new Vector3(0, 0, 5* 720 * Time.deltaTime));
     }
     private void OnTriggerEnter(Collider other)
     {
         //ContactPoint CP = collision.GetContact(0);
         //HitPrefab.transform.position = CP.point;              //접촉지점으로 피격 이펙트 위치 고정
         StartCoroutine(BulletHit());
-       
+       if(other.gameObject == Target)
+        {
+            Target.SendMessage("Damaged", 0.5f);
+        }
     }
 
     IEnumerator BulletHit()         //착탄 후 총알의 동작을 관리합니다.

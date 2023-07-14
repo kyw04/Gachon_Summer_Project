@@ -49,7 +49,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.21413529, y: 0.3283596, z: 0.9971167}
-  m_Center: {x: 0.008241147, y: -0.021544456, z: -0.017371595}
+  m_Center: {x: 0.008241147, y: -0.021544456, z: 0.67}
 --- !u!114 &6384139646990284320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,7 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Projectile: {fileID: 0}
   HitPrefab: {fileID: 0}
-  Accuracy: 90
+  Accuracy: 95
   Speed: 60
   Sentinel: 0
 --- !u!54 &6384139646990284323
@@ -426,7 +426,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4488862101063296, guid: a17580581e360e74db460cc3d5dc0396, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.07700001
       objectReference: {fileID: 0}
     - target: {fileID: 4488862101063296, guid: a17580581e360e74db460cc3d5dc0396, type: 3}
       propertyPath: m_LocalRotation.w
