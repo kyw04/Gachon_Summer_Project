@@ -12,18 +12,30 @@ EditorBuildSettings:
     path: Assets/Scenes/LoadingScene.unity
     guid: 972ccd3b3addac643834a629aeab49b0
   - enabled: 1
-    path: Assets/Scenes/kti.unity
+    path: Assets/Scenes/Tutorial.unity
+    guid: 751314adea40c9641bc92ef74bf59151
+  - enabled: 1
+    path: Assets/Scenes/Stage1.unity
     guid: a7dbd0e1c11252c45bd78a96abd3e0a3
+  - enabled: 1
+    path: Assets/Scenes/Stage2.unity
+    guid: 6d0b2e085610afd41aefe53dd42fe5e9
+  - enabled: 1
+    path: Assets/Scenes/Stage4.unity
+    guid: c2d59a0f95629ad40b3eadbcd4fd9e38
+  - enabled: 1
+    path: Assets/Scenes/Stage5.unity
+    guid: 230ccaa46ac22e34fbe16093c7b60299
   - enabled: 1
     path: Assets/Scenes/1Boss_Clear.unity
     guid: 4f81ea9caae154a4981431d9edb629b0
+  - enabled: 1
+    path: Assets/Scenes/GameClear.unity
+    guid: cbed4587a8741414bbd7c520e1803ec6
+  - enabled: 1
+    path: Assets/Scenes/Gameover.unity
+    guid: 64193fc53ee9fd447919a26fbc236262
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
-  - enabled: 1
-    path: Assets/Scenes/JYH.unity
-    guid: 6d0b2e085610afd41aefe53dd42fe5e9
-  - enabled: 1
-    path: Assets/Scenes/SB(Boss).unity
-    guid: c2d59a0f95629ad40b3eadbcd4fd9e38
   m_configObjects: {}

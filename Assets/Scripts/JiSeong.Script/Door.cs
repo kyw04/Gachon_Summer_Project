@@ -11,10 +11,6 @@ public class Door : MonoBehaviour
 
     private bool isOpen = false; // 문 열림 여부
 
-    private void Start()
-    {
-        
-    }
     private void Update()
     {
         float distance = Vector3.Distance(transform.position, player.position);

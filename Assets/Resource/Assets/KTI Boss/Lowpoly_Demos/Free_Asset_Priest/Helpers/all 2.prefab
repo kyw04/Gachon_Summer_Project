@@ -41,6 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5762114527131080138}
+  - component: {fileID: 5933406815000959529}
   m_Layer: 0
   m_Name: PT_Medieval_Hips
   m_TagString: Untagged
@@ -66,6 +67,19 @@ Transform:
   m_Father: {fileID: 4117844902412465681}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5933406815000959529
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 168048453470432882}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 0.7, y: 1.8, z: 1}
+  m_Center: {x: 0.1, y: 0, z: 0}
 --- !u!1 &271314897641940890
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,6 +599,7 @@ GameObject:
   - component: {fileID: 1116109283517734838}
   - component: {fileID: 1116109283517734832}
   - component: {fileID: 1116109283517734833}
+  - component: {fileID: 1732170574150048455}
   m_Layer: 0
   m_Name: PT_Medieval_Staff_StPatrick
   m_TagString: Untagged
@@ -657,6 +672,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &1732170574150048455
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116109283517734839}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 0.1, y: 1.9, z: -0.1}
+  m_Center: {x: 0, y: -0.4, z: 0}
 --- !u!1 &1134588225481057957
 GameObject:
   m_ObjectHideFlags: 0
@@ -1435,6 +1463,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4117844902412465681}
+  - component: {fileID: 7123128396193237008}
   m_Layer: 0
   m_Name: all 2
   m_TagString: Untagged
@@ -1460,6 +1489,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7123128396193237008
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4319310187799462069}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4568920587522715318
 GameObject:
   m_ObjectHideFlags: 0
@@ -2398,6 +2440,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4643167769930087922}
   - component: {fileID: 764801163191855940}
+  - component: {fileID: 5846950895716387695}
   m_Layer: 0
   m_Name: PT_Medieval_Priest_StPatrick
   m_TagString: Untagged
@@ -2534,3 +2577,16 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: -0.13488495, z: -0.025272414}
     m_Extent: {x: 0.92835015, y: 0.9995614, z: 0.37952304}
   m_DirtyAABB: 0
+--- !u!65 &5846950895716387695
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8814954954507246188}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.9991226, z: 0.7590463}
+  m_Center: {x: 0.0000045223196, y: 0.8939978, z: -0.0067000855}

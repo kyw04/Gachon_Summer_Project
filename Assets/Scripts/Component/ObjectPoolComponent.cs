@@ -13,14 +13,14 @@ public class ObjectPoolComponent : MonoBehaviour
     //풀링할 오브젝트
     [SerializeField] private GameObject prefab = null;
     //오브젝트를 생성하는 주기
-    [SerializeField] private float frequency = 1f;
+    //[SerializeField] private float frequency = 1f;
     //풀링할 오브젝트의 최대치를 가진 변수
     [SerializeField] private int maxObjectCount = 20;
 
     private int index;
     
     public List<GameObject> poolObjectLlist;
-    private bool _isPooling = false;
+    //private bool _isPooling = false;
 
     private void Awake()
     {
@@ -120,26 +120,26 @@ public class ObjectPoolComponent : MonoBehaviour
         FreeItem(item);
     }
 
-    public void StartPooling(Queue<GameObject> queue)
-    {
-        StartCoroutine(Pooling(queue));
-    }
+    //public void StartPooling(Queue<GameObject> queue)
+    //{
+    //    StartCoroutine(Pooling(queue));
+    //}
 
-    public void StopPooling()
-    {
-        _isPooling = !_isPooling;
-    }
+    //public void StopPooling()
+    //{
+    //    _isPooling = !_isPooling;
+    //}
 
-    IEnumerator Pooling(Queue<GameObject> queue)
-    {
-        _isPooling = true;
-        while (_isPooling)
-        {
-            var instance =  queue.Dequeue();
-            instance.SetActive(true);
-            queue.Enqueue(instance);
+    //IEnumerator Pooling(Queue<GameObject> queue)
+    //{
+    //    _isPooling = true;
+    //    while (_isPooling)
+    //    {
+    //        var instance =  queue.Dequeue();
+    //        instance.SetActive(true);
+    //        queue.Enqueue(instance);
 
-            yield return new WaitForSeconds(frequency);
-        }
-    }
+    //        yield return new WaitForSeconds(frequency);
+    //    }
+    //}
 }

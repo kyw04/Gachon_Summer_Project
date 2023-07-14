@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -15,6 +16,7 @@ using UnityEngine.Serialization;
 public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
 {
     public BattleableVOBase Status;
+    public Queue<Action> queue = new Queue<Action>();
 
     //현재 체력
     [SerializeField]
@@ -38,15 +40,27 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
     
     //공격을 시작했을 경우 true로 변했다가 공격 애니메이션이 끝나면 false로
     public bool isAttacking = false;
+    public bool isDamageable = true;
+    public bool isMoving = false;
 
     // 전투 가능한 오브젝트들의 스테이터스를 보관할 VO.
     
-    private void Awake()
+    protected void Awake()
     {
         //컴포넌트를 가져옴
         animator = GetComponent<Animator>();
         Rigidbody = GetComponent<Rigidbody>();
-        Status = new BattleableVOBase();
+    }
+    private void Update()
+    {
+        if (queue.Count > 0)
+        {
+            while (queue.Count > 0)
+            {
+                var act = queue.Dequeue();
+                act();
+            }
+        }
     }
 
     public virtual void Attack()
@@ -63,7 +77,6 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
     {
         if (amount < 0)
         {
-            Debug.Log(amount);
             if ((healthPoint += amount) <= 0)
             {
                 healthPoint = 0;
@@ -79,7 +92,7 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
                 select param.name;
             foreach (var paramName in  boolParamName)
                 animator.SetBool(paramName, false);
-            
+
             return 0;
         }
         else
@@ -103,6 +116,24 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
     #region Animation Event를 위한 메소드
 
     public abstract void AnimEvt(string cmd);
+    protected async void CallMethodWaitForSeconds(int milliseconds, Action act)
+    {
+        //주어진 시간 만큼 대기, 단 이 때 제어권을 다시 유니티한테 넘겨줌 (코루틴 처럼)
+        await Task.Delay(milliseconds);
+        await Task.Run(() =>
+        {
+            try
+            {
+                queue.Enqueue(act);
+            }
+            catch (Exception e)
+            {
+                //Debug.Log(e);
+                throw;
+            }
+        });
+        
+    }
 
     #endregion
 }
