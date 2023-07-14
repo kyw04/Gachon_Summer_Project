@@ -25,6 +25,7 @@ TagManager:
   - Magic
   - Stage2_Meteor
   - Hook
+  - MagicZone
   layers:
   - Default
   - TransparentFX
