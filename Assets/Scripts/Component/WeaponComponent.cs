@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
+using UniRx.Operators;
 [RequireComponent(typeof(Collider))]
 public class WeaponComponent : MonoBehaviour
 {
@@ -20,30 +23,37 @@ public class WeaponComponent : MonoBehaviour
 
     private void OnCollisionEnter(Collision col)
     {
-        //if(col.gameObject.CompareTag(_owner.gameObject.tag)) return;
-        var instance = col.gameObject.transform.root.gameObject;
-        if (instance.Equals(_owner.gameObject)) return;
-        if (instance.CompareTag("Player"))
+        try
         {
-            var component = instance.GetComponent<PlayerComponent>();
-            if (_owner.isAttacking)
+            //if(col.gameObject.CompareTag(_owner.gameObject.tag)) return;
+            var instance = col.gameObject.transform.root.gameObject;
+            if (instance.Equals(_owner.gameObject)) return;
+            if (instance.CompareTag("Player"))
             {
-                if (component.ModifyHealthPoint(_attackPoint * -1) == -1)
+                var component = instance.GetComponent<PlayerComponent>();
+                if (_owner.isAttacking)
                 {
-                    _owner.animator.SetTrigger("Dancing");
+                    if (component.ModifyHealthPoint(_attackPoint * -1) == -1)
+                    {
+                        _owner.animator.SetTrigger("Dancing");
+                    }
+                }
+            }
+            else if (instance.CompareTag("Enemy"))
+            {
+                var component = instance.GetComponent<BattleableComponentBase>();
+                if (_owner.isAttacking)
+                {
+                    if (component.ModifyHealthPoint(_attackPoint * -1) == -1)
+                    {
+                        _owner.animator.SetTrigger("Dancing");
+                    }
                 }
             }
         }
-        else if (instance.CompareTag("Enemy"))
+        catch
         {
-            var component = instance.GetComponent<BattleableComponentBase>();
-            if (_owner.isAttacking)
-            {
-                if (component.ModifyHealthPoint(_attackPoint * -1) == -1)
-                {
-                    _owner.animator.SetTrigger("Dancing");
-                }
-            }
+            Debug.Log("error");
         }
     }
 }

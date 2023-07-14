@@ -222,7 +222,6 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     public override void Move()
     {
         int snum = BtnManager.instance.sceneNum;
-        //Debug.Log(snum);
         try
         {
             if ((snum == 3 && bossline.isPlayerMove) || snum != 3)

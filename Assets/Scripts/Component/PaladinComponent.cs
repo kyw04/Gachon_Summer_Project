@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Numerics;
+using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+using UniRx;
+using UniRx.Triggers;
 using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
@@ -13,9 +15,9 @@ public class PaladinComponent : BattleableComponentBase
 {
     public bool isActing;
     public bool isActionable;
-    public bool isDamageable = true;
     public float coolDown;
     public sbyte phase = 1;
+    private Subject<sbyte> _phaseObserver = new Subject<sbyte>();
 
     //������
     public Queue<MagicComponent> magicInstances;
@@ -31,15 +33,7 @@ public class PaladinComponent : BattleableComponentBase
     public void Awake()
     {
         base.Awake();
-        var magicPrefab = Resources.Load("Magic/Metor/Object") as GameObject;
-        magicInstances = new Queue<MagicComponent>();
-
-        for (var i = 0 ; i < 8; i++)
-        {
-            var item = Instantiate(magicPrefab).gameObject.GetComponent<MagicComponent>();
-            item.gameObject.SetActive(false);
-            magicInstances.Enqueue(item);
-        }
+        ChargeMagic();
     }
     
     void Start()
@@ -49,7 +43,7 @@ public class PaladinComponent : BattleableComponentBase
             name = Status.name,
             attackPoint = Status.attackPoint,
             maxHealthPoint = Status.maxHealthPoint,
-            spd = 1.5f
+            spd = Status.spd
         };
         playerInstance = GameObject.FindWithTag("Player").GetComponent<PlayerComponent>();
         healthPoint = Status.maxHealthPoint;
@@ -60,6 +54,7 @@ public class PaladinComponent : BattleableComponentBase
     }
 
     // Update is called once per frame
+
     void FixedUpdate()
     {
         if (playerInstance is null)
@@ -70,13 +65,26 @@ public class PaladinComponent : BattleableComponentBase
         Move();
     }
 
+    private void ChargeMagic()
+    {
+        var magicPrefab = Resources.LoadAsync<GameObject>("Magic/Metor/Object").asset as GameObject;
+        magicInstances = new Queue<MagicComponent>();
+
+        for (var i = 0 ; i < 8; i++)
+        {
+            var item = Instantiate(magicPrefab).gameObject.GetComponent<MagicComponent>();
+            item.gameObject.SetActive(false);
+            magicInstances.Enqueue(item);
+        }
+    }
+    
     private void Think()
     {
         if (isActing || !isActionable || healthPoint == 0) return;
         
         isActionable = false;
 
-        Act action = () => { isActing = true;};
+        Act action = () => { isActing = true; };
 
         if (phase == 1 && (float)healthPoint / this.Status.maxHealthPoint <= 0.5f)
             action += () =>
@@ -85,37 +93,61 @@ public class PaladinComponent : BattleableComponentBase
                 phase = 2;
                 healthPointSlider.value = healthPoint;
                 animator.SetTrigger("Rage");
+                FormChange("Paladin/Phase2");
             };
         
-        if (_distance <= 1.5f)
+        else if (_distance <= 1.5f)
             action += () =>
             {
                 animator.SetTrigger("Kick");
+                
+                CallMethodWaitForSeconds(1000,() => { isActionable = true; });
             };
-        else if (_distance <= 3.1f)
+        else if (_distance <= 4f)
+        {
             action += Attack;
+
+            action += phase == 1 ? () => { } : () =>
+            {
+                StartCoroutine(UpgradeedAttack());
+            };
+
+            action += () => { CallMethodWaitForSeconds(5000, () => { isActionable = true; }); };
+        }
         else
             action += () =>
             {
                 animator.SetTrigger("Cast");
                 StartCoroutine(Casting());
+                CallMethodWaitForSeconds((int)coolDown * 1000,() => { isActionable = true; });
             };
-        
-        action += () =>
-        {
-            Debug.Log(true);
-            StartCoroutine(CallMethodWaitForSeconds(coolDown, () => { isActionable = true; }));
-        };
-        
-       
-        
+
+
+
         action();
+    }
+
+    public void FormChange(string path)
+    {
+        if (path.Trim() == "") path = "Paladin/Phase2";
+        var mat = Resources.LoadAsync(path.Trim()).asset as Material;
+        FormChange(mat);
+    }
+
+    private void FormChange(Material mat)
+    {
+        var renderCollection = GetComponentsInChildren<SkinnedMeshRenderer>();
+
+        foreach (var meshRenderer in renderCollection)
+        {
+            meshRenderer.sharedMaterial = mat;
+        }
     }
 
     public override void Attack()
     {
+        isDamageable = false;
         base.Attack();
-        animator.SetBool("isWalkingForward", false);
     }
 
     public override void Move()
@@ -147,10 +179,11 @@ public class PaladinComponent : BattleableComponentBase
         if (!isDamageable) return 0;
         isDamageable = false;
         isActionable = false;
-        StopAllCoroutines();
-        StartCoroutine(CallMethodWaitForSeconds(2f, () => { isDamageable = true; }));   
+        //1.5초 동안 데미지 입힐 수 없는 상태가 됨.
+        CallMethodWaitForSeconds(1500,() => { isDamageable = true; });
+        var result = base.ModifyHealthPoint(amount);   
         healthPointSlider.value = healthPoint;
-        return base.ModifyHealthPoint(amount);
+        return result;
     }
 
     public override void Die()
@@ -176,6 +209,7 @@ public class PaladinComponent : BattleableComponentBase
         {
             case "AttackEnd":
                 isAttacking = false;
+                isDamageable = true;
                 //this.transform.LookAt(playerInstance.transform);
                 break;
             case "Damaged":
@@ -187,7 +221,7 @@ public class PaladinComponent : BattleableComponentBase
                 StartCoroutine(playerInstance.HitBack(playerInstance.lookFoward * -1, 0.1f, 3f));
                 break;
             case "KickEnd":
-                StartCoroutine(CallMethodWaitForSeconds(1f, () => { isActionable = true;}));
+                CallMethodWaitForSeconds(1000,() => { isActionable = true; });
                 break;
             case "RageEnd":
                 isActionable = true;
@@ -195,6 +229,7 @@ public class PaladinComponent : BattleableComponentBase
         }
         StartCoroutine(LookTo(playerInstance.transform));
     }
+    
 
     private IEnumerator Casting()
     {
@@ -215,11 +250,10 @@ public class PaladinComponent : BattleableComponentBase
             yield return new WaitForSeconds(0.5f);
         }
     }
-
     private IEnumerator LookTo(Transform target)
     {
         isActing = true;
-        for (float f = 0; f <= 1; f += 0.01f )
+        for (float f = 0; f <= 1; f += 0.04f )
         {
             Vector3 dir = target.position - this.transform.position;
 
@@ -232,9 +266,12 @@ public class PaladinComponent : BattleableComponentBase
         yield break;
     }
 
-    public IEnumerator CallMethodWaitForSeconds(float duration, Action act)
+    private IEnumerator UpgradeedAttack()
     {
-        yield return new WaitForSeconds(duration);
-        act();
+        while (isAttacking)
+        {
+            Rigidbody.velocity += lookFoward.normalized * 0.1f;
+            yield return new WaitForSeconds(0.01f);
+        }
     }
 }
