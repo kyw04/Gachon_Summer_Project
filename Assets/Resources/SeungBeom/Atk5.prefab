@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1787030501270613490}
   - component: {fileID: 1787030501270613489}
+  - component: {fileID: 1643261080671517747}
   m_Layer: 0
   m_Name: Atk5
   m_TagString: Untagged
@@ -47,6 +48,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f3c18919cc39514dacc653cdb065bbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!135 &1643261080671517747
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787030501270613491}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 38.8
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1787030500479314194
 PrefabInstance:
   m_ObjectHideFlags: 0

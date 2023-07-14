@@ -6,20 +6,23 @@ public class Atk5Small : MonoBehaviour
 {
     GameObject Meteor;
     GameObject explo;
-
+    GameObject player;
     GameObject MagicCircle;
-
     bool Grow;
     bool Shrink;
+
+    SphereCollider sphere;
     // Start is called before the first frame update
     private void Awake()
     {
+        sphere = GetComponent<SphereCollider>();
         Meteor = transform.GetChild(0).gameObject;
         explo = transform.GetChild(1).gameObject;
         MagicCircle = transform.GetChild(2).gameObject;
         Meteor.SetActive(false);
         explo.SetActive(false);
         MagicCircle.SetActive(false);
+        player = FindObjectOfType<PlayerComponent>().gameObject;
     }
     void OnEnable()
     {
@@ -27,6 +30,7 @@ public class Atk5Small : MonoBehaviour
         explo.SetActive(false);
         MagicCircle.SetActive(false);
         StartCoroutine(Ex());
+        sphere.enabled = false;
     }
     private void Update()
     {
@@ -42,7 +46,6 @@ public class Atk5Small : MonoBehaviour
 
     IEnumerator Ex()
     {
-        yield return new WaitForSeconds(0.1f);
         MagicCircle.SetActive(true);
         Grow = true;
         yield return new WaitForSeconds(0.5f);
@@ -50,11 +53,23 @@ public class Atk5Small : MonoBehaviour
         yield return new WaitForSeconds(3.5f);
         Meteor.SetActive(true);
         Shrink = true;
-        yield return new WaitForSeconds(0.7f);
+        yield return new WaitForSeconds(0.6f);
+        sphere.enabled = true;
+        yield return new WaitForSeconds(0.1f);
         explo.SetActive(true);
-        yield return new WaitForSeconds(0.3f);
+
+        yield return new WaitForSeconds(0.1f);
+        sphere.enabled = false;
+        yield return new WaitForSeconds(0.2f);
         Shrink = false;
         yield return new WaitForSeconds(4f);
         gameObject.SetActive(false);
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject == player)
+        {
+            player.SendMessage("Damaged", 40);
+        }
     }
 }

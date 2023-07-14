@@ -7,13 +7,14 @@ public class Atk4Ex : MonoBehaviour
     public GameObject Warning;
     public GameObject Laser;
     public GameObject Explosion;
-
+    bool canattacked;
+    GameObject Target;
 
     SphereCollider sphere;
     // Start is called before the first frame update
     void OnEnable()
     {
-
+        Target = FindObjectOfType<PlayerComponent>().gameObject;
 
         StartCoroutine(Atk4());
         Warning = transform.GetChild(0).gameObject;
@@ -40,14 +41,17 @@ public class Atk4Ex : MonoBehaviour
 
         Laser.SetActive(true);
 
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.4f);      //폭발 발생
 
         Warning.SetActive(false);
         Explosion.SetActive(true);
         sphere.enabled = true;
-
-        yield return new WaitForSeconds(0.2f);
-
+        yield return new WaitForSeconds(0.01f);
+        if (canattacked)
+        {
+            Target.SendMessage("Damaged", 5f);
+        }
+        yield return new WaitForSeconds(0.19f);
         sphere.enabled = false;
 
         yield return new WaitForSeconds(3);
@@ -56,9 +60,16 @@ public class Atk4Ex : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if(other.gameObject == Target)
         {
-            //플레이어에게 데미지 줄 것.
+            canattacked = true;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject == Target)
+        {
+            canattacked = false;
         }
     }
 }

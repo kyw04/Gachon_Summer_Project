@@ -109,7 +109,7 @@ public class BossAttackManager : MonoBehaviour
         StartCoroutine(FIrstPattern());
         StartCoroutine(BulletShoot());
         StartCoroutine(Select());
-        //StartCoroutine(Barrier());
+        StartCoroutine(Barrier());
     }
 
     public GameObject P1_GetItem()
@@ -134,7 +134,7 @@ public class BossAttackManager : MonoBehaviour
     IEnumerator FIrstPattern()  //완료
     {
         P1 = true;
-        //P1Shield.SetActive(true);
+        P1Shield.SetActive(true);
         yield return new WaitForSeconds(7);  //몇초동안 발사할것인지? 7초로 하자.
         P1 = false;
         yield return new WaitForSeconds(2);
@@ -267,20 +267,17 @@ public class BossAttackManager : MonoBehaviour
 
                 if (i == 0)                              
                 {
-                    if (Spread == 0) P2Reposition1 = new Vector3(Luck * 15,0, 0);
-                    else P2Reposition1 = new Vector3(-Luck * 15,0, 0);
-                    Debug.Log("P2Reposition1 값 : " + P2Reposition1);
+                    if (Spread == 0) P2Reposition1 = new Vector3(Luck * 5,0, 0);
+                    else P2Reposition1 = new Vector3(-Luck * 5,0, 0);
                 }
                 if(i == 1)                                   
                 {
-                    if (Spread == 0) P2Reposition2 = new Vector3(0, 0, Luck * 15);
-                    else P2Reposition2 = new Vector3(0, 0, -Luck * 15);
-                    Debug.Log("P2Reposition2 값 : " + P2Reposition2);
+                    if (Spread == 0) P2Reposition2 = new Vector3(0, 0, Luck * 5);
+                    else P2Reposition2 = new Vector3(0, 0, -Luck * 5);
                 }
                 if(i == 2)
                 {
                     P2Reposition = new Vector3(P2Reposition1.x, 0, P2Reposition2.z);
-                    Debug.Log("최종값 : " + P2Reposition);
                 }
             }
         }
@@ -314,11 +311,11 @@ public class BossAttackManager : MonoBehaviour
         while(true)
         {
             yield return new WaitForSeconds(8f);
-            Selection = 1;
-            //Selection = Random.Range(1, 5); // 패턴이 5개이기 때문, (1~5 까지)
-            Debug.Log(Selection);
+            Selection = 3;
+            //Selection = Random.Range(1, 6); // 패턴이 5개이기 때문, (1~5 까지)
         }
     }
+    
 
 
     private void Update()
