@@ -13,13 +13,17 @@ public class Atk3Ex : MonoBehaviour
     public GameObject Explosion;
     bool LightOn;
     Light ligh;
+
+    SphereCollider sphere;
     // Start is called before the first frame update
     private void Awake()
     {
         Target = FindObjectOfType<PlayerComponent>().gameObject;
+        sphere = GetComponent<SphereCollider>();
     }
     void OnEnable()
     {
+        sphere.enabled = false;
         Circle = transform.GetChild(0).gameObject;
         Explosion = transform.GetChild(1).gameObject;
         ligh = GetComponent<Light>();
@@ -57,10 +61,10 @@ public class Atk3Ex : MonoBehaviour
         yield return new WaitForSeconds(3f);
         Explosion.SetActive(true);
         LightOn = true;
-        yield return new WaitForSeconds(4.9f);
-        if (canattack) Target.SendMessage("Damaged", 70f);
+        yield return new WaitForSeconds(4.99f);
+        sphere.enabled = true;
         yield return new WaitForSeconds(0.1f);    //폭발함
-        
+        sphere.enabled = false;
         LightOn = false;
         ligh.range = 0;
         ligh.intensity = 1;
@@ -72,20 +76,11 @@ public class Atk3Ex : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if(collision.gameObject == Target)
+        if (other.gameObject == Target)
         {
-            canattack = true;
-            Debug.Log("맞는다");
-        }
-    }
-    private void OnCollisionExit(Collision collision)
-    {
-        if(collision.gameObject == Target)
-        {
-            canattack = false;
-            Debug.Log("나왔다");
+            Target.SendMessage("Damaged", 100);
         }
     }
 }
