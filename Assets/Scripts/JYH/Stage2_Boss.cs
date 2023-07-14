@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
+using UnityEngine.Experimental.GlobalIllumination;
 
 public class Stage2_Boss : MonoBehaviour
 {
@@ -32,7 +33,7 @@ public class Stage2_Boss : MonoBehaviour
     public GameObject[] cast_Effect;
 
 
-    [Header("안개로 공격패턴 관련 변수들")]
+    [Header("암흑 공격패턴 관련 변수들")]
     [SerializeField] GameObject lamp;
     [SerializeField] GameObject directional_light;
     [SerializeField] GameObject boss_torch;
@@ -41,6 +42,9 @@ public class Stage2_Boss : MonoBehaviour
     [SerializeField] private AudioClip[] _clip;
     [SerializeField] private AudioClip[] _bgmClip;
 
+    [Header ("보스가 죽었을때 관련 변수")]
+    public GameObject die_boss_camera;
+    public GameObject die_img_obj;
 
     public float away;
     public Transform Player;
@@ -74,9 +78,8 @@ public class Stage2_Boss : MonoBehaviour
         Player = FindObjectOfType<PlayerComponent>().transform;
         eState = EnemyState.Idle;
         boss_Line.isArrive_Boss = false;
-
+       
         SoundManager.instance.BGM_Sound(0);
-
         //  SoundManager.instance.BGM_PlaySound(_bgmClip[0]);
     }
 
@@ -91,8 +94,8 @@ public class Stage2_Boss : MonoBehaviour
 
         //  Debug.Log(away);
 
-        //if (Input.GetKeyDown(KeyCode.Z))
-        //    Damaged(0.2f);
+        if (Input.GetKeyDown(KeyCode.Z))
+            Damaged(1f);
 
         if (boss_Line.isArrive_Boss && boss_Line.endProduction)
         {
@@ -113,9 +116,9 @@ public class Stage2_Boss : MonoBehaviour
             if (hp <= 0)
             {
                 hp = 0;
-                Boss_Dead();
                 hp_Bar.value = 0f;
                 hp_T.text = "X" + hp.ToString();
+                Boss_Dead();
             }
         }
     }
@@ -167,6 +170,7 @@ public class Stage2_Boss : MonoBehaviour
     void Dead()
     {
         die_Effect.SetActive(true);
+        die_boss_camera.SetActive(true);
         anim.SetTrigger("dead");
     }
     void Attack()
@@ -190,18 +194,21 @@ public class Stage2_Boss : MonoBehaviour
                 case 4:
                     Dark();
                     break;
-                    
+
             }
         }
     }
 
+
+   
+    #region 공격 패턴
     public void Slash()
     {
         if (away <= 5)
         {
             anim.SetTrigger("slash");
         }
-    }   
+    }
     public void CircleMeteorAttack() // 원형으로 메테오 생성
     {
         anim.SetTrigger("shootMeteor");
@@ -211,40 +218,12 @@ public class Stage2_Boss : MonoBehaviour
     {
         anim.SetTrigger("dark");
     }
-
     void SpawnMeteor_Attack() // 위에서 메테오 생성
     {
         anim.SetTrigger("spawn_Meteor");
         //Debug.Log("sky메테오");
     }
-
-    void Real_dark_attack()
-    {
-        directional_light.transform.Rotate(new Vector3(-30f, transform.rotation.y, transform.rotation.z));
-        boss_torch.SetActive(false);
-        lamp.SetActive(false);
-        StartCoroutine(Recover_dark_attack());
-    }
-
-    IEnumerator Recover_dark_attack()
-    {
-        yield return new WaitForSeconds(3.5f);
-        directional_light.transform.Rotate(new Vector3(30f, transform.rotation.y, transform.rotation.z));
-        boss_torch.SetActive(true);
-        lamp.SetActive(true);
-    }
-    void Real_CircleMeteor_Attack()
-    {
-        for (int i = 0; i < spawnPoint.Length; i++)
-        {
-            //Debug.Log("Real_CircleMeteor_Attack 들어옴");
-            GameObject meteor0 = boss_Attack[1].GetItem(spawnPoint[i].position);
-            Vector3 direction = spawnPoint[i].position - transform.position; // 현재 위치에서 spawnPoint 위치로 향하는 벡터
-            direction.y = 0f;
-            meteor0.GetComponent<Rigidbody>().velocity = direction.normalized * meteorSpeed;
-        }
-    }
-
+    #endregion
     void Off_Speed()
     {
         agent.speed = 0;
@@ -257,21 +236,38 @@ public class Stage2_Boss : MonoBehaviour
         agent.isStopped = false;
         agent.speed = 3.5f;
     }
+    // 메테오 생성후 닿으면 사라지도록 구현
 
-    void Real_SpawnMeteor_Attack()
+    IEnumerator Recover_dark_attack()
     {
-        Vector3 meteorPosition = new Vector3(Player.position.x, 
-            Player.position.y + 10f, Player.position.z);
-        // 메테오를 플레이어의 현재 위치에 생성
-        GameObject meteor = boss_Attack[0].GetItem(meteorPosition);
-        GameObject partical1 = boss_Partical[0].GetItem(meteorPosition);
-
-        boss_Attack[0].FreeItem(meteor, 2f);
-        boss_Partical[0].FreeItem(partical1, 2f);
-        eState = EnemyState.Idle;
+        yield return new WaitForSeconds(3.5f);
+        directional_light.transform.Rotate(new Vector3(30f, transform.rotation.y, transform.rotation.z));
+        boss_torch.SetActive(true);
+        lamp.SetActive(true);
     }
 
-    // 메테오 생성후 닿으면 사라지도록 구현
+    #region 애니메이션 이벤트 시스템에 넣어준 진짜 공격
+    void Real_dark_attack()
+    {
+        directional_light.transform.Rotate(new Vector3(-30f, transform.rotation.y, transform.rotation.z));
+        boss_torch.SetActive(false);
+        lamp.SetActive(false);
+        StartCoroutine(Recover_dark_attack());
+    }
+
+    void Real_CircleMeteor_Attack()
+    {
+        for (int i = 0; i < spawnPoint.Length; i++)
+        {
+            //Debug.Log("Real_CircleMeteor_Attack 들어옴");
+            GameObject meteor0 = boss_Attack[1].GetItem(spawnPoint[i].position);
+            Vector3 direction = spawnPoint[i].position - transform.position; // 현재 위치에서 spawnPoint 위치로 향하는 벡터
+            direction.y = 0f;
+            meteor0.GetComponent<Rigidbody>().velocity = direction.normalized * meteorSpeed;
+        }
+    }
+
+
     IEnumerator Destroy_Partical()
     {
         yield return new WaitForSeconds(3f);
@@ -280,6 +276,21 @@ public class Stage2_Boss : MonoBehaviour
         yield return new WaitForSeconds(5f);
         boss_Partical[1].FreeItem(partical2); // 바닥에 닿았을때 생성, 2초뒤 삭제
     }
+
+    void Real_SpawnMeteor_Attack()
+    {
+        Vector3 meteorPosition = new Vector3(Player.position.x,
+            Player.position.y + 10f, Player.position.z);
+
+        // 메테오를 플레이어의 현재 위치에 생성
+        GameObject meteor = boss_Attack[0].GetItem(meteorPosition);
+        GameObject partical1 = boss_Partical[0].GetItem(meteorPosition);
+
+        boss_Attack[0].FreeItem(meteor, 2f);
+        boss_Partical[0].FreeItem(partical1, 2f);
+        eState = EnemyState.Idle;
+    }
+    #endregion
 
     void Boss_Dead()
     {
@@ -292,7 +303,9 @@ public class Stage2_Boss : MonoBehaviour
     void RealDead()
     {
         Destroy(gameObject);
-        Time.timeScale = 0;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        LoadingScene.LoadScene("Clear");
     }
     void RealAttack()
     {
@@ -302,7 +315,12 @@ public class Stage2_Boss : MonoBehaviour
         }
         eState = EnemyState.Idle;
     }
-
+    void Cast_Dark_Attack()
+    {
+        cast_Effect[1].SetActive(true);
+        SoundManager.instance.Boss_PlaySound(_clip[3]);
+    }
+    #region 공격 사운드 재생
     void Slash_Sound()
     {
         SoundManager.instance.Boss_PlaySound(_clip[0]);
@@ -324,15 +342,11 @@ public class Stage2_Boss : MonoBehaviour
         SoundManager.instance.Boss_PlaySound(_clip[4]);
     }
 
-    void Cast_Dark_Attack()
-    {
-        cast_Effect[1].SetActive(true);
-        SoundManager.instance.Boss_PlaySound(_clip[3]);
-    }
-
     void Cast_Dark_Sound()
     {
         cast_Effect[1].SetActive(false);
         SoundManager.instance.Boss_PlaySound(_clip[5]);
     }
+    #endregion 
+
 }

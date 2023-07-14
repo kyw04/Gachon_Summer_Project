@@ -15,6 +15,8 @@ public class BtnManager : MonoBehaviour
     public int sceneNum; // 각 Scene들의 번호를 알려주기 위한 변수
     void Awake()
     {
+        Debug.Log(sceneNum);
+
         if (instance == null)
             instance = this;
         else
@@ -22,7 +24,7 @@ public class BtnManager : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && sceneNum == 3)
         {
             Time.timeScale = 0;
             Cursor.visible = true;
@@ -38,7 +40,6 @@ public class BtnManager : MonoBehaviour
         Time.timeScale = 1;
         sceneNum = 0;
         StartCoroutine(Scene_Move());
-
     }
     public void Tutorial_SceneMove() // 튜토리얼(윤지성 씬)
     {
@@ -156,4 +157,27 @@ public class BtnManager : MonoBehaviour
     }
     #endregion
 
+    #region 게임오버
+    public void GameOver_Retry()
+    {
+        switch (sceneNum)
+        {
+            case 2:
+                LoadingScene.LoadScene("Stage1");
+                break;
+            case 3:
+                LoadingScene.LoadScene("Stage2");
+                break;
+            case 4:
+                LoadingScene.LoadScene("Stage3");
+                break;
+            case 5:
+                LoadingScene.LoadScene("Stage4");
+                break;
+            case 6:
+                LoadingScene.LoadScene("Stage5");
+                break;
+        }
+    }
+    #endregion
 }
