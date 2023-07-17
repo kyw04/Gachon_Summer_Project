@@ -421,6 +421,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1885039255}
         m_TargetAssemblyTypeName: LoadSceneManager, Assembly-CSharp
         m_MethodName: RestartButton
+
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -560,6 +561,7 @@ GameObject:
   - component: {fileID: 560725202}
   - component: {fileID: 560725201}
   - component: {fileID: 560725200}
+  - component: {fileID: 560725204}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -654,6 +656,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &560725204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 560725199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65f9bc4a70163bd4ea35469138f061b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &850430627
 GameObject:
   m_ObjectHideFlags: 0
