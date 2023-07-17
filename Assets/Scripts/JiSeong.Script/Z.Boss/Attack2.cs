@@ -3,7 +3,6 @@ using UnityEngine;
 public class Attack2 : MonoBehaviour
 {
     public float speed = 10f; // 발사체의 속도
-
     private Rigidbody rb;
 
     private void Start()
@@ -20,7 +19,11 @@ public class Attack2 : MonoBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
-        // 충돌이 발생하면 오브젝트 삭제
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            var v = collision.gameObject.GetComponent<PlayerComponent>();
+            v.ModifyHealthPoint(-20);
+        }
         Destroy(gameObject);
     }
 }
