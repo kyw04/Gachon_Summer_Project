@@ -44284,6 +44284,8 @@ GameObject:
   - component: {fileID: 9011748759806478573}
   - component: {fileID: 9147235156033893223}
   - component: {fileID: 9097610268878920375}
+  - component: {fileID: -1386264537178744756}
+  - component: {fileID: 8840951683829896319}
   m_Layer: 0
   m_Name: ATK1
   m_TagString: Untagged
@@ -49304,6 +49306,31 @@ MonoBehaviour:
   RandomVolume: 0
   minVolume: 0.4
   maxVolume: 1
+--- !u!114 &-1386264537178744756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9210365359793611255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2787ee9d1a491ff4b877530a5215960f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &8840951683829896319
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9210365359793611255}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.29, y: 0.1, z: 9.52}
+  m_Center: {x: 0, y: 0, z: 3.61}
 --- !u!1 &9210401676505192549
 GameObject:
   m_ObjectHideFlags: 0
