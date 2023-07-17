@@ -15,7 +15,7 @@ public class ExperiBullet : MonoBehaviour
     GameObject Target;
 
     public int Sentinel;
-
+    
     Vector3 Reposition;
     Vector3 Reposition1;
     Vector3 Reposition2;
@@ -33,7 +33,6 @@ public class ExperiBullet : MonoBehaviour
         {
             Refresh();
         }
-
 
 
         Target = FindObjectOfType<PlayerComponent>().gameObject;
@@ -55,8 +54,8 @@ public class ExperiBullet : MonoBehaviour
 
                 if(i == 0)                              // 첫 번째 , Y축으로 랜덤하게 탄이 튀도록 함.
                 {
-                    if(Spread == 0) Reposition1 = new Vector3(0, Luck, 0);
-                    else Reposition1 = new Vector3(0, -Luck, 0);
+                    if(Spread == 0) Reposition1 = new Vector3(0, Luck + 1, 0);
+                    else Reposition1 = new Vector3(0, -Luck + 1, 0);
 
                 }
                 if (i == 1)                                     //두 번째 반복 , Z 축으로 랜덤하게 탄이 튀도록 함.
