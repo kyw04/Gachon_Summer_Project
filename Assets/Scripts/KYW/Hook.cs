@@ -31,6 +31,7 @@ public class Hook : MonoBehaviour
 
     private SpringJoint joint;
     private Transform movingObject;
+    private Rigidbody playerRb;
     private Rigidbody rb;
     private HookedTarget hookedTarget;
     private Vector3 direction;
@@ -45,6 +46,7 @@ public class Hook : MonoBehaviour
 
     private void Start()
     {
+        playerRb = GetComponent<Rigidbody>();
         firePosition = GameObject.FindWithTag("Hook").transform;
         firePosition.parent = this.transform;
 
@@ -129,6 +131,10 @@ public class Hook : MonoBehaviour
             {
                 destination.y -= playerHeight;
             }
+        }
+        else
+        {
+            playerRb.useGravity = true;
         }
 
         if (isMove)
