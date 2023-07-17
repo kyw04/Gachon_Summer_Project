@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class BossAttackManager : BattleableComponentBase
@@ -29,7 +30,8 @@ public class BossAttackManager : BattleableComponentBase
 
 
 
-
+    public TMP_Text bossName;
+    public TMP_Text bossHealth;
 
 
 
@@ -39,6 +41,8 @@ public class BossAttackManager : BattleableComponentBase
     GameObject Shield;
 
     GameObject P1Shield;
+
+    public GameObject eXPLOSION;
 
     int Selection;
 
@@ -59,8 +63,11 @@ public class BossAttackManager : BattleableComponentBase
     Vector3 P5Reposition1;
     Vector3 P5Reposition2;
 
+    BoxCollider boxcol;
+
     private void Awake()
     {
+        eXPLOSION.transform.localScale = new Vector3(3, 9, 3);
         P1 = false;
         isDead = false;
 
@@ -72,10 +79,15 @@ public class BossAttackManager : BattleableComponentBase
         Shield = transform.GetChild(5).gameObject;
 
         P1Shield = transform.GetChild(7).gameObject;
+
+        boxcol = GetComponent<BoxCollider>();
     }
 
     void Start()
     {
+        healthPoint.Value = Status.maxHealthPoint;
+
+        bossHealth.text = healthPoint.Value + "";
         
         player = GameObject.FindGameObjectWithTag("Player");
         // ----------------------------------------- 1번패턴 오브젝트 풀 -----------------------------------
@@ -111,6 +123,7 @@ public class BossAttackManager : BattleableComponentBase
         StartCoroutine(Select());
         StartCoroutine(Barrier());
     }
+
 
     public GameObject P1_GetItem()
     {
@@ -311,24 +324,51 @@ public class BossAttackManager : BattleableComponentBase
         {
             
             yield return new WaitForSeconds(8f);
-            Selection = 2;
-            //Selection = Random.Range(1, 6); // 패턴이 5개이기 때문, (1~5 까지)
+            Selection = Random.Range(1, 6); // 패턴이 5개이기 때문, (1~5 까지)
         }
     }
-    void BossDead()
+    IEnumerator Dead()
     {
-        isDead = true;
-
+        while(true)
+        {
+            yield return new WaitForSeconds(0.1f);
+            if (isDead)
+            {
+                Instantiate(eXPLOSION, transform.position, Quaternion.identity);
+                yield return new WaitForSeconds(0.1F);
+                gameObject.SetActive(false);
+                isDead = false;
+            }
+        }
     }
-
 
     private void Update()
     {
        if(healthPoint.Value <= 0)
         {
-            Debug.Log("보스 사망");
+            bossHealth.text = 0 +"";
             WaitTime = 9999;
+            //Instantiate(eXPLOSION, transform.position, Quaternion.identity);
+            isDead = true;
+            Shield.SetActive(false);
+            boxcol.enabled = false;
         }
+        else
+        {
+
+            bossHealth.text = $"{this.healthPoint.Value}";
+        }
+    }
+
+    public override int ModifyHealthPoint(int amount)
+    {
+        var result = base.ModifyHealthPoint(amount);
+        return result;
+    }
+
+    public override void Die()
+    {
+        base.Die();
     }
 
     public override void Move()
