@@ -164,6 +164,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BigMeteor
       objectReference: {fileID: 0}
+    - target: {fileID: 6475189335906444087, guid: 537f8a409ed571841b88aeabad644f08, type: 3}
+      propertyPath: m_Volume
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 5569955751138304619, guid: 537f8a409ed571841b88aeabad644f08, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 537f8a409ed571841b88aeabad644f08, type: 3}

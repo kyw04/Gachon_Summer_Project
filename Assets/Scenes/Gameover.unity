@@ -418,9 +418,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1648393792}
-        m_TargetAssemblyTypeName: BtnManager, Assembly-CSharp
-        m_MethodName: GameOver_Retry
+      - m_Target: {fileID: 1885039255}
+        m_TargetAssemblyTypeName: LoadSceneManager, Assembly-CSharp
+        m_MethodName: RestartButton
+
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1253,6 +1254,7 @@ GameObject:
   - component: {fileID: 1885039254}
   - component: {fileID: 1885039253}
   - component: {fileID: 1885039252}
+  - component: {fileID: 1885039255}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -1309,3 +1311,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1885039255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885039251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 889e57404b25f3e41b90b8f31a18a770, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
