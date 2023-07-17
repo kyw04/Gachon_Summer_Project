@@ -10,10 +10,11 @@ public class Dragon : MonoBehaviour
         None,
         Idle,
         Attack,
-        Move
+        Move,
+        Dead
     }
 
-    public GameObject player;
+    public PlayerComponent player;
     public ParticleSystem[] particles;
     public ParticleSystem[] fireParticles;
     public NavMeshAgent nvAgent;
@@ -32,17 +33,21 @@ public class Dragon : MonoBehaviour
     [Header("Stats")]
     public Vector3 handAttackBox;
     public Vector3 mouthAttackBox;
+    public float health = 100;
     public float movementSpeed = 5f;
-    public float damage = 10f;
-    public float attackRandMax = 1;
-    public float attackDlay = 5;
+    public int damage = 10;
+    public float attackRandMax = 1f;
+    public float attackDlay = 5f;
     private float attackTime;
 
     [Space(15)]
+    public float damageDlay = 1f;
+    private float damageTime;
     public float screamDistance = 30f;
     public float screamPower = 0.5f;
     public float dashPower = 50f;
     public float dashTime = 1f;
+
     #endregion
     #region Dictionary
     [Header("Dictionary")]
@@ -61,6 +66,7 @@ public class Dragon : MonoBehaviour
     private bool isSleeping;
     private bool isScreaming;
     private bool isWingAttacking;
+    private bool bodyCollision;
     private bool isFly;
 
     private Transform attackTransform;
@@ -90,7 +96,7 @@ public class Dragon : MonoBehaviour
         rigi = GetComponent<Rigidbody>();
         nvAgent = GetComponent<NavMeshAgent>();
 
-        state = State.Idle;
+        state = State.None;
         isSleeping = true;
         isScreaming = false;
         isWingAttacking = false;
@@ -99,21 +105,41 @@ public class Dragon : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKey(KeyCode.Tab))
+        {
+            if (Input.GetKeyDown(KeyCode.H))
+                if (isFly)
+                    Land();
+                else
+                    Fly();
+
+            return;
+        }
+
         if (state == State.Idle)
         {
             foreach (ParticleSystem particle in particles) { particle.Stop(); }
             foreach (ParticleSystem particle in fireParticles) { particle.Stop(); }
+
             idleStateRotation = transform.rotation;
             attackTransform = null;
+            bodyCollision = false;
             attackPos = Vector3.zero;
+            float dis = Vector3.Distance(player.transform.position, transform.position);
+            //Debug.Log(dis);
+            //Debug.Log(state);
 
             if (attackTime + attackDlay <= Time.time)
             {
                 attackTime = Time.time + Random.Range(0, attackRandMax);
 
-                float dis = Vector3.Distance(player.transform.position, transform.position);
                 int num;
-                if (dis <= 10)
+                if (isFly)
+                {
+                    num = Random.Range(0, 2);
+                    num = num == 0 ? 1 : 5;
+                }
+                else if (dis <= 10)
                 {
                     num = Random.Range(0, 5);
                     if (num == 1)
@@ -132,7 +158,7 @@ public class Dragon : MonoBehaviour
                     num = Random.Range(1, 3);
                 }
 
-                Debug.Log($"{attackTime}\ndis: {dis} {num}");
+                //Debug.Log($"{attackTime}\ndis: {dis} {num}");
                 switch (num)
                 {
                     case 0:
@@ -142,7 +168,7 @@ public class Dragon : MonoBehaviour
                         Attack("AttackFlame");
                         break;
                     case 2:
-                        Attack("AttackHand");
+                        Attack("AttackHand", true);
                         break;
                     case 3:
                         Attack("AttackScream");
@@ -159,14 +185,22 @@ public class Dragon : MonoBehaviour
                         break;
                 }
             }
+            else if (dis > 19f)
+            {
+                state = State.Move;
+                
+                //int num = Random.Range(0, 10);
+
+                //if (num < 8)
+                //    state = State.Move;
+                //else if (isFly)
+                //    Land();
+                //else
+                //    Fly();
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-            if (isFly)
-                Land();
-            else
-                Fly();
-
+        Move();
         WakeUp();
         AttackWings();
 
@@ -176,15 +210,57 @@ public class Dragon : MonoBehaviour
         if (state == State.Attack)
         {
             Vector3 pos = attackTransform ? attackTransform.position : attackPos;
+            Collider[] colliders;
 
-            Collider[] colliders = Physics.OverlapBox(pos, attackBoxSize, attackBoxRotation, LayerMask.GetMask("Player"));
+            if (attackRadius != 0)
+                colliders = Physics.OverlapSphere(pos, attackRadius, LayerMask.GetMask("Player"));
+            else
+                colliders = Physics.OverlapBox(pos, attackBoxSize, attackBoxRotation, LayerMask.GetMask("Player"));
             foreach (Collider collider in colliders)
             {
-                Debug.Log(collider.name);
+                if (collider.CompareTag("Player"))
+                {
+                    OnDamage();
+                }
             }
         }
     }
 
+    public void OnDamage()
+    {
+        if (damageDlay + damageTime <= Time.time)
+        {
+            damageTime = Time.time;
+            player.ModifyHealthPoint(-damage);
+            player.SendMessage("Damaged", damage);
+        }
+    }
+
+    private void Move()
+    {
+        if (state != State.Move)
+            return;
+
+        animator.SetFloat("Speed", movementSpeed);
+        nvAgent.speed = movementSpeed;
+        nvAgent.isStopped = false;
+        nvAgent.destination = player.transform.position;
+
+        float dis = Vector3.Distance(transform.position, player.transform.position);
+        if (dis <= 19)
+            Stop();
+    }
+    private void Stop()
+    {
+        if (state != State.Move)
+            return;
+
+        state = State.Idle;
+        animator.SetFloat("Speed", 0f);
+        nvAgent.speed = 0f;
+        nvAgent.isStopped = true;
+        nvAgent.destination = transform.position;
+    }
     private void WakeUp()
     {
         if (!animator.GetCurrentAnimatorStateInfo(0).IsName("WakeUp"))
@@ -232,6 +308,7 @@ public class Dragon : MonoBehaviour
         if (state != State.Idle)
             return;
 
+        this.bodyCollision = bodyCollision;
         Attack(aniName);
     }
     private void Attack(string aniName)
@@ -347,6 +424,7 @@ public class Dragon : MonoBehaviour
         if (state != State.Idle)
             return;
 
+        rigi.isKinematic = false;
         state = State.Move;
         attackTransform = null;
         attackPos = Vector3.zero;
@@ -363,6 +441,7 @@ public class Dragon : MonoBehaviour
         if (state != State.Idle)
             return;
 
+        rigi.isKinematic = true;
         state = State.Move;
         attackTransform = null;
         attackPos = Vector3.zero;
@@ -385,7 +464,7 @@ public class Dragon : MonoBehaviour
 
     private IEnumerator Dash()
     {
-        Debug.Log("Dash");
+        //Debug.Log("Dash");
         Vector3 finishPos = dash.position;
         rigi.useGravity = false;
 
@@ -399,7 +478,7 @@ public class Dragon : MonoBehaviour
             yield return new WaitForSeconds(Time.deltaTime);
         }
         rigi.useGravity = true;
-        Debug.Log("Dash Finish");
+        //Debug.Log("Dash Finish");
     }
     private IEnumerator LaterAttack(string aniName, float seconds)
     {
@@ -409,6 +488,16 @@ public class Dragon : MonoBehaviour
     }
     private void SetIdle() { state = State.Idle; Debug.Log(state); }
     private void ParticlePlay(int index) { particles[index].Play(); }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        //Debug.Log(bodyCollision);
+        if (bodyCollision && collision.transform.CompareTag("Player"))
+        {
+            //Debug.Log(collision.transform.name);
+            OnDamage();
+        }
+    }
 
     private void OnDrawGizmos()
     {
