@@ -3080,10 +3080,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7317174023108063589, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
-      propertyPath: coolDown
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 7317174023108063589, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
       propertyPath: nameTextField
       value: 
       objectReference: {fileID: 1498358894}
