@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossAttackManager : MonoBehaviour
+public class BossAttackManager : BattleableComponentBase
 {
 
     [Header("보스 공격 주기")]
@@ -23,7 +23,7 @@ public class BossAttackManager : MonoBehaviour
     Vector3 P2Reposition1;
     Vector3 P2Reposition2;
 
-
+    bool isDead;
     private List<GameObject> P5List = new List<GameObject>();
     int ListSentinel = 0;
 
@@ -62,7 +62,7 @@ public class BossAttackManager : MonoBehaviour
     private void Awake()
     {
         P1 = false;
-
+        isDead = false;
 
         P1Bullet = Resources.Load<GameObject>("SeungBeom/FinalBullet 1");
         P2_Atk = Resources.Load<GameObject>("SeungBeom/Atk2Ex 1");
@@ -145,18 +145,17 @@ public class BossAttackManager : MonoBehaviour
     IEnumerator SecondPattern() //완료
     {
         P2Accuracy();
-        P2list[0].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.y);
-        Debug.Log("메테오 생성 위치 : " + P2list[0].transform.position);
+        P2list[0].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.z);
         yield return new WaitForSeconds(0.1f);
         P2list[0].SetActive(true);
         yield return new WaitForSeconds(4f); //1번
         P2Accuracy();
-        P2list[1].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.y);
+        P2list[1].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.z);
         yield return new WaitForSeconds(0.1f);
         P2list[1].SetActive(true);
         yield return new WaitForSeconds(4f); //2번
         P2Accuracy();
-        P2list[2].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.y);
+        P2list[2].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.z);
         yield return new WaitForSeconds(0.1f);
         P2list[2].SetActive(true);
         yield return new WaitForSeconds(WaitTime); //3번
@@ -312,17 +311,39 @@ public class BossAttackManager : MonoBehaviour
         {
             
             yield return new WaitForSeconds(8f);
-            Selection = 4;
+            Selection = 2;
             //Selection = Random.Range(1, 6); // 패턴이 5개이기 때문, (1~5 까지)
         }
     }
-    
+    void BossDead()
+    {
+        isDead = true;
+
+    }
 
 
     private void Update()
     {
+       if(healthPoint <= 0)
+        {
+            Debug.Log("보스 사망");
+            WaitTime = 9999;
+        }
     }
 
+    public override void Move()
+    {
+    }
 
+    protected override void OnCollisionEnter(Collision other)
+    {
+    }
 
+    protected override void OnCollisionStay(Collision other)
+    {
+    }
+
+    public override void AnimEvt(string cmd)
+    {
+    }
 }
