@@ -844,14 +844,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 4041579628058226153, guid: 35d521e6a30287f4e8f3ba9221b4fc71, type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].time
-      value: 0.0033798218
-      objectReference: {fileID: 0}
-    - target: {fileID: 4041579628058226153, guid: 35d521e6a30287f4e8f3ba9221b4fc71, type: 3}
-      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
-      value: 0.453125
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35d521e6a30287f4e8f3ba9221b4fc71, type: 3}
 --- !u!114 &714454497 stripped
@@ -3043,26 +3035,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 845473561854561574, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 845473561854561574, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
-      propertyPath: m_TagString
-      value: Weapon
-      objectReference: {fileID: 0}
-    - target: {fileID: 3504208779451615623, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f3df8e9bb5c42cb4eb7dc3389107e90e, type: 2}
-    - target: {fileID: 5660840824010038398, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f3df8e9bb5c42cb4eb7dc3389107e90e, type: 2}
-    - target: {fileID: 6937994387231389092, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: f3df8e9bb5c42cb4eb7dc3389107e90e, type: 2}
     - target: {fileID: 7062042774189236792, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -3108,6 +3080,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7317174023108063589, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
+      propertyPath: coolDown
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 7317174023108063589, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
       propertyPath: nameTextField
       value: 
       objectReference: {fileID: 1498358894}
@@ -3115,10 +3091,6 @@ PrefabInstance:
       propertyPath: healthPointSlider
       value: 
       objectReference: {fileID: 1138033729}
-    - target: {fileID: 7317174023108063589, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
-      propertyPath: Status.attackPoint
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 7587081925758138498, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
       propertyPath: m_Name
       value: Paladin

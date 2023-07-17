@@ -77,11 +77,15 @@ MonoBehaviour:
     spd: 10
     modelName: Dummy
     position: {x: 0, y: 0, z: 0}
-  healthPoint: 0
+  healthPoint:
+    value: 0
   animator: {fileID: 0}
   lookFoward: {x: 0, y: 0, z: 0}
   lookRight: {x: 0, y: 0, z: 0}
   isAttacking: 0
+  isDamageable: 1
+  isMoving: 0
+  bossline: {fileID: 0}
   isDodging: 0
   isWiring: 0
   isJumping: 0
@@ -176,8 +180,8 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0
-        value: 1
+        time: 0.0033798218
+        value: 0.453125
         inSlope: 0
         outSlope: 0
         tangentMode: 0
