@@ -31,6 +31,7 @@ public class Hook : MonoBehaviour
 
     private SpringJoint joint;
     private Transform movingObject;
+    private Rigidbody playerRb;
     private Rigidbody rb;
     private HookedTarget hookedTarget;
     private Vector3 direction;
@@ -45,6 +46,7 @@ public class Hook : MonoBehaviour
 
     private void Start()
     {
+        playerRb = GetComponent<Rigidbody>();
         firePosition = GameObject.FindWithTag("Hook").transform;
         firePosition.parent = this.transform;
 
@@ -129,6 +131,10 @@ public class Hook : MonoBehaviour
             {
                 destination.y -= playerHeight;
             }
+        }
+        else
+        {
+            playerRb.useGravity = true;
         }
 
         if (isMove)
@@ -314,20 +320,20 @@ public class Hook : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
-        Transform mainCamera = Camera.main.transform;
-        Gizmos.DrawRay(mainCamera.position, mainCamera.forward * range);
+        //Gizmos.color = Color.blue;
+        //Transform mainCamera = Camera.main.transform;
+        //Gizmos.DrawRay(mainCamera.position, mainCamera.forward * range);
 
         //Gizmos.color = Color.red;
         //Gizmos.DrawRay(firePosition.position, direction * range);
 
-        Gizmos.color = Color.green;
-        Vector3 dir = (hookHead.position - firePosition.position).normalized;
-        float dis = Vector3.Distance(hookHead.position, firePosition.position);
-        Gizmos.DrawRay(firePosition.position, dir * dis);
-        Gizmos.DrawSphere(hookHead.position, 0.25f);
+        //Gizmos.color = Color.green;
+        //Vector3 dir = (hookHead.position - firePosition.position).normalized;
+        //float dis = Vector3.Distance(hookHead.position, firePosition.position);
+        //Gizmos.DrawRay(firePosition.position, dir * dis);
+        //Gizmos.DrawSphere(hookHead.position, 0.25f);
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawRay(hookHead.position, Vector3.up * playerHeight);
+        //Gizmos.color = Color.yellow;
+        //Gizmos.DrawRay(hookHead.position, Vector3.up * playerHeight);
     }
 }

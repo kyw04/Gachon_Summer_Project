@@ -11,8 +11,7 @@ public class BossHPBar : MonoBehaviour
 
     private void Update()
     {
-        float hp = boss.health.Value / boss.Status.maxHealthPoint;
-        hpSlider.value = hp;
+        hpSlider.value = boss.health.Value / (float)boss.Status.maxHealthPoint;
         hpText.text = boss.health.Value.ToString("F0");
     }
 }
