@@ -299,7 +299,7 @@ GameObject:
   - component: {fileID: 620369840}
   - component: {fileID: 620369839}
   m_Layer: 5
-  m_Name: ReStart
+  m_Name: NextStage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -370,9 +370,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 735509448}
-        m_TargetAssemblyTypeName: BtnManager, Assembly-CSharp
-        m_MethodName: Stage1_SceneMove
+      - m_Target: {fileID: 852102254}
+        m_TargetAssemblyTypeName: NextScene, Assembly-CSharp
+        m_MethodName: NextStage_Button
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -420,54 +420,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 620369837}
   m_CullTransparentMesh: 1
---- !u!1 &735509445
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 735509447}
-  - component: {fileID: 735509448}
-  m_Layer: 0
-  m_Name: BtnManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &735509447
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 735509445}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &735509448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 735509445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04716ae78d0bea846bcea59ada527297, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onoff_Btn: []
-  onoff_sound_icon: []
-  settingPopup: {fileID: 0}
-  sceneNum: 0
 --- !u!1 &852102249
 GameObject:
   m_ObjectHideFlags: 0
@@ -736,7 +688,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 60
+    m_FontSize: 50
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 4
@@ -747,7 +699,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC7AC\uC2DC\uC791"
+  m_Text: Next Stage
 --- !u!222 &1177674313
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -827,7 +779,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Game Clear
+  m_Text: Stage Clear
 --- !u!222 &1387727145
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -907,7 +859,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uB3CC\uC544\uAC00\uAE30"
+  m_Text: Quit
 --- !u!222 &1727142184
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -996,7 +948,7 @@ GameObject:
   - component: {fileID: 2061950704}
   - component: {fileID: 2061950703}
   m_Layer: 5
-  m_Name: Back
+  m_Name: Quit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1067,7 +1019,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 735509448}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: BtnManager, Assembly-CSharp
         m_MethodName: Title_SceneMove
         m_Mode: 1
