@@ -310,8 +310,10 @@ public class BossAttackManager : MonoBehaviour
     {
         while(true)
         {
+            
             yield return new WaitForSeconds(8f);
-            Selection = Random.Range(1, 6); // 패턴이 5개이기 때문, (1~5 까지)
+            Selection = 4;
+            //Selection = Random.Range(1, 6); // 패턴이 5개이기 때문, (1~5 까지)
         }
     }
     
