@@ -26,6 +26,7 @@ TagManager:
   - Stage2_Meteor
   - Hook
   - MagicZone
+  - Heal
   layers:
   - Default
   - TransparentFX

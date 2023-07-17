@@ -2,15 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GroundAppear : MonoBehaviour
+public class HealSpawner : MonoBehaviour
 {
     // 위에서 언급한 Plane의 자식인 RespawnRange 오브젝트
     public GameObject rangeObject;
     BoxCollider rangeCollider;
-    Vector3 Spawnpos;
-    Vector3[] SpawnposSave = new Vector3[3];
 
-    [Header("생성될 그라운드 개수")]
     public int FireballCount;
 
     private void Awake()
@@ -26,20 +23,21 @@ public class GroundAppear : MonoBehaviour
         float range_Z = rangeCollider.bounds.size.z;
 
 
-        range_X = Random.Range(-19, 34);
-        range_Z = Random.Range(-19, 34);
-        Vector3 RandomPostion = new Vector3(range_X, 2f, range_Z);
+
+        range_X = Random.Range(-15, 25);
+        range_Z = Random.Range(-15, 25);
+
+
+        Vector3 RandomPostion = new Vector3(range_X, 2.5f, range_Z);
 
         Vector3 respawnPosition = originPosition + RandomPostion;
         return respawnPosition;
     }
 
     public GameObject enemy;
-    public GameObject Warn;
     private void Start()
     {
         StartCoroutine(RandomRespawn_Coroutine());
-        
     }
 
     IEnumerator RandomRespawn_Coroutine()
@@ -47,26 +45,12 @@ public class GroundAppear : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(10f);
+            // 생성 위치 부분에 위에서 만든 함수 Return_RandomPosition() 함수 대입
+            //GameObject instantCapsul = Instantiate(enemy, Return_RandomPosition(), Quaternion.identity);
             for (int i = 0; i < FireballCount; i++)
             {
-                Spawnpos = Return_RandomPosition();
-                Instantiate(Warn, Spawnpos, Quaternion.identity);
-                StartCoroutine(Spawn_Cor(Spawnpos));
-                //Invoke("Summon", 0.5f);
-                //Instantiate(enemy, Return_RandomPosition(), Quaternion.identity);
+                Instantiate(enemy, Return_RandomPosition(), Quaternion.identity);
             }
         }
     }
-
-    IEnumerator Spawn_Cor(Vector3 a)
-    {
-        while (true)
-        {
-                yield return new WaitForSeconds(1f);
-                Instantiate(enemy, a, Quaternion.identity);
-                break;
-        }
-    }
-
-
 }

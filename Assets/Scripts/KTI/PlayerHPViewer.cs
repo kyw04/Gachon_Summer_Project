@@ -52,6 +52,22 @@ public class PlayerHPViewer : MonoBehaviour
                 hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
             }
         }
+        if (collision.gameObject.tag == "Big")
+        {
+            if (P_curHp > 0)
+            {
+                P_curHp -= 70f;
+                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+            }
+        }
+        if (collision.gameObject.tag == "Heal")
+        {
+            if (P_curHp > 0)
+            {
+                P_curHp += 10f;
+                hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+            }
+        }
 
         if (P_hpbar.value <= 0)
         {
@@ -124,7 +140,21 @@ public class PlayerHPViewer : MonoBehaviour
         }
     }
 
-        void OnTriggerEnter(Collider other)
+    public void Heal()
+    {
+        if (P_hpbar.value > 0)
+        {
+            P_curHp += 10f;
+            hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
+        }
+        if (P_hpbar.value > 90)
+        {
+            P_curHp = 100f;
+            hp_text.text = (100 + "/" + 100);
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
         {
             switch (other.gameObject.tag)
             {

@@ -8,11 +8,17 @@ using UnityEngine.UI;
 
 public class BigFireBall : MonoBehaviour
 {
+
+    private void Start()
+    {
+        
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Player")
         {
             Destroy(gameObject);
+       
         }
         if (collision.gameObject.tag == "Bottom")
         {
