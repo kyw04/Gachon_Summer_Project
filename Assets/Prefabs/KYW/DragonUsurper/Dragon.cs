@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using UniRx;
 
 public class Dragon : BattleableComponentBase
 {
@@ -34,7 +35,7 @@ public class Dragon : BattleableComponentBase
     [Header("Stats")]
     public Vector3 handAttackBox;
     public Vector3 mouthAttackBox;
-    public float health = 100;
+    public IntReactiveProperty health;
     public float movementSpeed = 5f;
     public int damage = 10;
     public float attackRandMax = 1f;
