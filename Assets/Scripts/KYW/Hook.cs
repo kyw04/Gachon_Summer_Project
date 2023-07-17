@@ -48,7 +48,7 @@ public class Hook : MonoBehaviour
         firePosition = GameObject.FindWithTag("Hook").transform;
         firePosition.parent = this.transform;
 
-        firePosition.position = new Vector3(0, 0, 0);
+        firePosition.position = new Vector3(0, 1, 0);
         hookHead = firePosition.GetChild(0);
         
         mask = ~LayerMask.GetMask("Player");
@@ -59,17 +59,19 @@ public class Hook : MonoBehaviour
         isHold = false;
     }
 
-    public void HookControl()
+    public void HookControl(bool state)
     {
+        //state = true == Fire1
+        //state = false == Fire2 
         if (!isMove)
         {
-            if (isFixed && hookedTarget.mass < power && Input.GetButtonDown("Fire1"))
+            if (isFixed && hookedTarget.mass < power && state)
             {
                 //Debug.Log($"Fire1 mass = {hookedTarget.mass}");
                 isBack = true;
                 Retract(firePosition, hookedTarget.targetObj);
             }
-            else if (Input.GetButtonDown("Fire2"))
+            else if (!state)
             {
                 if (isFixed)
                 {

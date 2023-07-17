@@ -203,9 +203,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8133943399115107533}
   - component: {fileID: 7795767827823944002}
-  m_Layer: 10
+  m_Layer: 8
   m_Name: Paladin_J_Nordstrom_Sword
-  m_TagString: Enemy
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -969,7 +969,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5c7494bf8826ed4488a87e174cca57d4, type: 2}
+  - {fileID: 2100000, guid: f3df8e9bb5c42cb4eb7dc3389107e90e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2409,24 +2409,28 @@ MonoBehaviour:
     name: Paladin
     maxHealthPoint: 300
     maxStaminaPoint: 0
-    attackPoint: 20
+    attackPoint: 10
     defencePoint: 5
     spd: 3.5
     modelName: Paladin
     position: {x: 0, y: 0, z: 0}
-  healthPoint: 0
+  healthPoint:
+    value: 0
   animator: {fileID: 0}
   lookFoward: {x: 0, y: 0, z: 0}
   lookRight: {x: 0, y: 0, z: 0}
   isAttacking: 0
-  isActing: 0
-  isActionable: 1
   isDamageable: 1
-  coolDown: 8
-  phase: 1
+  isMoving: 0
+  isActing: 0
+  isActionable:
+    value: 1
+  phase:
+    value: 1
   playerInstance: {fileID: 0}
   healthPointSlider: {fileID: 0}
   nameTextField: {fileID: 0}
+  coolDown: 8
 --- !u!65 &1699249495
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2526,7 +2530,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5c7494bf8826ed4488a87e174cca57d4, type: 2}
+  - {fileID: 2100000, guid: f3df8e9bb5c42cb4eb7dc3389107e90e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2743,7 +2747,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5c7494bf8826ed4488a87e174cca57d4, type: 2}
+  - {fileID: 2100000, guid: f3df8e9bb5c42cb4eb7dc3389107e90e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
