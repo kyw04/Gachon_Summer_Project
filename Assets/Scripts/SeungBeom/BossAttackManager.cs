@@ -324,7 +324,7 @@ public class BossAttackManager : BattleableComponentBase
 
     private void Update()
     {
-       if(healthPoint <= 0)
+       if(healthPoint.Value <= 0)
         {
             Debug.Log("보스 사망");
             WaitTime = 9999;
