@@ -14,15 +14,26 @@ public class Atk3Ex : MonoBehaviour
     bool LightOn;
     Light ligh;
 
+    AudioSource audio;
+    AudioClip P3MagicCircleS;
+    AudioClip P3EX;
+    AudioClip P3Charge;
+
     SphereCollider sphere;
     // Start is called before the first frame update
     private void Awake()
     {
         Target = FindObjectOfType<PlayerComponent>().gameObject;
+        audio = GetComponent<AudioSource>();
         sphere = GetComponent<SphereCollider>();
+        P3MagicCircleS = Resources.Load<AudioClip>("SeungBeom/Sound/P3MC-1");
+        P3EX = Resources.Load<AudioClip>("SeungBeom/Sound/P3EX");
+        P3Charge = Resources.Load<AudioClip>("SeungBeom/Sound/ex1");
     }
     void OnEnable()
     {
+        audio.clip = P3MagicCircleS;
+        audio.Play();
         sphere.enabled = false;
         Circle = transform.GetChild(0).gameObject;
         Explosion = transform.GetChild(1).gameObject;
@@ -59,10 +70,13 @@ public class Atk3Ex : MonoBehaviour
         Grow = false;
 
         yield return new WaitForSeconds(3f);
+        audio.PlayOneShot(P3Charge);
         Explosion.SetActive(true);
         LightOn = true;
         yield return new WaitForSeconds(4.99f);
         sphere.enabled = true;
+        audio.clip = P3EX;
+        audio.Play();
         yield return new WaitForSeconds(0.1f);    //Æø¹ßÇÔ
         sphere.enabled = false;
         LightOn = false;
@@ -79,7 +93,7 @@ public class Atk3Ex : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == Target)
-        {
+        {   
             Target.SendMessage("Damaged", 100);
         }
     }

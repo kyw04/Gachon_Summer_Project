@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -16,11 +17,11 @@ using UnityEngine.Serialization;
 public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
 {
     public BattleableVOBase Status;
-    public Queue<Action> queue = new Queue<Action>();
+    public Queue<Action> queue = new();
 
     //현재 체력
     [SerializeField]
-    protected int healthPoint;
+    protected IntReactiveProperty healthPoint;
     protected int StaminaPoint;
     protected float AttackDelay;
     
@@ -75,9 +76,9 @@ public abstract class BattleableComponentBase : MonoBehaviour, IBattleable
     {
         if (amount < 0)
         {
-            if ((healthPoint += amount) <= 0)
+            if ((healthPoint.Value += amount) <= 0)
             {
-                healthPoint = 0;
+                healthPoint.Value = 0;
                 Die();
                 return -1;
             }

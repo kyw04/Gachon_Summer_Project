@@ -6,8 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
 using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.SceneManagement;
 
-public class Stage2_Boss : MonoBehaviour
+public class Stage2_Boss : BattleableComponentBase
 {
     Animator anim;
     NavMeshAgent agent;
@@ -32,7 +33,6 @@ public class Stage2_Boss : MonoBehaviour
     public GameObject die_Effect;
     public GameObject[] cast_Effect;
 
-
     [Header("암흑 공격패턴 관련 변수들")]
     [SerializeField] GameObject lamp;
     [SerializeField] GameObject directional_light;
@@ -42,9 +42,10 @@ public class Stage2_Boss : MonoBehaviour
     [SerializeField] private AudioClip[] _clip;
     [SerializeField] private AudioClip[] _bgmClip;
 
-    [Header ("보스가 죽었을때 관련 변수")]
+    [Header("보스가 죽었을때 관련 변수")]
     public GameObject die_boss_camera;
-    public GameObject die_img_obj;
+    public GameObject gameClear_popup;
+    public GameObject gameOver_popup;
 
     public float away;
     public Transform Player;
@@ -68,23 +69,37 @@ public class Stage2_Boss : MonoBehaviour
 
     void Awake()
     {
+        base.Awake();
         anim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         rb = GetComponent<Rigidbody>();
     }
     void Start()
     {
+        BtnManager.instance.sceneNum = 3;
         fillImage = hp_Bar.fillRect.GetComponentInChildren<Image>();
         Player = FindObjectOfType<PlayerComponent>().transform;
+
+        Status = new BattleableVOBase()
+        {
+            maxHealthPoint = Status.maxHealthPoint,
+            attackPoint = Status.attackPoint,
+        };
+
         eState = EnemyState.Idle;
         boss_Line.isArrive_Boss = false;
-       
+
         SoundManager.instance.BGM_Sound(0);
         //  SoundManager.instance.BGM_PlaySound(_bgmClip[0]);
     }
 
 
-
+    public override int ModifyHealthPoint(int amount)
+    {
+        //회복 이면 1 맞고 살으면 0 죽으면 -1
+        Damaged(-amount);
+        return 0;
+    }
 
     void Update()
     {
@@ -92,10 +107,10 @@ public class Stage2_Boss : MonoBehaviour
         away = Vector3.Distance(transform.position, Player.position); // 적과 플레이어의 거리
         Vector3 playerPosition = Player.position; // 플레이어의 위치
 
-        //  Debug.Log(away);
 
-        if (Input.GetKeyDown(KeyCode.Z))
-            Damaged(1f);
+        if (Input.GetKeyDown(KeyCode.Tab))
+            Damaged(100f);
+        //  Debug.Log(away);
 
         if (boss_Line.isArrive_Boss && boss_Line.endProduction)
         {
@@ -105,12 +120,13 @@ public class Stage2_Boss : MonoBehaviour
 
     void Damaged(float damage) // 플레이어가 공격했을때 이 함수 호출 
     {
+        Debug.Log(damage);
         hp_Bar.value -= damage;
         if (hp_Bar.value <= 0f)
         {
             hp -= 1;
             hp_T.text = "X" + hp.ToString();
-            hp_Bar.value = 1f;
+            hp_Bar.value = 100f;
             // 9-1/3 = 3 
             fillImage.color = hp_Bar_Change_Color[(hp - 1) / hp_Bar_Change_Color.Length];
             if (hp <= 0)
@@ -200,7 +216,7 @@ public class Stage2_Boss : MonoBehaviour
     }
 
 
-   
+
     #region 공격 패턴
     public void Slash()
     {
@@ -305,8 +321,9 @@ public class Stage2_Boss : MonoBehaviour
         Destroy(gameObject);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        LoadingScene.LoadScene("Clear");
+        SceneManager.LoadScene("StageClear");
     }
+
     void RealAttack()
     {
         if (away <= 3)
@@ -347,6 +364,26 @@ public class Stage2_Boss : MonoBehaviour
         cast_Effect[1].SetActive(false);
         SoundManager.instance.Boss_PlaySound(_clip[5]);
     }
-    #endregion 
+
+    public override void Move()
+    {
+        //   throw new System.NotImplementedException();
+    }
+
+    protected override void OnCollisionEnter(Collision other)
+    {
+        //    throw new System.NotImplementedException();
+    }
+
+    protected override void OnCollisionStay(Collision other)
+    {
+        //  throw new System.NotImplementedException();
+    }
+
+    public override void AnimEvt(string cmd)
+    {
+        //throw new System.NotImplementedException();
+    }
+    #endregion
 
 }

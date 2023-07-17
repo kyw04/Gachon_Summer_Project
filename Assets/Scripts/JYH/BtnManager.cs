@@ -15,7 +15,7 @@ public class BtnManager : MonoBehaviour
     public int sceneNum; // 각 Scene들의 번호를 알려주기 위한 변수
     void Awake()
     {
-        Debug.Log(sceneNum);
+        Time.timeScale = 1;
 
         if (instance == null)
             instance = this;
@@ -24,6 +24,7 @@ public class BtnManager : MonoBehaviour
     }
     void Update()
     {
+        Debug.Log(sceneNum);
         if (Input.GetKeyDown(KeyCode.Escape) && sceneNum == 3)
         {
             Time.timeScale = 0;
@@ -144,7 +145,6 @@ public class BtnManager : MonoBehaviour
 
     void SoundOnOff(bool isSound)
     {
-        Debug.Log("들어옴");
         SoundManager.instance._boss_EffectSource.mute = isSound;
         SoundManager.instance._player_EffectSource.mute = isSound;
         SoundManager.instance.Bgm.mute = isSound;
@@ -152,6 +152,7 @@ public class BtnManager : MonoBehaviour
 
     public void Continue_Btn()
     {
+        Debug.Log("들어옴");
         Time.timeScale = 1;
         settingPopup.SetActive(false);
     }
