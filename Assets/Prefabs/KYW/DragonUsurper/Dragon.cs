@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
-public class Dragon : MonoBehaviour
+public class Dragon : BattleableComponentBase
 {
     public enum State
     {
@@ -58,7 +59,6 @@ public class Dragon : MonoBehaviour
     #endregion
 
     private State state;
-    private Animator animator;
     private Rigidbody rigi;
     private Quaternion idleStateRotation;
     private float timeSpeed = 0.5f;
@@ -105,6 +105,7 @@ public class Dragon : MonoBehaviour
 
     private void Update()
     {
+        health = healthPoint;
         if (Input.GetKey(KeyCode.Tab))
         {
             if (Input.GetKeyDown(KeyCode.H))
@@ -226,6 +227,8 @@ public class Dragon : MonoBehaviour
         }
     }
 
+    
+
     public void OnDamage()
     {
         if (damageDlay + damageTime <= Time.time)
@@ -234,21 +237,6 @@ public class Dragon : MonoBehaviour
             player.ModifyHealthPoint(-damage);
             player.SendMessage("Damaged", damage);
         }
-    }
-
-    private void Move()
-    {
-        if (state != State.Move)
-            return;
-
-        animator.SetFloat("Speed", movementSpeed);
-        nvAgent.speed = movementSpeed;
-        nvAgent.isStopped = false;
-        nvAgent.destination = player.transform.position;
-
-        float dis = Vector3.Distance(transform.position, player.transform.position);
-        if (dis <= 19)
-            Stop();
     }
     private void Stop()
     {
@@ -276,7 +264,7 @@ public class Dragon : MonoBehaviour
 
             animator.SetFloat("Wake", wakeValue + Time.deltaTime * timeSpeed);
         }
-        else if (Vector3.Distance(player.transform.position, transform.position) <= 20f)
+        else if (Vector3.Distance(player.transform.position, transform.position) <= screamDistance)
         {
             isSleeping = false;
             animator.SetTrigger("WakeUp");
@@ -487,9 +475,31 @@ public class Dragon : MonoBehaviour
         attackTime += seconds;
     }
     private void SetIdle() { state = State.Idle; Debug.Log(state); }
+    public override void Die()
+    {
+        if (state == State.Dead)
+            return;
+
+        base.Die();
+        state = State.Dead;
+
+        foreach (ParticleSystem particle in particles) { particle.Stop(); }
+        foreach (ParticleSystem particle in fireParticles) { particle.Stop(); }
+
+        idleStateRotation = transform.rotation;
+        attackTransform = null;
+        bodyCollision = false;
+        attackPos = Vector3.zero;
+
+        Invoke("ChageScene", 4f);
+    }
+    private void ChageScene()
+    {
+        SceneManager.LoadScene("GameClear");
+    }
     private void ParticlePlay(int index) { particles[index].Play(); }
 
-    private void OnCollisionStay(Collision collision)
+    protected override void OnCollisionStay(Collision collision)
     {
         //Debug.Log(bodyCollision);
         if (bodyCollision && collision.transform.CompareTag("Player"))
@@ -501,11 +511,8 @@ public class Dragon : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.gray;
-        Gizmos.DrawWireSphere(transform.position, screamDistance);
-
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, 20f);
+        Gizmos.DrawWireSphere(transform.position, screamDistance);
 
         if (state == State.Attack)
         {
@@ -514,5 +521,28 @@ public class Dragon : MonoBehaviour
             Gizmos.DrawWireCube(pos, attackBoxSize);
             Gizmos.DrawWireSphere(pos, attackRadius);
         }
+    }
+
+    public override void Move()
+    {
+        if (state != State.Move)
+            return;
+
+        animator.SetFloat("Speed", movementSpeed);
+        nvAgent.speed = movementSpeed;
+        nvAgent.isStopped = false;
+        nvAgent.destination = player.transform.position;
+
+        float dis = Vector3.Distance(transform.position, player.transform.position);
+        if (dis <= 19)
+            Stop();
+    }
+
+    protected override void OnCollisionEnter(Collision other)
+    {
+    }
+
+    public override void AnimEvt(string cmd)
+    {
     }
 }
