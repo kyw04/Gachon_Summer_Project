@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
 using UnityEngine.Experimental.GlobalIllumination;
+using UnityEngine.SceneManagement;
 
 public class Stage2_Boss : BattleableComponentBase
 {
@@ -106,6 +107,9 @@ public class Stage2_Boss : BattleableComponentBase
         away = Vector3.Distance(transform.position, Player.position); // 적과 플레이어의 거리
         Vector3 playerPosition = Player.position; // 플레이어의 위치
 
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+            Damaged(100f);
         //  Debug.Log(away);
 
         if (boss_Line.isArrive_Boss && boss_Line.endProduction)
@@ -317,6 +321,7 @@ public class Stage2_Boss : BattleableComponentBase
         Destroy(gameObject);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        SceneManager.LoadScene("StageClear");
     }
 
     void RealAttack()

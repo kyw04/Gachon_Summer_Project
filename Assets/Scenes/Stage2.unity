@@ -5726,7 +5726,8 @@ MonoBehaviour:
   _bgmClip:
   - {fileID: 8300000, guid: 8c385ba7adc2d3941965c7b0e8184c33, type: 3}
   die_boss_camera: {fileID: 159671377}
-  die_img_obj: {fileID: 0}
+  gameClear_popup: {fileID: 0}
+  gameOver_popup: {fileID: 0}
   away: 0
   Player: {fileID: 1338873159}
   boss_Line: {fileID: 1152505156}
@@ -5746,7 +5747,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!195 &330721687
 NavMeshAgent:
@@ -11534,7 +11535,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 301245838}
         m_TargetAssemblyTypeName: BtnManager, Assembly-CSharp
-        m_MethodName: Stage5_SceneMove
+        m_MethodName: Title_SceneMove
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -20058,6 +20059,7 @@ GameObject:
   - component: {fileID: 1905926955}
   - component: {fileID: 1905926954}
   - component: {fileID: 1905926958}
+  - component: {fileID: 1905926959}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -20167,6 +20169,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66d079ed2d8de58429fa01f5d614777f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1905926959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905926953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a807e2d8bb797e49898d7b77021d3cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1921777696
