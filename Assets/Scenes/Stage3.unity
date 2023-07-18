@@ -6693,7 +6693,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   B_hpbar: {fileID: 1138033729}
-  Text: {fileID: 708289960}
   Text2: {fileID: 0}
   Door: {fileID: 0}
   Bottom: {fileID: 0}
@@ -10080,33 +10079,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.94594526, y: 3.8572438, z: 0.94593394}
   m_Center: {x: -0.00000010430816, y: 1.9286219, z: -0.00000022351747}
---- !u!1 &1605174809 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7587081925758138498, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
-  m_PrefabInstance: {fileID: 7317174023058972673}
-  m_PrefabAsset: {fileID: 0}
---- !u!195 &1605174816
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1605174809}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 2
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 3.5
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 0
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 5
-  m_ObstacleAvoidanceType: 4
 --- !u!1 &1605345073 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1660479392756500, guid: 9848e4b3deb970743a6ea02dcfe6159e, type: 3}
@@ -13207,10 +13179,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1699249495, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7062042774189236792, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -13263,10 +13231,6 @@ PrefabInstance:
       propertyPath: healthPointSlider
       value: 
       objectReference: {fileID: 1138033729}
-    - target: {fileID: 7317174023108063592, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7587081925758138498, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
       propertyPath: m_Name
       value: Paladin
