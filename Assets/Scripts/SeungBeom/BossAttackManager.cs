@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BossAttackManager : BattleableComponentBase
 {
@@ -344,6 +345,8 @@ public class BossAttackManager : BattleableComponentBase
                 Instantiate(eXPLOSION, transform.position, Quaternion.identity);
                 Debug.Log("폭발 생성");
 
+                yield return new WaitForSeconds(0.1f);
+                SceneManager.LoadScene("StageClear");
                 yield return new WaitForSeconds(0.1f);
                 Debug.Log("비활성화");
                 this.gameObject.SetActive(false);
