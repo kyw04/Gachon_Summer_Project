@@ -400,7 +400,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
                 rollInstance = null;
                 break;
             case "Die":
-                SceneManager.LoadScene(10);
+                SceneManager.LoadScene(9);
                 break;
         }
 

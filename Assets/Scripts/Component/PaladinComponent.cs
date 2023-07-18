@@ -142,11 +142,6 @@ public class PaladinComponent : BattleableComponentBase
         {
             action += Attack;
 
-            action += phase.Value == 1 ? () => { } : () =>
-            {
-                StartCoroutine(UpgradedAttack());
-            };
-
             action += () => { CallMethodWaitForSeconds(5000, () => { isActionable = true; }); };
         }
         else
@@ -260,7 +255,8 @@ public class PaladinComponent : BattleableComponentBase
                 isActing = false;
                 break;
             case "Die":
-                SceneManager.LoadScene(6);
+                if(SceneManager.GetActiveScene().name == "Stage3")
+                    SceneManager.LoadScene(6);
                 break;
         }
         StartCoroutine(LookTo(playerInstance.transform));
