@@ -16,6 +16,8 @@ public class BossLine : MonoBehaviour
     public GameObject boss_name_obj;
     public Text bossNameText;
     public float delayBetweenCharacters = 0.1f;
+    public Slider boss_hp;
+    public GameObject boss_hp_obj;
     string bossName;
     int currentIndex;
 
@@ -30,6 +32,7 @@ public class BossLine : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player") && on == null)
         {
+            boss_hp_obj.SetActive(true);
             Time.timeScale = 0.8f;
             SoundManager.instance.Boss_PlaySound(clip[0]);
             on = PlayerCamera_OnOff();

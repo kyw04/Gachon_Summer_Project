@@ -3,13 +3,15 @@ using UnityEngine;
 public class Attack2 : MonoBehaviour
 {
     public float speed = 10f; // 발사체의 속도
-
     private Rigidbody rb;
+    public PlayerComponent player;
 
     private void Start()
     {
         // Rigidbody 컴포넌트 가져오기
         rb = GetComponent<Rigidbody>();
+        player = FindObjectOfType<PlayerComponent>();
+
     }
 
     private void Update()
@@ -20,7 +22,12 @@ public class Attack2 : MonoBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
-        // 충돌이 발생하면 오브젝트 삭제
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            var v = collision.gameObject.GetComponent<PlayerComponent>();
+            //v.ModifyHealthPoint(-20);
+            player.SendMessage("Damaged", 20f);
+        }
         Destroy(gameObject);
     }
 }
