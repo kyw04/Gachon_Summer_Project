@@ -63,7 +63,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
             .Where(_ => Input.GetButtonDown("Fire1"))
             .Subscribe(param =>
             { _hookController.HookControl(true); });
-        
+
         this.UpdateAsObservable()
             .Where(_ => Input.GetButtonDown("Fire2"))
             .Subscribe(param => { _hookController.HookControl(false); });
@@ -85,7 +85,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
             hp_Bar.value = healthPoint.Value;
             hp_T.text = curHp.ToString() + "/" + maxHp.ToString();
         }
-        else
+        else if (curHp <= 0)
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
@@ -198,7 +198,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
                 if (isDodging || !isControllable) return;
                 else isDodging = !isDodging;
                 isControllable = false;
-                
+
                 _weapon.gameObject.SetActive(false);
 
                 //this.transform.forward = lookFoward * (Input.GetAxisRaw("Vertical") == -1 ? -1 : 1);
@@ -230,7 +230,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         int snum = BtnManager.instance.sceneNum;
 
         if (isDodging) return;
-        
+
         try
         {
             if ((snum == 3 && bossline.isPlayerMove) || snum != 3)
@@ -288,7 +288,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
             //에러가 발생했을 때도 계속 해서 움직 일 수 있도록 예외처리 했습니다. 이 블록은 건들지 말아주세요 
             if (!isControllable) return;
             _weapon.gameObject.SetActive(false);
-            
+
             Debug.Log(true);
 
             var dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
@@ -372,11 +372,11 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
 
                 if (rollInstance is not null)
                 {
-                    StopCoroutine(rollInstance);   
+                    StopCoroutine(rollInstance);
                     Rigidbody.velocity = Vector3.zero;
                     rollInstance = null;
                 }
-                
+
                 rollInstance = StartCoroutine(Roll(status));
                 break;
             case "RollEnd":
@@ -402,7 +402,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
                 SceneManager.LoadScene(10);
                 break;
         }
-        
+
     }
 
     #region IEnumerator

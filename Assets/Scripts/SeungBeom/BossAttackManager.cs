@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BossAttackManager : BattleableComponentBase
 {
@@ -88,6 +89,8 @@ public class BossAttackManager : BattleableComponentBase
 
     void Start()
     {
+        BtnManager.instance.sceneNum =  4;
+
         healthPoint.Value = Status.maxHealthPoint;
 
         bossHealth.text = healthPoint.Value + "";
@@ -345,6 +348,8 @@ public class BossAttackManager : BattleableComponentBase
                 Debug.Log("폭발 생성");
 
                 yield return new WaitForSeconds(0.1f);
+                SceneManager.LoadScene("StageClear");
+                yield return new WaitForSeconds(0.1f);
                 Debug.Log("비활성화");
                 this.gameObject.SetActive(false);
                 yield return new WaitForSeconds(0.1f);
@@ -372,7 +377,7 @@ public class BossAttackManager : BattleableComponentBase
         }
        if(isDead)
         {
-            ligh.range += 50 * Time.deltaTime;
+            ligh.range += 80 * Time.deltaTime;
         }
     }
 
