@@ -302,7 +302,6 @@ GameObject:
   - component: {fileID: 616934226}
   - component: {fileID: 616934228}
   - component: {fileID: 616934227}
-  - component: {fileID: 616934229}
   m_Layer: 5
   m_Name: "\uAC8C\uC784\uC81C\uBAA9"
   m_TagString: Untagged
@@ -363,7 +362,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Journey of Soul
+  m_Text: "\uB300\uCDA9 \uAC8C\uC784 \uC774\uB984"
 --- !u!222 &616934228
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -372,21 +371,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 616934225}
   m_CullTransparentMesh: 1
---- !u!114 &616934229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 616934225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.64705884}
-  m_EffectDistance: {x: 6, y: -2}
-  m_UseGraphicAlpha: 1
 --- !u!1 &654398465
 GameObject:
   m_ObjectHideFlags: 0
