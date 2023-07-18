@@ -2821,7 +2821,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ada1b397440f00841ad3806f33308774, type: 3}
       propertyPath: m_LocalScale.y
-      value: 40
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ada1b397440f00841ad3806f33308774, type: 3}
       propertyPath: m_LocalScale.z
@@ -14318,7 +14318,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ada1b397440f00841ad3806f33308774, type: 3}
       propertyPath: m_LocalScale.y
-      value: 40
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: ada1b397440f00841ad3806f33308774, type: 3}
       propertyPath: m_LocalScale.z
@@ -14881,11 +14881,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 751178946922008385, guid: 943b4463630abad4a95ab45f5ab2b31e, type: 3}
       propertyPath: healthPoint.value
-      value: 800
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 751178946922008385, guid: 943b4463630abad4a95ab45f5ab2b31e, type: 3}
       propertyPath: Status.maxHealthPoint
-      value: 800
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 1450898367958476029, guid: 943b4463630abad4a95ab45f5ab2b31e, type: 3}
       propertyPath: m_RootOrder

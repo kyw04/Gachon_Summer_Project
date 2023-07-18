@@ -345,14 +345,17 @@ public class BossAttackManager : BattleableComponentBase
                 yield return new WaitForSeconds(5);
                 
                 Instantiate(eXPLOSION, transform.position, Quaternion.identity);
-                Debug.Log("폭발 생성");
+                yield return new WaitForSeconds(0.1f);
+                Instantiate(eXPLOSION, transform.position, Quaternion.identity);
+                yield return new WaitForSeconds(0.1f);
+                Instantiate(eXPLOSION, transform.position, Quaternion.identity);
+                yield return new WaitForSeconds(0.1f);
+                Instantiate(eXPLOSION, transform.position, Quaternion.identity);
 
-                yield return new WaitForSeconds(0.1f);
+                
+                
+                yield return new WaitForSeconds(2f);
                 SceneManager.LoadScene("StageClear");
-                yield return new WaitForSeconds(0.1f);
-                Debug.Log("비활성화");
-                this.gameObject.SetActive(false);
-                yield return new WaitForSeconds(0.1f);
                 Debug.Log("false로 변환");
                 isDead = false;
 
