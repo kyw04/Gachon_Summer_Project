@@ -63,6 +63,9 @@ public class BossAttackManager : BattleableComponentBase
     Vector3 P5Reposition1;
     Vector3 P5Reposition2;
 
+
+    Light ligh;
+
     BoxCollider boxcol;
 
     private void Awake()
@@ -77,7 +80,7 @@ public class BossAttackManager : BattleableComponentBase
         P4_Atk = transform.GetChild(4).gameObject;
         P5_Atk = Resources.Load<GameObject>("SeungBeom/Atk5");
         Shield = transform.GetChild(5).gameObject;
-
+        ligh = GetComponent<Light>();
         P1Shield = transform.GetChild(7).gameObject;
 
         boxcol = GetComponent<BoxCollider>();
@@ -122,6 +125,8 @@ public class BossAttackManager : BattleableComponentBase
         StartCoroutine(BulletShoot());
         StartCoroutine(Select());
         StartCoroutine(Barrier());
+
+        StartCoroutine(Dead());
     }
 
 
@@ -231,7 +236,7 @@ public class BossAttackManager : BattleableComponentBase
         P5List[4].transform.position = P5Reposition;
         yield return new WaitForSeconds(0.1f);
         P5List[4].SetActive(true);
-        yield return new WaitForSeconds(WaitTime);
+        yield return new WaitForSeconds(1);
         NextPattern();
     }
     IEnumerator Barrier()
@@ -334,10 +339,18 @@ public class BossAttackManager : BattleableComponentBase
             yield return new WaitForSeconds(0.1f);
             if (isDead)
             {
+                yield return new WaitForSeconds(5);
+                
                 Instantiate(eXPLOSION, transform.position, Quaternion.identity);
-                yield return new WaitForSeconds(0.1F);
-                gameObject.SetActive(false);
+                Debug.Log("폭발 생성");
+
+                yield return new WaitForSeconds(0.1f);
+                Debug.Log("비활성화");
+                this.gameObject.SetActive(false);
+                yield return new WaitForSeconds(0.1f);
+                Debug.Log("false로 변환");
                 isDead = false;
+
             }
         }
     }
@@ -355,8 +368,11 @@ public class BossAttackManager : BattleableComponentBase
         }
         else
         {
-
             bossHealth.text = $"{this.healthPoint.Value}";
+        }
+       if(isDead)
+        {
+            ligh.range += 50 * Time.deltaTime;
         }
     }
 
