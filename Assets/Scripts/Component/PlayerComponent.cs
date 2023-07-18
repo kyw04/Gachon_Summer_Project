@@ -87,6 +87,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         }
         else if (curHp <= 0)
         {
+            Debug.Log("sss");
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             SceneManager.LoadScene("Gameover");
