@@ -89,6 +89,8 @@ public class BossAttackManager : BattleableComponentBase
 
     void Start()
     {
+        BtnManager.instance.sceneNum =  4;
+
         healthPoint.Value = Status.maxHealthPoint;
 
         bossHealth.text = healthPoint.Value + "";
@@ -375,7 +377,7 @@ public class BossAttackManager : BattleableComponentBase
         }
        if(isDead)
         {
-            ligh.range += 50 * Time.deltaTime;
+            ligh.range += 80 * Time.deltaTime;
         }
     }
 
