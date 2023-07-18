@@ -52,8 +52,8 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
 
     private void Start()
     {
-        // BtnManager.instance.sceneNum = 3;
         SetUpPlayer();
+        // BtnManager.instance.sceneNum = 3;
         _weapon = GetComponentInChildren<WeaponComponent>();
         hp_Bar.maxValue = Status.maxHealthPoint;
         hp_Bar.value = healthPoint.Value;
@@ -398,6 +398,9 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
                 Rigidbody.useGravity = true;
                 rollInstance = null;
                 break;
+            case "Die":
+                SceneManager.LoadScene(10);
+                break;
         }
         
     }
@@ -427,7 +430,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         var degree = 0.2f;
         while (isJumping)
         {
-            this.Rigidbody.velocity += Vector3.up * coefficient * 1.5f;
+            this.Rigidbody.velocity += Vector3.up * coefficient * Time.deltaTime * 120f;
             coefficient -= degree;
             degree *= 0.86f;
             yield return new WaitForSeconds(0.01f);

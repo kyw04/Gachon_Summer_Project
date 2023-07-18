@@ -7,9 +7,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using UniRx.Triggers;
+using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
+
+[RequireComponent(typeof(NavMeshAgent))]
 
 public class PaladinComponent : BattleableComponentBase
 {
@@ -23,6 +27,7 @@ public class PaladinComponent : BattleableComponentBase
 
     [SerializeField]
     private PlayerComponent playerInstance;
+    private NavMeshAgent _agent;
     public Slider healthPointSlider;
     public Text nameTextField;
     public float coolDown;
@@ -34,6 +39,7 @@ public class PaladinComponent : BattleableComponentBase
     {
         base.Awake();
         ChargeMagic();
+        _agent = GetComponent<NavMeshAgent>();
     }
     
     void Start()
@@ -43,9 +49,9 @@ public class PaladinComponent : BattleableComponentBase
             name = Status.name,
             attackPoint = Status.attackPoint,
             maxHealthPoint = Status.maxHealthPoint,
-            spd = Status.spd
         };
         playerInstance = GameObject.FindWithTag("Player").GetComponent<PlayerComponent>();
+        _agent.speed = this.Status.spd;
 
         try
         {
@@ -66,7 +72,7 @@ public class PaladinComponent : BattleableComponentBase
                 isDamageable = false;
                 isActionable = false;
                 //1.5초 동안 데미지 입힐 수 없는 상태가 됨.
-                CallMethodWaitForSeconds(1500,() => { isDamageable = true; });   
+                CallMethodWaitForSeconds(1800,() => { isDamageable = true; });   
                 healthPointSlider.value = healthPoint.Value;
             });
 
@@ -118,7 +124,12 @@ public class PaladinComponent : BattleableComponentBase
         
         isActionable = false;
 
-        Act action = () => { isActing = true; };
+        Act action = () =>
+        {
+            isActing = true;
+            _agent.isStopped = true;
+            Rigidbody.velocity = Vector3.zero;
+        };
         
         if (_distance <= 1.5f)
             action += () =>
@@ -184,16 +195,18 @@ public class PaladinComponent : BattleableComponentBase
 
         if (_distance <= 3f)
         {
+            _agent.isStopped = true;
             Rigidbody.velocity = Vector3.zero;
             animator.SetBool("isWalkingForward", false);
             animator.SetBool("isIdle", true);
         }
         else
         {
+            _agent.isStopped = false;
             lookFoward = this.transform.forward;
             lookRight = this.transform.right;
 
-            Rigidbody.velocity = lookFoward.normalized * Status.spd;
+            _agent.SetDestination(playerInstance.transform.position);
             animator.SetBool("isWalkingForward", true);
             animator.SetBool("isIdle", false);
         }
@@ -211,7 +224,6 @@ public class PaladinComponent : BattleableComponentBase
         base.Die();
         isActionable = false;
         isActing = true;
-        Debug.Log(true);
     }
 
     protected override void OnCollisionEnter(Collision other)
@@ -246,6 +258,9 @@ public class PaladinComponent : BattleableComponentBase
             case "RageEnd":
                 isActionable = true;
                 isActing = false;
+                break;
+            case "Die":
+                SceneManager.LoadScene(6);
                 break;
         }
         StartCoroutine(LookTo(playerInstance.transform));

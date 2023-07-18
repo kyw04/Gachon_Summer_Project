@@ -49,8 +49,8 @@ public class Hook : MonoBehaviour
         playerRb = GetComponent<Rigidbody>();
         firePosition = GameObject.FindWithTag("Hook").transform;
         firePosition.parent = this.transform;
+        firePosition.localPosition = new Vector3(0, 1, 0);
 
-        firePosition.position = new Vector3(0, 1, 0);
         hookHead = firePosition.GetChild(0);
         
         mask = ~LayerMask.GetMask("Player");

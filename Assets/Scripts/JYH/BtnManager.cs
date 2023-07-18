@@ -24,7 +24,6 @@ public class BtnManager : MonoBehaviour
     }
     void Update()
     {
-        Debug.Log(sceneNum);
         if (Input.GetKeyDown(KeyCode.Escape) && sceneNum == 3)
         {
             Time.timeScale = 0;
