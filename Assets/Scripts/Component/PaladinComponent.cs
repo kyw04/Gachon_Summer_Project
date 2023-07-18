@@ -98,6 +98,8 @@ public class PaladinComponent : BattleableComponentBase
 
 
         #endregion
+        
+        Debug.Log(playerInstance.name);
 
     }
 
@@ -105,13 +107,22 @@ public class PaladinComponent : BattleableComponentBase
 
     void FixedUpdate()
     {
-        nameTextField.text = this.healthPoint.Value + "";
+        try
+        {
+            //this.nameTextField.text = playerInstance.name;
+            //Debug.Log(playerInstance.name);
+        }
+        catch (Exception e)
+        {
+            
+            this.nameTextField.text = e.Message;
+            throw;
+        }
         if (playerInstance is null)
             return;
             
         try
         {
-
             _distance = Vector3.Distance(this.transform.position, playerInstance.transform.position);
             Think();
             Move();
