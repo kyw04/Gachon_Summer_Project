@@ -24,7 +24,12 @@ public class BtnManager : MonoBehaviour
     }
     void Update()
     {
+<<<<<<< Updated upstream
         if (Input.GetKeyDown(KeyCode.Escape) && sceneNum == 3)
+=======
+        Debug.Log(sceneNum);
+        if (Input.GetKeyDown(KeyCode.Escape))
+>>>>>>> Stashed changes
         {
             Time.timeScale = 0;
             Cursor.visible = true;
