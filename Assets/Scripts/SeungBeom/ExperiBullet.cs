@@ -83,7 +83,7 @@ public class ExperiBullet : MonoBehaviour
         StartCoroutine(BulletHit());
        if(other.gameObject == Target)
         {
-            Target.SendMessage("Damaged", 0.5f);
+            Target.SendMessage("Damaged", 20f);
         }
     }
 

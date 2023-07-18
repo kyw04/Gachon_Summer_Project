@@ -94,7 +94,7 @@ public class Atk3Ex : MonoBehaviour
     {
         if (other.gameObject == Target)
         {   
-            Target.SendMessage("Damaged", 100);
+            Target.SendMessage("Damaged", 150);
         }
     }
 }

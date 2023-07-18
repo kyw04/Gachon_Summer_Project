@@ -30,11 +30,11 @@ public class Bullet :MonoBehaviour
             Destroy(gameObject);
         }
       
-        if (collision.gameObject.tag == "Wall")
+       /* if (collision.gameObject.tag == "Wall")
         {
             Destroy(gameObject);
             boss.Fire();
-        }
+        } */
 
         if (collision.gameObject.tag == "Big")
         {

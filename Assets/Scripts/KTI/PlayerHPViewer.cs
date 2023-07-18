@@ -73,7 +73,7 @@ public class PlayerHPViewer : MonoBehaviour
         {
             //P_hpbar.value = 0;
             //hp_text.text = (P_curHp.ToString() + "/" + P_maxHp.ToString());
-            SceneManager.LoadScene(4);
+            SceneManager.LoadScene("GameOver");
         }
     }
 

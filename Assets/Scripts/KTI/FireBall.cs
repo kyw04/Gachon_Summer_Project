@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FireBall : Bullet
 {
@@ -52,6 +53,11 @@ public class FireBall : Bullet
             Destroy(gameObject);
             bossHP.Fire();
         }
+        if(bossHP.B_curHp<=0)
+        {
+            SceneManager.LoadScene("StageClear");
+        }
+
     }
 }
 
