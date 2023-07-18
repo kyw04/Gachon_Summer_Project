@@ -3890,7 +3890,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -3.5997925, y: 0}
   m_SizeDelta: {x: 0.0171, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4228,7 +4228,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   B_hpbar: {fileID: 1384816203}
-  Text: {fileID: 1462873770}
+  Text2: {fileID: 0}
+  Door: {fileID: 0}
+  Bottom: {fileID: 0}
+  BigFire: {fileID: 0}
+  Map: {fileID: 0}
   B_maxHp: 100
   B_curHp: 100
 --- !u!114 &1384816203
@@ -5298,7 +5302,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0.43, y: 1}
   m_AnchoredPosition: {x: -3.599945, y: 0}
   m_SizeDelta: {x: 0.0171, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5374,7 +5378,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -3.599945, y: 0}
   m_SizeDelta: {x: 0.0171, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5581,7 +5585,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2115765936
 MonoBehaviour:
   m_ObjectHideFlags: 0

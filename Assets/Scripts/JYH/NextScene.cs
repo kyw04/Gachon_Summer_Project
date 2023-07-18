@@ -13,6 +13,8 @@ public class NextScene : MonoBehaviour
 
     public void NextStage_Button()
     {
-        SceneManager.LoadScene(PlayerPrefs.GetInt("LastScene") + 1);
+        int lastSceneIndex = PlayerPrefs.GetInt("LastScene");
+        PlayerPrefs.SetInt(SceneManager.GetSceneByBuildIndex(lastSceneIndex + 1).name, 1);
+        SceneManager.LoadScene(lastSceneIndex + 1);
     }
 }

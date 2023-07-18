@@ -69,7 +69,7 @@ public class BossHPViewer : MonoBehaviour
     {
         if (B_hpbar.value > 0)
         {
-            B_curHp -= 0.01f;
+            B_curHp -= 0.1f;
         }
     }
 
@@ -77,7 +77,7 @@ public class BossHPViewer : MonoBehaviour
     {
         if (B_hpbar.value > 0)
         {
-            B_curHp -= 1.0f;
+            B_curHp -= 0.1f;
         }
     }
 

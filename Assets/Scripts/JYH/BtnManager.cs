@@ -43,6 +43,7 @@ public class BtnManager : MonoBehaviour
     }
     public void Tutorial_SceneMove() // Æ©Åä¸®¾ó(À±Áö¼º ¾À)
     {
+        PlayerPrefs.SetInt("Tutorial", 1);
         Debug.Log("Æ©Åä¸®¾ó ÀÌµ¿");
         Time.timeScale = 1;
         sceneNum = 1;

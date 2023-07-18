@@ -13,6 +13,8 @@ public class LoadSceneManager : MonoBehaviour
 
     public void RestartButton()
     {
-        SceneManager.LoadScene(PlayerPrefs.GetInt("LastScene"));
+        int lastSceneIndex = PlayerPrefs.GetInt("LastScene");
+        PlayerPrefs.SetInt(PlayerPrefs.GetString("LastSceneName"), 1);
+        SceneManager.LoadScene(lastSceneIndex);
     }
 }

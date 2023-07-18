@@ -17,7 +17,7 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PaladinComponent : BattleableComponentBase
 {
-    public bool isActing;
+    public bool isActing = false;
     public bool isActionable = true;
     
     public ByteReactiveProperty phase = new (1);
@@ -37,13 +37,21 @@ public class PaladinComponent : BattleableComponentBase
     
     public void Awake()
     {
-        base.Awake();
-        ChargeMagic();
-        _agent = GetComponent<NavMeshAgent>();
+        try
+        {
+            base.Awake();
+            ChargeMagic();
+            _agent = GetComponent<NavMeshAgent>();
+        }
+        catch (Exception e)
+        {
+            nameTextField.text = e.Message;
+        }
+
     }
     
     void Start()
-    {   
+    {
         Status = new BattleableVOBase()
         {
             name = Status.name,
@@ -65,14 +73,14 @@ public class PaladinComponent : BattleableComponentBase
             healthPoint.Value = Status.maxHealthPoint;
         }
         #region Subscribes
-        
+
         healthPoint
             .Where(remainHitPoint => remainHitPoint != Status.maxHealthPoint)
-            .Subscribe(remainHitPoint => { 
+            .Subscribe(remainHitPoint => {
                 isDamageable = false;
                 isActionable = false;
-                //1.5초 동안 데미지 입힐 수 없는 상태가 됨.
-                CallMethodWaitForSeconds(1800,() => { isDamageable = true; });   
+                    //1.5초 동안 데미지 입힐 수 없는 상태가 됨.
+                    CallMethodWaitForSeconds(1800, () => { isDamageable = true; });
                 healthPointSlider.value = healthPoint.Value;
             });
 
@@ -81,14 +89,14 @@ public class PaladinComponent : BattleableComponentBase
             .Subscribe(remainHitPoint =>
             {
                 phase.Value = 2;
-                
+
                 isActionable = false;
                 isActing = true;
                 animator.SetTrigger("Rage");
                 FormChange("Paladin/Phase2");
             });
-        
-        
+
+
         #endregion
 
     }
@@ -97,12 +105,22 @@ public class PaladinComponent : BattleableComponentBase
 
     void FixedUpdate()
     {
+        nameTextField.text = this.healthPoint.Value + "";
         if (playerInstance is null)
             return;
             
-        _distance = Vector3.Distance(this.transform.position, playerInstance.transform.position);
-        Think();
-        Move();
+        try
+        {
+
+            _distance = Vector3.Distance(this.transform.position, playerInstance.transform.position);
+            Think();
+            Move();
+        }
+
+        catch (Exception e)
+        {
+            nameTextField.text = e.Message;
+        }
     }
 
     private void ChargeMagic()
@@ -120,7 +138,7 @@ public class PaladinComponent : BattleableComponentBase
     
     private void Think()
     {
-        if (isActing || !isActionable || healthPoint.Value == 0) return;
+        if (isActing || !isActionable) return;
         
         isActionable = false;
 
@@ -182,7 +200,7 @@ public class PaladinComponent : BattleableComponentBase
 
     public override void Move()
     {
-        if (isActing || this.healthPoint.Value <= 0) return;
+        if (isActing) return;
         
         this.transform.LookAt(
             new Vector3(
