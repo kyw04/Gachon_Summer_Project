@@ -7,62 +7,120 @@ using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
 using UniRx.Triggers;
+using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 using Quaternion = UnityEngine.Quaternion;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
+[RequireComponent(typeof(NavMeshAgent))]
+
 public class PaladinComponent : BattleableComponentBase
 {
-    public bool isActing;
-    public bool isActionable;
-    public float coolDown;
-    public sbyte phase = 1;
-    private Subject<sbyte> _phaseObserver = new Subject<sbyte>();
+    public bool isActing = false;
+    public bool isActionable = true;
+    
+    public ByteReactiveProperty phase = new (1);
 
     //������
     public Queue<MagicComponent> magicInstances;
 
     [SerializeField]
     private PlayerComponent playerInstance;
+    private NavMeshAgent _agent;
     public Slider healthPointSlider;
     public Text nameTextField;
+    public float coolDown;
     private float _distance = 0;
     delegate void Act();
     // Start is called before the first frame update
     
     public void Awake()
     {
-        base.Awake();
-        ChargeMagic();
+        try
+        {
+            base.Awake();
+            ChargeMagic();
+            _agent = GetComponent<NavMeshAgent>();
+        }
+        catch (Exception e)
+        {
+            nameTextField.text = e.Message;
+        }
+
     }
     
     void Start()
-    {   
+    {
         Status = new BattleableVOBase()
         {
             name = Status.name,
             attackPoint = Status.attackPoint,
             maxHealthPoint = Status.maxHealthPoint,
-            spd = Status.spd
         };
         playerInstance = GameObject.FindWithTag("Player").GetComponent<PlayerComponent>();
-        healthPoint = Status.maxHealthPoint;
-        
-        healthPointSlider.maxValue = Status.maxHealthPoint;
-        healthPointSlider.value = healthPoint;
-        nameTextField.text = Status.name;
+        _agent.speed = this.Status.spd;
+
+        try
+        {
+            healthPoint.Value = Status.maxHealthPoint;
+            healthPointSlider.maxValue = Status.maxHealthPoint;
+            healthPointSlider.value = healthPoint.Value;
+            nameTextField.text = Status.name;
+        }
+        catch
+        {
+            healthPoint.Value = Status.maxHealthPoint;
+        }
+        #region Subscribes
+
+        healthPoint
+            .Where(remainHitPoint => remainHitPoint != Status.maxHealthPoint)
+            .Subscribe(remainHitPoint => {
+                isDamageable = false;
+                isActionable = false;
+                    //1.5초 동안 데미지 입힐 수 없는 상태가 됨.
+                    CallMethodWaitForSeconds(1800, () => { isDamageable = true; });
+                healthPointSlider.value = healthPoint.Value;
+            });
+
+        healthPoint
+            .Where(remainHitPoint => (float)remainHitPoint / Status.maxHealthPoint <= 0.5f && phase.Value == 1)
+            .Subscribe(remainHitPoint =>
+            {
+                phase.Value = 2;
+
+                isActionable = false;
+                isActing = true;
+                animator.SetTrigger("Rage");
+                FormChange("Paladin/Phase2");
+            });
+
+
+        #endregion
+
     }
 
     // Update is called once per frame
 
     void FixedUpdate()
     {
+        nameTextField.text = this.healthPoint.Value + "";
         if (playerInstance is null)
             return;
             
-        _distance = Vector3.Distance(this.transform.position, playerInstance.transform.position);
-        Think();
-        Move();
+        try
+        {
+
+            _distance = Vector3.Distance(this.transform.position, playerInstance.transform.position);
+            Think();
+            Move();
+        }
+
+        catch (Exception e)
+        {
+            nameTextField.text = e.Message;
+        }
     }
 
     private void ChargeMagic()
@@ -80,23 +138,18 @@ public class PaladinComponent : BattleableComponentBase
     
     private void Think()
     {
-        if (isActing || !isActionable || healthPoint == 0) return;
+        if (isActing || !isActionable) return;
         
         isActionable = false;
 
-        Act action = () => { isActing = true; };
-
-        if (phase == 1 && (float)healthPoint / this.Status.maxHealthPoint <= 0.5f)
-            action += () =>
-            {
-                isActionable = false;
-                phase = 2;
-                healthPointSlider.value = healthPoint;
-                animator.SetTrigger("Rage");
-                FormChange("Paladin/Phase2");
-            };
+        Act action = () =>
+        {
+            isActing = true;
+            _agent.isStopped = true;
+            Rigidbody.velocity = Vector3.zero;
+        };
         
-        else if (_distance <= 1.5f)
+        if (_distance <= 1.5f)
             action += () =>
             {
                 animator.SetTrigger("Kick");
@@ -107,11 +160,6 @@ public class PaladinComponent : BattleableComponentBase
         {
             action += Attack;
 
-            action += phase == 1 ? () => { } : () =>
-            {
-                StartCoroutine(UpgradeedAttack());
-            };
-
             action += () => { CallMethodWaitForSeconds(5000, () => { isActionable = true; }); };
         }
         else
@@ -119,7 +167,7 @@ public class PaladinComponent : BattleableComponentBase
             {
                 animator.SetTrigger("Cast");
                 StartCoroutine(Casting());
-                CallMethodWaitForSeconds((int)coolDown * 1000,() => { isActionable = true; });
+                CallMethodWaitForSeconds((int)(coolDown * 1000),() => { isActionable = true; });
             };
 
 
@@ -127,7 +175,7 @@ public class PaladinComponent : BattleableComponentBase
         action();
     }
 
-    public void FormChange(string path)
+    private void FormChange(string path)
     {
         if (path.Trim() == "") path = "Paladin/Phase2";
         var mat = Resources.LoadAsync(path.Trim()).asset as Material;
@@ -152,22 +200,26 @@ public class PaladinComponent : BattleableComponentBase
 
     public override void Move()
     {
-        if (isActing || this.healthPoint <= 0) return;
+        if (isActing) return;
         
-        this.transform.LookAt(playerInstance.transform);
+        this.transform.LookAt(
+            new Vector3(
+                playerInstance.transform.position.x, 0, playerInstance.transform.position.z));
 
         if (_distance <= 3f)
         {
+            _agent.isStopped = true;
             Rigidbody.velocity = Vector3.zero;
             animator.SetBool("isWalkingForward", false);
             animator.SetBool("isIdle", true);
         }
         else
         {
+            _agent.isStopped = false;
             lookFoward = this.transform.forward;
             lookRight = this.transform.right;
 
-            Rigidbody.velocity = lookFoward.normalized * Status.spd;
+            _agent.SetDestination(playerInstance.transform.position);
             animator.SetBool("isWalkingForward", true);
             animator.SetBool("isIdle", false);
         }
@@ -175,15 +227,9 @@ public class PaladinComponent : BattleableComponentBase
 
     public override int ModifyHealthPoint(int amount)
     {
-        if (this.healthPoint == 0) return -1;
+        if (this.healthPoint.Value == 0) return -1;
         if (!isDamageable) return 0;
-        isDamageable = false;
-        isActionable = false;
-        //1.5초 동안 데미지 입힐 수 없는 상태가 됨.
-        CallMethodWaitForSeconds(1500,() => { isDamageable = true; });
-        var result = base.ModifyHealthPoint(amount);   
-        healthPointSlider.value = healthPoint;
-        return result;
+        return base.ModifyHealthPoint(amount);
     }
 
     public override void Die()
@@ -191,7 +237,6 @@ public class PaladinComponent : BattleableComponentBase
         base.Die();
         isActionable = false;
         isActing = true;
-        Debug.Log(true);
     }
 
     protected override void OnCollisionEnter(Collision other)
@@ -225,6 +270,11 @@ public class PaladinComponent : BattleableComponentBase
                 break;
             case "RageEnd":
                 isActionable = true;
+                isActing = false;
+                break;
+            case "Die":
+                if(SceneManager.GetActiveScene().name == "Stage3")
+                    SceneManager.LoadScene(6);
                 break;
         }
         StartCoroutine(LookTo(playerInstance.transform));
@@ -266,11 +316,11 @@ public class PaladinComponent : BattleableComponentBase
         yield break;
     }
 
-    private IEnumerator UpgradeedAttack()
+    private IEnumerator UpgradedAttack()
     {
         while (isAttacking)
         {
-            Rigidbody.velocity += lookFoward.normalized * 0.1f;
+            Rigidbody.velocity += lookFoward.normalized * 0.2f;
             yield return new WaitForSeconds(0.01f);
         }
     }

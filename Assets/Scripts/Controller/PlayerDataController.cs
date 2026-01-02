@@ -11,14 +11,12 @@ using UnityEngine;
 sealed class PlayerDataController : BattleableDataControllerBase
 {
     public static string TableName = "PlayerData";
-
     public PlayerDataController(string dbName)
     {
         if (!File.Exists(Application.persistentDataPath + dbName))
             File.Copy(Application.streamingAssetsPath + dbName, Application.persistentDataPath + dbName);
         dbConnection = new SqliteConnection(ConnectionString + dbName);
     }
-
     public override BattleableVOBase getDatum()
     {
         BattleableVOBase result = default;
@@ -33,7 +31,6 @@ sealed class PlayerDataController : BattleableDataControllerBase
         //연동 성공
         return result;
     }
-    
     public ICollection<BattleableVOBase> getData()
     {
         BattleableVOBase result = default;
@@ -45,12 +42,10 @@ sealed class PlayerDataController : BattleableDataControllerBase
 
         return tables;
     }
-
     public override bool UseDelete(string _query)
     {
         throw new NotImplementedException();
     }
-
     public override ICollection<BattleableVOBase> UseSelect(string _query)
     {
 
@@ -104,7 +99,6 @@ sealed class PlayerDataController : BattleableDataControllerBase
         }
         return result;
     }
-
     public override bool UseUpdate(BattleableVOBase status)
     {
         bool result = true;
@@ -175,7 +169,6 @@ sealed class PlayerDataController : BattleableDataControllerBase
         }
         return result;
     }
-
     public override bool UseInsert(string _query)
     {
         bool result = true;

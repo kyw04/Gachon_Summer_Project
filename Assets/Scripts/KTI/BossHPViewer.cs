@@ -10,7 +10,6 @@ public class BossHPViewer : MonoBehaviour
 {
     [SerializeField]
     public Slider B_hpbar;
-    public GameObject Text;
     public GameObject Text2;
     public GameObject Door;
     public GameObject Bottom;
@@ -25,14 +24,14 @@ public class BossHPViewer : MonoBehaviour
     bool Actived = false;
     public void Start()
     {
-        Text.SetActive(false);
+        BtnManager.instance.sceneNum = 2;
         Text2.SetActive(false);
         Door.SetActive(true);
         Bottom.SetActive(true);
         BigFire.SetActive(false);
         Map.SetActive(false);
-        
-        
+
+
         Invoke("Text2Fade", 5f);
         B_hpbar.value = (float)B_curHp / (float)B_maxHp;
         B_hpbar.minValue = 0;
@@ -52,8 +51,10 @@ public class BossHPViewer : MonoBehaviour
             BigFire.SetActive(true);
             StartCoroutine(HideText());
             StartCoroutine(HideMap());
-            
-        }  
+
+        }
+
+        
     }
 
     public void Fire()
@@ -68,7 +69,7 @@ public class BossHPViewer : MonoBehaviour
     {
         if (B_hpbar.value > 0)
         {
-            B_curHp -= 0.03f;
+            B_curHp -= 0.1f;
         }
     }
 
@@ -76,24 +77,10 @@ public class BossHPViewer : MonoBehaviour
     {
         if (B_hpbar.value > 0)
         {
-            B_curHp -= 1.2f;
+            B_curHp -= 0.1f;
         }
     }
 
-    public void Boss3()
-    {
-        if (B_hpbar.value > 0)
-        {
-            B_curHp -= 10f;
-        }
-
-        if (B_hpbar.value <= 0)
-        {
-            B_hpbar.value = 0;
-            Text.SetActive(true);
-            // SceneManager.LoadScene();
-        }
-    }
     IEnumerator HideText()
     {
         while (true)

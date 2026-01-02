@@ -49,7 +49,7 @@ public class Atk4Ex : MonoBehaviour
         yield return new WaitForSeconds(0.01f);
         if (canattacked)
         {
-            Target.SendMessage("Damaged", 5f);
+            Target.SendMessage("Damaged", 50f);
         }
         yield return new WaitForSeconds(0.19f);
         sphere.enabled = false;

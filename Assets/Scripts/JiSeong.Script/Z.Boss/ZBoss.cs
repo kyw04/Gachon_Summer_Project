@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class ZBoss : MonoBehaviour
 {
-    public Transform target; // 플레이어의 Transform 컴포넌트
+    public GameObject target; // 플레이어의 Transform 컴포넌트
     public GameObject prefab1;
     public GameObject prefab2;
     public GameObject attackObjectPrefab; // 발사할 공격 오브젝트 프리팹
@@ -16,9 +17,9 @@ public class ZBoss : MonoBehaviour
     public float attackDamage = 10f; // 공격력
     public float attackCooldown = 2f; // 공격 쿨다운
     public float pushForce = 5f; // 충돌로 인한 밀리는 힘
-    public int EnemyHp = 3;
     public float ignoreCollisionDuration = 3f; // 충돌 무시 기간
     private bool isChasing = true; // 보스가 플레이어를 쫓는지 여부를 나타내는 변수
+    public float distance; // 플레이와 보스 사이 거리
 
     private Animator animator; // Animator 컴포넌트
     private bool canAttack = true; // 공격 가능 여부
@@ -32,27 +33,31 @@ public class ZBoss : MonoBehaviour
     private static readonly int AttackTriggerHash = Animator.StringToHash("Attack");
     private static readonly int HitTriggerHash = Animator.StringToHash("Hit");
 
+    public BossLine bossLine;
+
     private void Start()
     {
         animator = GetComponent<Animator>(); // Animator 컴포넌트 가져오기
         rb = GetComponent<Rigidbody>(); // Rigidbody 컴포넌트 가져오기
         objectRenderer = GetComponent<Renderer>();
         InvokeRepeating("PerformRandomAttack", attackCooldown, attackCooldown);
+        target = FindObjectOfType<PlayerComponent>().gameObject;
+        BtnManager.instance.sceneNum = 2;
     }
 
     private void Update()
     {
         if (target != null)
         {
-            if (EnemyHp > 0)
+            // if ( > 0)
             {
                 // 플레이어 방향 구하기
-                Vector3 direction = target.position - transform.position;
+                Vector3 direction = target.transform.position - transform.position;
                 direction.y = 0; // 수평 방향으로 제한 (y축 회전 방지)
                 direction.Normalize(); // 벡터를 단위 벡터로 정규화
 
                 // 적과 플레이어 사이의 거리 계산
-                float distance = Vector3.Distance(transform.position, target.position);
+                distance = Vector3.Distance(transform.position, target.transform.position);
 
                 if (distance <= attackRange && canAttack && !isAttacking)
                 {
@@ -84,7 +89,7 @@ public class ZBoss : MonoBehaviour
         }
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Zombie Attack (2)"))
         {
-            Vector3 direction = target.position - transform.position;
+            Vector3 direction = target.transform.position - transform.position;
             direction.y = 0; // 수평 방향으로 제한 (y축 회전 방지)
             direction.Normalize(); // 벡터를 단위 벡터로 정규화
             animator.ResetTrigger("isAttack1");
@@ -92,7 +97,7 @@ public class ZBoss : MonoBehaviour
         }
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Mutant Jump Attack"))
         {
-            Vector3 direction = target.position - transform.position;
+            Vector3 direction = target.transform.position - transform.position;
             direction.y = 0; // 수평 방향으로 제한 (y축 회전 방지)
             direction.Normalize(); // 벡터를 단위 벡터로 정규화
             animator.ResetTrigger("isAttack2");
@@ -106,7 +111,7 @@ public class ZBoss : MonoBehaviour
     }
     private void PerformRandomAttack()
     {
-        float distance = Vector3.Distance(transform.position, target.position);
+        float distance = Vector3.Distance(transform.position, target.transform.position);
         if (distance <= attackRange)
         {
             if (isChasing && !isAttacking)
@@ -129,41 +134,32 @@ public class ZBoss : MonoBehaviour
     private IEnumerator Attack1()
     {
         isAttacking = true;
-
-        // 첫 번째 공격 실행하는 코드 작성
-        // 예를 들어, 보스가 특정 공격 애니메이션을 재생하거나 플레이어에게 데미지를 입힐 수 있습니다.
         ritationColldown = true;
         animator.SetTrigger("isAttack1");
 
-        isAttacking = false;
         canAttack = false;
-        isAttacking = true;
         Invoke("ResetAttack", attackCooldown);
         yield return new WaitForSeconds(1.5f);
 
         SpawnPrefab1();
 
-        yield return new WaitForSeconds(0.5f); // 공격 지속 시간
+        yield return new WaitForSeconds(0.5f);
 
         ritationColldown = false;
+        ResetAttack();
     }
 
     private IEnumerator Attack2()
     {
         isAttacking = true;
-
-        // 두 번째 공격 실행하는 코드 작성
-        // 예를 들어, 보스가 특정 공격 패턴을 수행하거나 주변에 폭발을 일으킬 수 있습니다.
         ritationColldown = true;
         animator.SetTrigger("isAttack2");
 
-
-        isAttacking = false;
         canAttack = false;
         isAttacking = true;
         Invoke("ResetAttack", attackCooldown);
 
-        yield return new WaitForSeconds(1.8f); // 공격 지속 시간
+        yield return new WaitForSeconds(1.8f);
 
         SpawnPrefab2();
         for (int i = 0; i < 8; i++)
@@ -180,6 +176,7 @@ public class ZBoss : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
 
         ritationColldown = false;
+        ResetAttack();
     }
     private void SpawnPrefab2()
     {
@@ -187,7 +184,7 @@ public class ZBoss : MonoBehaviour
         GameObject spawnedPrefab = Instantiate(prefab2, transform.position, Quaternion.identity);
 
         // 2초 후에 프리팹을 삭제하는 함수 호출을 예약합니다.
-        Destroy(spawnedPrefab, 2f);
+        Destroy(spawnedPrefab, 0.7f);
     }
     private void SpawnPrefab1()
     {
@@ -195,7 +192,7 @@ public class ZBoss : MonoBehaviour
         GameObject spawnedPrefab = Instantiate(prefab1, transform.position, transform.rotation);
 
         // 2초 후에 프리팹을 삭제하는 함수 호출을 예약합니다.
-        Destroy(spawnedPrefab, 1.5f);
+        Destroy(spawnedPrefab, 0.7f);
     }
 
     public void StopChasing()
@@ -209,14 +206,6 @@ public class ZBoss : MonoBehaviour
             isDying = true;
             StartCoroutine(DieCoroutine());
         }
-        // 현재 오브젝트의 위치를 가져옴
-        Vector3 currentPosition = transform.position;
-
-        // y 좌표 값을 감소시킴
-        currentPosition.y -= 0.6f;
-
-        // 위치를 변경하여 오브젝트의 y 좌표 값을 줄임
-        transform.position = currentPosition;
     }
     private System.Collections.IEnumerator DieCoroutine()
     {
@@ -227,30 +216,26 @@ public class ZBoss : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        // 충돌이 발생한 경우
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (isAttacking == false)
-            {
-                ignoreCollisionTimer = ignoreCollisionDuration;
-                StartCoroutine(ResetIgnoreCollisionTimer());
-            }
+            ignoreCollisionTimer = ignoreCollisionDuration;
+            StartCoroutine(ResetIgnoreCollisionTimer());
         }
     }
     private System.Collections.IEnumerator ResetIgnoreCollisionTimer()
     {
-        // HP를 감소시킴
-        EnemyHp--;
 
-        if (EnemyHp <= 0)
+        bossLine.boss_hp.value -= 0.05f;
+        if (bossLine.boss_hp.value <= 0)
         {
             transform.rotation = Quaternion.Euler(0, -0.4f, 0);
-            Vector3 direction = target.position - transform.position;
-            direction.y = 0; // 수평 방향으로 제한 (y축 회전 방지)
+            Vector3 direction = target.transform.position - transform.position;
+            direction.y = 0;
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             transform.rotation = targetRotation;
             rb.isKinematic = true;
             animator.SetTrigger("isDie");
+            SceneManager.LoadScene("Stage1");
             Die();
         }
 

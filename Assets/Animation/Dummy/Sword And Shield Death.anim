@@ -64580,4 +64580,11 @@ AnimationClip:
   m_EulerEditorCurves: []
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events: []
+  m_Events:
+  - time: 2.1666667
+    functionName: AnimEvt
+    data: Die
+    objectReferenceParameter: {fileID: 7587081925758138498, guid: 22edd963151fb094c9abd2f67694f812, type: 3}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class BossAttackManager : MonoBehaviour
+public class BossAttackManager : BattleableComponentBase
 {
 
     [Header("보스 공격 주기")]
@@ -23,13 +25,14 @@ public class BossAttackManager : MonoBehaviour
     Vector3 P2Reposition1;
     Vector3 P2Reposition2;
 
-
+    bool isDead;
     private List<GameObject> P5List = new List<GameObject>();
     int ListSentinel = 0;
 
 
 
-
+    public TMP_Text bossName;
+    public TMP_Text bossHealth;
 
 
 
@@ -39,6 +42,8 @@ public class BossAttackManager : MonoBehaviour
     GameObject Shield;
 
     GameObject P1Shield;
+
+    public GameObject eXPLOSION;
 
     int Selection;
 
@@ -59,10 +64,16 @@ public class BossAttackManager : MonoBehaviour
     Vector3 P5Reposition1;
     Vector3 P5Reposition2;
 
+
+    Light ligh;
+
+    BoxCollider boxcol;
+
     private void Awake()
     {
+        eXPLOSION.transform.localScale = new Vector3(3, 9, 3);
         P1 = false;
-
+        isDead = false;
 
         P1Bullet = Resources.Load<GameObject>("SeungBeom/FinalBullet 1");
         P2_Atk = Resources.Load<GameObject>("SeungBeom/Atk2Ex 1");
@@ -70,12 +81,19 @@ public class BossAttackManager : MonoBehaviour
         P4_Atk = transform.GetChild(4).gameObject;
         P5_Atk = Resources.Load<GameObject>("SeungBeom/Atk5");
         Shield = transform.GetChild(5).gameObject;
-
+        ligh = GetComponent<Light>();
         P1Shield = transform.GetChild(7).gameObject;
+
+        boxcol = GetComponent<BoxCollider>();
     }
 
     void Start()
     {
+        BtnManager.instance.sceneNum =  4;
+
+        healthPoint.Value = Status.maxHealthPoint;
+
+        bossHealth.text = healthPoint.Value + "";
         
         player = GameObject.FindGameObjectWithTag("Player");
         // ----------------------------------------- 1번패턴 오브젝트 풀 -----------------------------------
@@ -110,7 +128,10 @@ public class BossAttackManager : MonoBehaviour
         StartCoroutine(BulletShoot());
         StartCoroutine(Select());
         StartCoroutine(Barrier());
+
+        StartCoroutine(Dead());
     }
+
 
     public GameObject P1_GetItem()
     {
@@ -145,18 +166,17 @@ public class BossAttackManager : MonoBehaviour
     IEnumerator SecondPattern() //완료
     {
         P2Accuracy();
-        P2list[0].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.y);
-        Debug.Log("메테오 생성 위치 : " + P2list[0].transform.position);
+        P2list[0].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.z);
         yield return new WaitForSeconds(0.1f);
         P2list[0].SetActive(true);
         yield return new WaitForSeconds(4f); //1번
         P2Accuracy();
-        P2list[1].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.y);
+        P2list[1].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.z);
         yield return new WaitForSeconds(0.1f);
         P2list[1].SetActive(true);
         yield return new WaitForSeconds(4f); //2번
         P2Accuracy();
-        P2list[2].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.y);
+        P2list[2].transform.position = P2Reposition + new Vector3(player.transform.position.x, 0, player.transform.position.z);
         yield return new WaitForSeconds(0.1f);
         P2list[2].SetActive(true);
         yield return new WaitForSeconds(WaitTime); //3번
@@ -219,7 +239,7 @@ public class BossAttackManager : MonoBehaviour
         P5List[4].transform.position = P5Reposition;
         yield return new WaitForSeconds(0.1f);
         P5List[4].SetActive(true);
-        yield return new WaitForSeconds(WaitTime);
+        yield return new WaitForSeconds(1);
         NextPattern();
     }
     IEnumerator Barrier()
@@ -310,17 +330,84 @@ public class BossAttackManager : MonoBehaviour
     {
         while(true)
         {
+            
             yield return new WaitForSeconds(8f);
             Selection = Random.Range(1, 6); // 패턴이 5개이기 때문, (1~5 까지)
         }
     }
-    
+    IEnumerator Dead()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(0.1f);
+            if (isDead)
+            {
+                yield return new WaitForSeconds(5);
+                
+                Instantiate(eXPLOSION, transform.position, Quaternion.identity);
+                yield return new WaitForSeconds(0.1f);
+                Instantiate(eXPLOSION, transform.position, Quaternion.identity);
+                yield return new WaitForSeconds(0.1f);
+                Instantiate(eXPLOSION, transform.position, Quaternion.identity);
+                yield return new WaitForSeconds(0.1f);
+                Instantiate(eXPLOSION, transform.position, Quaternion.identity);
 
+                
+                
+                yield return new WaitForSeconds(2f);
+                SceneManager.LoadScene("StageClear");
+                Debug.Log("false로 변환");
+                isDead = false;
+
+            }
+        }
+    }
 
     private void Update()
     {
+       if(healthPoint.Value <= 0)
+        {
+            bossHealth.text = 0 +"";
+            WaitTime = 9999;
+            //Instantiate(eXPLOSION, transform.position, Quaternion.identity);
+            isDead = true;
+            Shield.SetActive(false);
+            boxcol.enabled = false;
+        }
+        else
+        {
+            bossHealth.text = $"{this.healthPoint.Value}";
+        }
+       if(isDead)
+        {
+            ligh.range += 80 * Time.deltaTime;
+        }
     }
 
+    public override int ModifyHealthPoint(int amount)
+    {
+        var result = base.ModifyHealthPoint(amount);
+        return result;
+    }
 
+    public override void Die()
+    {
+        base.Die();
+    }
 
+    public override void Move()
+    {
+    }
+
+    protected override void OnCollisionEnter(Collision other)
+    {
+    }
+
+    protected override void OnCollisionStay(Collision other)
+    {
+    }
+
+    public override void AnimEvt(string cmd)
+    {
+    }
 }

@@ -8,6 +8,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Serialization;
 using TMPro;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rope))]
@@ -50,12 +52,21 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
 
     private void Start()
     {
-        // BtnManager.instance.sceneNum = 3;
         SetUpPlayer();
+        // BtnManager.instance.sceneNum = 3;
         _weapon = GetComponentInChildren<WeaponComponent>();
         hp_Bar.maxValue = Status.maxHealthPoint;
-        hp_Bar.value = healthPoint;
+        hp_Bar.value = healthPoint.Value;
         hp_T.text = curHp + "/" + maxHp;
+
+        this.UpdateAsObservable()
+            .Where(_ => Input.GetButtonDown("Fire1"))
+            .Subscribe(param =>
+            { _hookController.HookControl(true); });
+
+        this.UpdateAsObservable()
+            .Where(_ => Input.GetButtonDown("Fire2"))
+            .Subscribe(param => { _hookController.HookControl(false); });
     }
 
     private void FixedUpdate()
@@ -63,7 +74,6 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         Command();
         Status.position = this.transform.position;
         dataController.UseUpdate(Status.id, Status.position);
-        isJumpable = Rigidbody.velocity.y > -0.1f;
     }
     #region 기능적인 메소드
 
@@ -72,11 +82,14 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         if (curHp > 0)
         {
             curHp -= damage;
-            hp_Bar.value = healthPoint;
+            hp_Bar.value = healthPoint.Value;
             hp_T.text = curHp.ToString() + "/" + maxHp.ToString();
         }
-        else
+        else if (curHp <= 0)
         {
+            Debug.Log("sss");
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
             SceneManager.LoadScene("Gameover");
         }
     }
@@ -86,7 +99,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         isControllable = false;
         var result = base.ModifyHealthPoint(amount);
         StopAllCoroutines();
-        hp_Bar.value = healthPoint;
+        hp_Bar.value = healthPoint.Value;
         hp_T.text = $" {healthPoint} / {Status.maxHealthPoint}";
         return result;
     }
@@ -138,7 +151,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         GC.SuppressFinalize(playerModel);
 
         this.transform.position = Status.position;
-        healthPoint = Status.maxHealthPoint;
+        healthPoint.Value = Status.maxHealthPoint;
         StaminaPoint = Status.maxStaminaPoint;
 
         animator.Rebind();
@@ -168,7 +181,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     public void Command()
     {
         //기본적으로 MOVE함수를 실행시키며 특정한 INPUT이 있으면 그에 맞는 메소드를 실행
-        if (healthPoint == 0) return;
+        if (healthPoint.Value == 0) return;
 
         Act action = Move;
 
@@ -186,28 +199,22 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
                 if (isDodging || !isControllable) return;
                 else isDodging = !isDodging;
                 isControllable = false;
-                
+
                 _weapon.gameObject.SetActive(false);
 
                 //this.transform.forward = lookFoward * (Input.GetAxisRaw("Vertical") == -1 ? -1 : 1);
                 animator.SetTrigger("Rolling");
-                var status = Input.GetAxisRaw("Vertical");
-                
-                if (rollInstance is null)
-                    rollInstance = StartCoroutine(Roll(status));
-
-
             };
         }
         else if (Input.GetButton("Fire1") || Input.GetButton("Fire2"))
         {
-            action = _hookController.HookControl;
+            //action = _hookController.HookControl;
         }
         else if (Input.GetButton("Jump"))
         {
             action = () =>
             {
-                if (healthPoint <= 0 || !isJumpable || isJumping) return;
+                if (healthPoint.Value <= 0 || !isJumpable || isJumping) return;
                 isJumpable = false;
                 isControllable = false;
                 isJumping = true;
@@ -222,6 +229,9 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     public override void Move()
     {
         int snum = BtnManager.instance.sceneNum;
+
+        if (isDodging) return;
+
         try
         {
             if ((snum == 3 && bossline.isPlayerMove) || snum != 3)
@@ -280,6 +290,8 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
             if (!isControllable) return;
             _weapon.gameObject.SetActive(false);
 
+            Debug.Log(true);
+
             var dir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
 
             //에니메이터에 있는 bool 타입의 파라미터들을 한 번에 false로
@@ -336,7 +348,12 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
 
     protected override void OnCollisionStay(Collision other)
     {
+        isJumpable = true;
+    }
 
+    private void OnCollisionExit(Collision other)
+    {
+        isJumpable = false;
     }
 
     #endregion
@@ -350,6 +367,18 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         {
             case "AttackEnd":
                 isAttacking = false;
+                break;
+            case "Roll":
+                var status = Input.GetAxisRaw("Vertical");
+
+                if (rollInstance is not null)
+                {
+                    StopCoroutine(rollInstance);
+                    Rigidbody.velocity = Vector3.zero;
+                    rollInstance = null;
+                }
+
+                rollInstance = StartCoroutine(Roll(status));
                 break;
             case "RollEnd":
                 isDodging = false;
@@ -370,8 +399,11 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
                 Rigidbody.useGravity = true;
                 rollInstance = null;
                 break;
+            case "Die":
+                SceneManager.LoadScene(9);
+                break;
         }
-        
+
     }
 
     #region IEnumerator
@@ -380,13 +412,15 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
     {
         var dir = lookFoward;
         var coefficient = (Mathf.Abs(status) > 0.5f ? status : 1);
-        this.transform.forward = dir * coefficient;
+        this.transform.LookAt(dir.normalized * coefficient + this.transform.position);
+        this.Rigidbody.velocity = this.transform.forward.normalized * 8f;
         while (isDodging)
         {
-            this.transform.position += dir.normalized * 0.1f * coefficient;
-            yield return new WaitForSeconds(0.01f);
+            this.Rigidbody.velocity += this.transform.forward.normalized * 0.3f;
+            yield return new WaitForSeconds(0.1f);
         }
 
+        Rigidbody.velocity = Vector3.zero;
         rollInstance = null;
         yield break;
     }
@@ -397,7 +431,7 @@ public sealed class PlayerComponent : BattleableComponentBase, IControllable
         var degree = 0.2f;
         while (isJumping)
         {
-            this.Rigidbody.velocity += Vector3.up * coefficient * 1.5f;
+            this.Rigidbody.velocity += Vector3.up * coefficient * Time.deltaTime * 120f;
             coefficient -= degree;
             degree *= 0.86f;
             yield return new WaitForSeconds(0.01f);

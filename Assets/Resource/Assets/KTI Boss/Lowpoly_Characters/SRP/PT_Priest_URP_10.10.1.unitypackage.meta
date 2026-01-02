@@ -1,5 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< Updated upstream:Assets/External.meta
+guid: 51b853c24012f9c45b215d3d2b42497d
+folderAsset: yes
+========
 guid: 36f3744a471b49548b0fd5c836827247
+>>>>>>>> Stashed changes:Assets/Resource/Assets/KTI Boss/Lowpoly_Characters/SRP/PT_Priest_URP_10.10.1.unitypackage.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

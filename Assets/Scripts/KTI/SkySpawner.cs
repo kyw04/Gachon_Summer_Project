@@ -27,7 +27,7 @@ public class SkySpawner : MonoBehaviour
 
 
         range_X = Random.Range(-21,35);
-        range_Y = Random.Range(30, 35);
+        range_Y = Random.Range(20, 25);
         range_Z = Random.Range(-21,35);
         Vector3 RandomPostion = new Vector3(range_X, range_Y, range_Z);
 

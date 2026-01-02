@@ -64,7 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Projectile: {fileID: 0}
   HitPrefab: {fileID: 0}
-  Accuracy: 95
+  Accuracy: 90
   Speed: 60
   Sentinel: 0
 --- !u!54 &6384139646990284323

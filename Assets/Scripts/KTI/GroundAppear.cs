@@ -28,7 +28,7 @@ public class GroundAppear : MonoBehaviour
 
         range_X = Random.Range(-19, 34);
         range_Z = Random.Range(-19, 34);
-        Vector3 RandomPostion = new Vector3(range_X, 0.08f, range_Z);
+        Vector3 RandomPostion = new Vector3(range_X, 2f, range_Z);
 
         Vector3 respawnPosition = originPosition + RandomPostion;
         return respawnPosition;

@@ -15,7 +15,7 @@ public class ExperiBullet : MonoBehaviour
     GameObject Target;
 
     public int Sentinel;
-
+    
     Vector3 Reposition;
     Vector3 Reposition1;
     Vector3 Reposition2;
@@ -33,7 +33,6 @@ public class ExperiBullet : MonoBehaviour
         {
             Refresh();
         }
-
 
 
         Target = FindObjectOfType<PlayerComponent>().gameObject;
@@ -84,7 +83,7 @@ public class ExperiBullet : MonoBehaviour
         StartCoroutine(BulletHit());
        if(other.gameObject == Target)
         {
-            Target.SendMessage("Damaged", 0.5f);
+            Target.SendMessage("Damaged", 20f);
         }
     }
 

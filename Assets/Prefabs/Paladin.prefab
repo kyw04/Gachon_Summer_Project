@@ -203,9 +203,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8133943399115107533}
   - component: {fileID: 7795767827823944002}
-  m_Layer: 10
+  m_Layer: 8
   m_Name: Paladin_J_Nordstrom_Sword
-  m_TagString: Enemy
+  m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -969,7 +969,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5c7494bf8826ed4488a87e174cca57d4, type: 2}
+  - {fileID: 2100000, guid: f3df8e9bb5c42cb4eb7dc3389107e90e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -994,7 +994,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: -1942376176107530577, guid: 4250ecbf7e3e65149aeb35a4fa7ce679, type: 3}
+  m_Mesh: {fileID: 203458371695166868, guid: 4250ecbf7e3e65149aeb35a4fa7ce679, type: 3}
   m_Bones:
   - {fileID: 3337511127891804844}
   - {fileID: 3042675671432032575}
@@ -2316,6 +2316,7 @@ GameObject:
   - component: {fileID: 7317174023108063591}
   - component: {fileID: 7317174023108063589}
   - component: {fileID: 1699249495}
+  - component: {fileID: 1605174816}
   m_Layer: 10
   m_Name: Paladin
   m_TagString: Enemy
@@ -2409,24 +2410,27 @@ MonoBehaviour:
     name: Paladin
     maxHealthPoint: 300
     maxStaminaPoint: 0
-    attackPoint: 20
+    attackPoint: 10
     defencePoint: 5
     spd: 3.5
     modelName: Paladin
     position: {x: 0, y: 0, z: 0}
-  healthPoint: 0
+  healthPoint:
+    value: 0
   animator: {fileID: 0}
   lookFoward: {x: 0, y: 0, z: 0}
   lookRight: {x: 0, y: 0, z: 0}
   isAttacking: 0
+  isDamageable: 1
+  isMoving: 0
   isActing: 0
   isActionable: 1
-  isDamageable: 1
-  coolDown: 8
-  phase: 1
+  phase:
+    value: 1
   playerInstance: {fileID: 0}
   healthPointSlider: {fileID: 0}
   nameTextField: {fileID: 0}
+  coolDown: 16
 --- !u!65 &1699249495
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2440,6 +2444,28 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.4, y: 0.53, z: 0.4}
   m_Center: {x: 0, y: 0.51, z: 0}
+--- !u!195 &1605174816
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7587081925758138498}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 2
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 3.5
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 0
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 5
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &7678307087704153049
 GameObject:
   m_ObjectHideFlags: 0
@@ -2526,7 +2552,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5c7494bf8826ed4488a87e174cca57d4, type: 2}
+  - {fileID: 2100000, guid: f3df8e9bb5c42cb4eb7dc3389107e90e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2743,7 +2769,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5c7494bf8826ed4488a87e174cca57d4, type: 2}
+  - {fileID: 2100000, guid: f3df8e9bb5c42cb4eb7dc3389107e90e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2768,7 +2794,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: 203458371695166868, guid: 4250ecbf7e3e65149aeb35a4fa7ce679, type: 3}
+  m_Mesh: {fileID: -1942376176107530577, guid: 4250ecbf7e3e65149aeb35a4fa7ce679, type: 3}
   m_Bones:
   - {fileID: 3337511127891804844}
   - {fileID: 3042675671432032575}

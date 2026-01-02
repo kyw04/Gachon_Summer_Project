@@ -38,7 +38,7 @@ public class Meteor : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(0.25f);
-            if (canattacked) Target.SendMessage("Damaged", 2.5f);
+            if (canattacked) Target.SendMessage("Damaged", 4f);
         }
     }
 }
